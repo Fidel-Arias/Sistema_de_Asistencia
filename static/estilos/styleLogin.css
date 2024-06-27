@@ -1,0 +1,157 @@
+/*Cuerpo de HTML*/
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;  /*Hack para Box Model*/
+    scroll-snap-type: y proximity;
+}
+
+*, *:before, *:after {    /*Hack para Box Model*/
+    box-sizing: inherit;
+  }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    align-items: center;
+    
+}
+
+/*Responsive body*/
+
+/* @media (max-width: 412px) {
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background-color: white;
+    }
+    .header_ucsm {
+        background-color: white;
+        display: flex;
+        justify-content: space-between;
+    }
+    .header_ucsm img{
+        max-height: 50px;
+    }
+} */
+
+/*Header*/
+.logos_ucsm{
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem;
+    align-items: center;
+}
+/*logo ucsm*/
+.img-ucsm{
+    max-width: 20%;
+}
+.img-epis {
+    max-width: 10%;
+}
+
+/*Logo JINIS*/
+.content {
+    text-align: center;
+}
+
+.content img{
+    min-width: 35%;
+}
+
+.etiqueta {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #253E85;
+}
+
+
+/*Form*/
+.wrapper {
+    background: linear-gradient(95deg,#47BCEB, #9EE7FF) ;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0 30% 0 30%;
+}
+
+
+.labelCodigo {
+    margin-bottom: 20px;
+    font-size: 36px;
+    color: #ffffff;
+}
+
+.input-box {
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.input-box input:focus{
+    outline: none; /* Quita el contorno */
+    background-color: #f0f8ff; /* Color de fondo al enfocarse */
+}
+
+.buttonEntrar {
+    width: 30%;
+    background-color: #253E85;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #253f85bf;
+}
+
+
+/*ENLACES*/
+.colaboradorEnlace, .administradorEnlace, .participanteEnlace {
+    display: block;
+    margin-top: 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition-duration: 0.3s;
+}
+
+.enlacesLogin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 2rem;
+}
+
+.colaboradorEnlace:hover, .administradorEnlace:hover, .participanteEnlace:hover {
+    text-shadow: 0px 3px 3px black;
+    font-size: 17px;
+    transition-duration: 0.3s;
+}
+
+.labelCorreo,
+.labelContraseña {
+    margin-bottom: 20px;
+    font-size: 32px;
+    color: #ffffff;
+}

@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Ponente - Interfaz de Administración</title>
+    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    <!-- Barra Lateral -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <h2>Registrar Ponente</h2>
+        <form class="register-form">
+            <label for="nombre">Nombre del Ponente:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="apellido">Apellido del Ponente:</label>
+            <input type="text" id="apellido" name="apellido" required>
+
+            <div class="button-container">
+                <button type="submit" class="register-button">Registrar</button>
+                <button type="button" class="delete-button">Eliminar</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

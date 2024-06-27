@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'estilos/stylePonencias.css' %}">
+    <title>University Attendance Management System</title>
+
+    <script>
+        function redirectTo(url) {
+        window.location.href = url;
+        }
+    </script>
+</head>
+<body>
+    <div class="container"> 
+        <div class="top-section">
+            <div class="greeting">PONENTES</div>
+        </div>
+
+        <div class="box-container">
+            <!-- Plantilla para una caja -->
+            {% for ponencia in ponencias %}
+            <div class="box">
+                <div class="box-top">
+                    <div class="box-date">Fecha: 27-06-2024</div>
+                    <div class="box-time">Hora: 10:00 AM</div>
+                </div>
+                <div class="box-middle">
+                    <img src="{% static 'images/perfilponente.png' %}" alt="Imagen">
+                    <p><strong>{{ponencia.idponente}}</strong> <br>
+                        {{ponencia.nombre}}
+
+                    </p>
+                </div>
+                <div class="box-bottom">
+                    <div class="box-text-left">
+                        <p>{{ponencia.idponente}}</p>
+                    </div>
+                    
+                </div>                
+            </div>
+            {% endfor %}
+            <!-- Añade más casillas aquí -->
+        </div>
+
+        <div class="bottom-section">
+            <div class="left-button">
+                <a class="button profile-button">
+                    <img src="{% static 'images/perfil.png' %}" alt="Perfil Icon"> Perfil
+                </a>
+            </div>
+            <div class="center-button">
+                <a class="button presentations-button" href="{% url 'Ponencias' %}">
+                    <img src="{% static 'images/ponencias.png' %}" alt="Ponencias Icon"><br> Ponencias
+                </a>
+            </div>
+            <div class="right-button">
+                <a href="{% url 'Login' %}" class="button exit-button" href="#">
+                    <img src="{% static 'images/opened-door-aperture.png' %}" alt="Exit Icon"><br> Exit
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

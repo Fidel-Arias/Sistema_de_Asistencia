@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'estilos/styleLogin.css' %}" type="text/css">
+    <title>Login</title>
+</head>
+<body>     
+    <header class="header_ucsm">
+        <div class="logos_ucsm">
+            <img class="img-ucsm" src="{% static 'images/logoUCSM.png' %}" alt="Logo UCSM" />
+            <img class="img-epis" src="{% static 'images/logoEPIS.png' %}" alt="Logo Epis" />
+            
+        </div>
+    </header>
+
+    <div>
+        <div class="content">
+            <img src="{% static 'images/logoJINIS.webp' %}" alt="logo jinis"/>
+            <h2 class="etiqueta">INICIAR SESIÓN - ADMINISTRADOR</h2>
+        </div>
+    </div>
+
+    <div class='wrapper'>
+        <form action="/platformAdmin/" method="POST">
+            {% csrf_token %}
+            <h1 class="labelCorreo">CORREO</h1>
+            <div class="input-box">
+                <input type="email" name="correo" required />
+            </div>
+
+            <h1 class="labelContraseña">CONTRASEÑA</h1>
+            <div class="input-box">
+                <input type="password" name="codigo" required />
+            </div>
+            
+            <button type="submit" class="buttonEntrar">Entrar</button>
+
+            <div class="enlacesLogin">
+                <a href="{% url 'Colaborador' %}" class="colaboradorEnlace">¿Eres colaborador?</a>
+                <a href="{% url 'Login' %}" class="administradorEnlace">¿Eres Participante?</a>
+                
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+/* static/css/styles.css */
+
+/* Estilos generales del cuerpo */
+body {
+    margin-left: 200px; /* Margen izquierdo para el sidebar */
+}
+
+main {
+    margin-left: 220px; /* Espacio adicional para el sidebar */
+    padding: 20px; /* Espaciado interno general */
+}
+
+/* Estilos específicos del sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 235px;
+    background-color: #A7CCED; /* Color de fondo del sidebar */
+    padding: 20px 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: flex;
+    text-decoration: none;
+    color: #333;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.sidebar a:hover {
+    background-color: #80c7ff; /* Color de fondo al pasar el mouse */
+}
+
+.sidebar a.active {
+    background-color: #4da6ff; /* Color de fondo cuando está seleccionado */
+    color: #fff;
+}
+
+.sidebar a i {
+    margin-right: 10px;
+}
+
+.logout {
+    position: absolute;
+    bottom: 20px;
+    left: 10px;
+}
+
+.logout a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.logout a:hover {
+    background-color: #c01616; /* Color de fondo al pasar el mouse */
+    color: white;
+}
+
+.logout a i {
+    margin-right: 10px;
+}
+
+.sidebar img {
+    width: 34px; /* Ancho de los iconos */
+    height: 34px; /* Altura de los iconos */
+    margin-right: 10px; /* Espacio entre el icono y el texto */
+    margin-bottom: 10px; /* Espacio entre el icono y el texto */
+    vertical-align: middle;
+}
+
+/* Estilos del header */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border-bottom: 3px solid #162652;
+    z-index: 2000;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.header img {
+    width: 150px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: bold;
+    color: #253E85;
+}

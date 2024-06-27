@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Ponencia - Interfaz de Administración</title>
+    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    <!-- Barra Lateral -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <h2>Registrar Ponencia</h2>
+        <form class="register-form">
+            <label for="ponente">Ponente:</label>
+            <select id="ponente" name="ponente" required>
+                <!-- Aquí se deberían cargar dinámicamente los ponentes registrados -->
+                <option value="1">Ponente 1</option>
+                <option value="2">Ponente 2</option>
+                <option value="3">Ponente 3</option>
+                <!-- Más opciones según los ponentes registrados -->
+            </select>
+
+            <label for="nombre_ponencia">Nombre de la Ponencia:</label>
+            <input type="text" id="nombre_ponencia" name="nombre_ponencia" required>
+
+            <div class="button-container">
+                <button type="submit" class="register-button">Registrar</button>
+                <button type="button" class="delete-button">Eliminar</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

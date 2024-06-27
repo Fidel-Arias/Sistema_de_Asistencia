@@ -1,0 +1,149 @@
+/* static/css/paginasAdmin.css */
+
+/* Estilos compartidos para las páginas de administración */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+.main {
+    max-width: 1200px;
+    margin-left: 20%;
+    margin-top: 3%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #253E85;
+    text-align: center;
+}
+
+.table-container {
+    max-height: 400px; /* Altura máxima para el scroll */
+    overflow-y: auto; /* Habilitar scroll vertical */
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.report-table th,
+.report-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.report-table th {
+    background-color: #f0f0f0;
+}
+
+.download-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.download-button {
+    background-color: #4da6ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.download-button:hover {
+    background-color: #80c7ff;
+}
+
+.register-form {
+    max-width: 600px;
+    margin: auto auto 30px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.reg-bloques {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.register-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #253E85;
+    font-weight: bold;
+}
+
+.register-form select,
+.register-form input {
+    width: calc(100% - 22px); /* Ajustar para compensar el padding */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.main-content {
+    max-width: 800px;
+    margin-left: 32%;
+    margin-top: 3%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.main-bloques{
+    max-width: 800px;
+    margin-left: 32%;
+    margin-top: 2%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.register-button,
+.delete-button {
+    background-color: #4da6ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 48%;
+    text-align: center;
+}
+
+.register-button:hover,
+.delete-button:hover {
+    background-color: #80c7ff;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+}
+
+.delete-button:hover {
+    background-color: #ff8080;
+}

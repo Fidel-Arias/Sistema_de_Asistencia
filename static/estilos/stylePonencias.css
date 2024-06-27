@@ -1,0 +1,206 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif; /* Cambia la fuente principal */
+    margin: 0;
+    padding: 0;
+}
+
+/* Top section */
+.top-section {
+    display: flex;
+    padding-left: 20px;
+    justify-content: left; /* Centrar contenido horizontalmente */
+    align-items: flex-end;
+    background:#fff;
+    text-align: left; /* Centrar texto dentro del div */
+    color: #000000; /* Color de texto */
+    position: relative; /* Posicionamiento relativo para elementos hijos */
+    overflow: hidden; /* Evita que la imagen sobresalga del contenedor */
+    min-height: 70px; /* Altura mínima para asegurar espacio */
+}
+
+.greeting {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Montserrat';
+    align-self: flex-end;
+    position: relative;
+    z-index: 2;
+}
+
+/* Container for dynamic boxes */
+.box-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+    justify-content: center; /* Centra los elementos horizontalmente */
+    padding: 20px;
+    gap: 20px; /* Espacio entre las cajas */
+    align-items: center;
+    margin-bottom: 20%;
+}
+
+/* Styling for individual boxes */
+.box {
+    background-color: #339ECB;
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 20px;
+    width: calc(33.333% - 40px); /* Ancho dinámico para tres columnas con espacio */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .box {
+        width: calc(50% - 40px); /* Dos columnas en pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 480px) {
+    .box {
+        width: calc(100% - 40px); /* Una columna en pantallas muy pequeñas */
+    }
+}
+
+.box-top {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.box-date, .box-time {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+/* Imagen y texto en el medio */
+.box-middle {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2%;
+}
+
+.box-middle img {
+    max-width: 100px; /* Ajusta el ancho máximo de la imagen según sea necesario */
+    height: auto; /* Altura automática */
+    margin-right: 20px; /* Espacio entre la imagen y el texto */
+}
+
+.box-middle p {
+    font-size: 16px;
+    color: #333;
+}
+
+.box-bottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0%;
+    width: 100%;  
+}
+
+.box-text-left   {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-right: 2px;
+    justify-content: flex-start; /* Alinear a la izquierda */
+    
+}
+
+ 
+.box-text-left p {
+    margin: 0;
+    font-size: 14px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar horizontalmente */
+    text-align: space-between; /* Alinear el texto dentro del contenedor */
+}
+
+ 
+ 
+
+.box-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Bottom section */
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    height: 12%;
+ 
+    position: fixed; /* Fija la posición al fondo de la pantalla */
+    bottom: 0; /* Posiciona en la parte inferior */
+    border-top: 1px solid #ccc;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-button {
+    background-color: #ffffff00;
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%; /* Ancho máximo igual al contenedor */
+    height: 15%; /* Altura automática según el ancho */
+}
+
+.profile-button img {
+    width: 20px; /* Ajusta el tamaño del icono según sea necesario */
+    height: 30px;
+    margin-bottom: 20px; /* Espacio entre el icono y el texto */
+}
+
+.left-button, .right-button {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: top;
+}
+
+.presentations-button {
+    background-color: #ffffff00;
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%; /* Ancho máximo igual al contenedor */
+    height: 15%; /* Altura automática según el ancho */
+}
+
+.presentations-button img {
+    width: 20px; /* Ajusta el tamaño del icono según sea necesario */
+    height: 20px;
+    margin-bottom: 0px; /* Espacio entre el icono y el texto */
+}
+
+/* Icon styling */
+.button img {
+    width: 50px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: 60px;
+    top: 0px;
+    margin-right: 1px; /* Espacio entre el icono y el texto */
+}

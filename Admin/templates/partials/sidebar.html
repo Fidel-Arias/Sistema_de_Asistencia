@@ -1,0 +1,43 @@
+<!-- templates/partials/sidebar.html -->
+{% load static %}
+<nav class="sidebar">
+    <ul>
+        <li>
+            <a href="{% url 'GenerarReporte' %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
+                <img src="{% static 'images/reporte.png' %}" alt="Icono 1">
+                Generar Reporte
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'RegistrarPonentes' %}" class="{% if current_page == 'registrar_ponentes' %}active{% endif %}">
+                <img src="{% static 'images/ponentes.png' %}" alt="Icono 2">
+                Registrar Ponentes
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'RegistrarBloques' %}" class="{% if current_page == 'registrar_bloques' %}active{% endif %}">
+                <img src="{% static 'images/bloques.png' %}" alt="Icono 3">
+                Registrar Bloques
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'RegistrarPonencia' %}" class="{% if current_page == 'registrar_ponencia' %}active{% endif %}">
+                <img src="{% static 'images/ponencia.png' %}" alt="Icono 4">
+                Registrar Ponencia
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'RegistrarUniversidades' %}" class="{% if current_page == 'registrar_universidades' %}active{% endif %}">
+                <img src="{% static 'images/universidades.png' %}" alt="Icono 5">
+                Registrar Universidades
+            </a>
+        </li>
+        <!-- Otros elementos de la barra lateral -->
+    </ul>
+    <div class="logout">
+        <a href="{% url 'Login' %}">
+            <img src="{% static 'images/cerrarSesion.png' %}" alt="Icono de Cerrar Sesión">
+            Cerrar Sesión
+        </a>
+    </div>
+</nav>

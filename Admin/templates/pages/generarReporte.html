@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Reportes - Interfaz de Administración</title>
+    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    <!-- Barra Lateral -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <main class="main-content-reporte main">
+        <h2>Generar Reporte</h2>
+        <div class="table-container">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Código Estudiante</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Universidad</th>
+                        <th>Congreso</th>
+                        <th>Fecha Registrada</th>
+                        <th>Hora Registrada</th>
+                        <th>Hora Inicio del Bloque</th>
+                        <th>Hora Fin del Bloque</th>
+                        <th>Día</th>
+                        <th>Dirección</th>
+                        <th>Ponencia</th>
+                        <th>Correo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ejemplo de fila de datos -->
+                    <tr>
+                        <td>Dato 1</td>
+                        <td>Dato 2</td>
+                        <td>Dato 3</td>
+                        <td>Dato 4</td>
+                        <td>Dato 5</td>
+                        <td>Dato 6</td>
+                        <td>Dato 7</td>
+                        <td>Dato 8</td>
+                        <td>Dato 9</td>
+                        <td>Dato 10</td>
+                        <td>Dato 11</td>
+                        <td>Dato 12</td>
+                        <td>Dato 13</td>
+                    </tr>
+                    <!-- Agregar más filas según sea necesario -->
+                </tbody>
+            </table>
+        </div>
+        <div class="download-button-container">
+            <button class="download-button">Descargar</button>
+        </div>
+    </main>
+</body>
+</html>
