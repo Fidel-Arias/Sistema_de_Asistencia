@@ -130,8 +130,7 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 200px; /* Espacio superior */
-    margin-bottom: 20px;
-    background-color: black;
+    margin-bottom: 300px ;
 }
 
 .QR-code img {
