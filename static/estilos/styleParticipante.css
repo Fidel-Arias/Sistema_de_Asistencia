@@ -3,6 +3,7 @@ body {
     font-family: Arial, sans-serif; /* Cambia la fuente principal */
     margin: 0;
     padding: 0;
+    height: 100%;
 }
 
 /* Top section */
@@ -121,13 +122,16 @@ body {
     background-color: #f0f0f0; /* Color de fondo del rectángulo */
     width: 70%; /* Ajusta el ancho según sea necesario */
     max-width: 300px; /* Opcional: límite de ancho máximo */
+     
 }
 
 /* QR Code section */
 .QR-code {
     display: flex;
     justify-content: center;
-    margin-top: 20px; /* Espacio superior */
+    margin-top: 200px; /* Espacio superior */
+    margin-bottom: 20px;
+    background-color: black;
 }
 
 .QR-code img {
