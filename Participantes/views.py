@@ -20,6 +20,7 @@ class viewParticipantes(viewsets.ModelViewSet):
             return response.Response({'detail': 'No existe este participante'}, status=status.HTTP_404_NOT_FOUND)
         
         serializer = ParticipanteSerializer(participante)
+        print('Requested codigo User: ', request.session.get('codparticipante'))
         print('probando:', serializer['email'].value)
         return render(request, 'participante.html', {'participante_data': serializer.data})
 

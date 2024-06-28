@@ -8,8 +8,7 @@ class viewPonencias(viewsets.ModelViewSet):
     queryset = MaePonencia.objects.all()
     serializer_class = PonenciasSerializer
 
-    def verPonencias(self, request):
-        codigo = request.session.get('codigo', None)
+    def verPonencias(self, request, codigo):
         print('Codigo ver: ', codigo)
         print('JSON: ', self.queryset)
-        return render(request, 'ponencias.html', {'ponencias': self.queryset, 'codigo': codigo})
+        return render(request, 'ponencias.html', {'ponencias': self.queryset, 'codigoParticipante': codigo})

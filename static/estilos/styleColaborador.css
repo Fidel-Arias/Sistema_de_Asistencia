@@ -1,0 +1,97 @@
+/* CSS ajustado para hacer responsive */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+}
+
+.welcomeContainer {
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+    background-color: #0A9EDC;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    max-width: 100%; /* Cambiado para que la imagen sea responsive */
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.welcomeContainer h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.container h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.codigo-input {
+    width: 100%; /* Ajustado para que el ancho sea responsive y tenga espacio para el borde */
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.btn-ingresar {
+    background-color: #253E85;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%; /* Ajustado para que el botón ocupe todo el ancho del contenedor */
+}
+
+.btn-ingresar:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para el botón de Cerrar Sesión */
+.footer {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+}
+
+.btn-cerrar-sesion {
+    background-color: #f44336;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 200px; /* Ajusta el ancho según necesites */
+    margin: auto; /* Centra horizontalmente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre el icono y el texto */
+}
+
+.btn-cerrar-sesion:hover {
+    background-color: #d32f2f;
+}
+
+.icono-cerrar-sesion {
+    width: 20px; /* Ajusta el tamaño del icono según necesites */
+    height: auto;
+}
+
+/* Estilos para los selectores */

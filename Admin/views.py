@@ -1,7 +1,16 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .serializers import AdminSerializer
-from .models import MaeAdministrador
+from Participantes.serializers import ParticipanteSerializer
+from Ponencia.serializers import PonenciasSerializer
+from Admin.models import MaeAdministrador
+from Participantes.models import MaeParticipantes
+from Bloque.models import MaeBloque
+from Bloque.serializers import BloqueSerializer
+from Ponencia.models import MaePonencia
+from Dia.models import MaeDia
+
+
 
 class adminView(viewsets.ViewSet):
     queryset = MaeAdministrador.objects.all()
@@ -12,7 +21,6 @@ class adminView(viewsets.ViewSet):
             'mensaje': 'Error en la pagina'
         }
         return render(request, 'interfazAdmin.html', contexto)
-
 
 
     def generar_reporte(self, request):
@@ -29,6 +37,7 @@ class adminView(viewsets.ViewSet):
     def cerrar_sesion(request):
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
     
+
 def ingresoAdmin(request, correo, pk):
     try:
         admin = MaeAdministrador.objects.get(correo=correo, contrasenia=pk)
@@ -38,3 +47,24 @@ def ingresoAdmin(request, correo, pk):
     serializer = AdminSerializer(admin)
     print("validacion: ", request.session.get('contrasenia'))
     return render(request, 'interfazAdmin.html', serializer.data)
+
+
+def generar_reporte_documento(self, request):
+    admin = MaeParticipantes.objects.all()
+    
+    parti = ParticipanteSerializer(admin)
+    print(parti['codParticipante'].value, {'apellido'}.value,['email'].value)
+    
+    admin2=MaePonencia.objects.all()
+    Ponen = PonenciasSerializer(admin2)
+    print(Ponen['nombre'])
+
+    admin3=MaeBloque.objects.all()
+    Bloq = BloqueSerializer(admin3)
+    print(Bloq['horainicio'].value,['horaFin'].value,['direccion'].value)
+
+
+
+
+
+        

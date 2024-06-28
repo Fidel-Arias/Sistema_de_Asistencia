@@ -1,4 +1,5 @@
 from django.db import models
+from Asistencia.models import TrsAsistencia
 
 # Create your models here.
 class MaeColaborador(models.Model):

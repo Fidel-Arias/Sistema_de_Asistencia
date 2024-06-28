@@ -34,7 +34,7 @@ def admin_logged_in(request):
                 return redirect(reverse('LoguingAdministrador') + '?error=Usuario o contraseña incorrectos')
     return redirect(reverse('LoguingAdministrador'))
 
-def colaborador_logged_in(request, pk):
+def colaborador_logged_in(request):
     if request.method == 'POST':
         correo = request.POST.get('correo')
         contrasenia = request.POST.get('codigo')
@@ -46,7 +46,7 @@ def colaborador_logged_in(request, pk):
                 urlDirect = reverse('Colaborador', args=[correo, contrasenia])
                 return redirect(urlDirect)
             except MaeColaborador.DoesNotExist:
-                return redirect(reverse('LoginColaborador') + '?error=Usuario o contraseña incorrectos')
+                return redirect(reverse('LoguingColaborador') + '?error=Usuario o contraseña incorrectos')
     return render(request, 'loginColaborador.html')
 
 def login(request):

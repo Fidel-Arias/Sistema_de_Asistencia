@@ -1,41 +1,145 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escáner de Código QR</title>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <title>Pantalla de Bienvenida</title>
+    <link rel="stylesheet" href="{% static 'estilos/styleColaborador.css' %}">
     <style>
-        #reader {
-            width: 100%;
-            height: 100%;
+        /* Estilos para el mensaje flotante */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+            white-space: nowrap;
         }
-        #qr-reader {
-            width: 500px;
-            margin: auto;
+
+        .toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
         }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;} 
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+        
     </style>
 </head>
 <body>
-    <h1>Escanear Código QR</h1>
-    <div id="qr-reader"></div>
-    <div id="qr-reader-results"></div>
+    <div class="welcomeContainer">
+        <img class="logo" src="{% static 'images/logoJINIS.webp' %}" alt="Logo">
+        <h2>Bienvenido, {{ colaborador_data.nombre }}</h2>
+    </div>
+    <div class="container">
+        <h2>REGISTRAR ASISTENCIA</h2>
+        <form  class="asistenciaForm" id="asistenciaForm" method="POST" action="{% url 'registrar_asistencia' %}">
+            {% csrf_token %}
+            <input type="text" id="codigo" name="codigo" class="codigo-input" placeholder="Ingresar código de alumno" required>
+            
+            <!-- Primer combobox para seleccionar el congreso -->
+            {% for congreso in congreso_data %}
+            <select class="combobox" name="id_congreso" id="congreso" required>
+                <option value="">Seleccionar congreso</option>
+                <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+            {% endfor %}
 
+            <!-- Segundo combobox para seleccionar el bloque -->
+            
+            <select class="combobox" name="id_bloque" id="id_bloque">
+                {% for bloque in bloques_data %}
+                    <option value="{{ bloque.idbloque }}">{{ bloque.iddia }}</option>
+                {% endfor %}
+            </select>
+            
+
+            <style>
+                .asistenciaForm .combobox {
+                    width: 100%;
+                    padding: 12px;
+                    border: none;
+                    border-radius: 15px;
+                    background-color: #f2f2f2;
+                    font-size: 16px;
+                    box-sizing: border-box;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                    appearance: none;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    background-image: url('data:image/svg+xml;utf8,<svg fill="#333" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>');
+                    background-repeat: no-repeat;
+                    background-position-x: calc(100% - 15px);
+                    background-position-y: center;
+                    cursor: pointer;
+                }
+
+                .asistenciaForm .combobox :focus {
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+                }
+
+                .asistenciaForm .combobox option {
+                    padding: 10px;
+                    border-bottom: 1px solid #ddd;
+                    background-color: white;
+                }
+
+                .asistenciaForm .combobox::-ms-expand {
+                    display: none;
+                }
+            </style>
+            
+            <button type="submit" class="btn-ingresar">Ingresar</button>
+        </form>
+        
+    </div>
+    <div class="footer">
+        <a href="{% url 'Login' %}" class="btn-cerrar-sesion">
+            <img src="{% static 'images/cerrarSesion.png' %}" alt="Cerrar Sesión" class="icono-cerrar-sesion">
+            Cerrar Sesión
+        </a>
+    </div>
+
+    <!-- Contenedor del mensaje flotante -->
+    {% if mensaje %}
+    <div id="toast" class="toast">{{ mensaje }}</div>
     <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            // Manejar el texto decodificado aquí
-            document.getElementById('qr-reader-results').innerText = `Código QR escaneado: ${decodedText}`;
-            console.log(`Código QR escaneado: ${decodedText}`, decodedResult);
-        }
-
-        function onScanFailure(error) {
-            // Manejar los errores de escaneo aquí
-            console.warn(`Error de escaneo: ${error}`);
-        }
-
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        document.addEventListener('DOMContentLoaded', function() {
+            var toast = document.getElementById("toast");
+            toast.className = "toast show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        });
     </script>
+    {% endif %}
 </body>
 </html>
