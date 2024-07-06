@@ -88,9 +88,9 @@ main {
 }
 
 /* Estilos del header */
-.site-header {
-    display: flex;
+/* .site-header {
     align-items: center;
+    width: 100%;
     justify-content: center;
     padding: 10px 20px;
     background-color: #ffffff;
@@ -114,4 +114,4 @@ main {
     font-size: 48px;
     font-weight: bold;
     color: #253E85;
-}
+} */

@@ -22,7 +22,7 @@
 
     <div class="content">
         <img class="jinis" src="{% static 'images/logoJINIS.webp' %}" alt="logo jinis"/>
-        <h2 class="etiqueta">INICIAR SESIÓN - COLABORADOR</h2>
+        <h2 class="etiqueta">INICIAR SESIÓN COLABORADOR</h2>
     </div>
 
     <div class='wrapper'>
@@ -47,6 +47,81 @@
             </div>
         </form>
     </div>
+    <style>
+        /*Responsive body*/
+        @media (max-width: 412px) {
+            body {
+                height: 100vh;
+            }
+
+            .content {
+                margin-top: 8rem;
+            }
+
+            .content img {
+                max-width: 85%;
+            }
+
+            .etiqueta {
+                font-size: 3.5rem;
+            }
+
+            .img-ucsm{
+                min-width: 55%;
+            }
+
+            .img-epis {
+                max-width: 30%;
+            }
+
+            .logos_ucsm {
+                padding: 2rem;
+            }
+
+            .wrapper {
+                width: 30rem;
+                margin: 0 auto;
+                height: 35rem;
+                display: table;
+            }
+
+            .wrapper form{
+                display: table-cell;
+                vertical-align: middle;
+            }
+
+            .labelCorreo {
+                font-size: 2.5rem;
+            }
+
+            .labelContraseña {
+                font-size: 2.5rem;
+            }
+
+            .input-box input[type="password"], .input-box input[type="email"]{
+                width: 100%;
+            }
+
+            .buttonEntrar{
+                width: 60%;
+            }
+
+            .enlacesLogin {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .enlacesLogin a {
+                margin: 0;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+        }
+    </style>
 </body>
 </html>
 

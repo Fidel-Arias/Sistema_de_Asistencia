@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="preload" href="{% static 'estilos/styleLogin.css' %}" as="style">
     <link rel="stylesheet" href="{% static 'estilos/styleLogin.css' %}" type="text/css">
     <title>Login</title>
-    
 </head>
 <body>     
     <header class="header_ucsm">
@@ -39,5 +38,68 @@
             </div>
         </form>
     </div>
+    <style>
+        /*Responsive body*/
+        @media (max-width: 412px) {
+            body {
+                height: 100vh;
+            }
+
+            .content {
+                margin-top: 8rem;
+            }
+
+            .content img {
+                max-width: 85%;
+            }
+
+            .etiqueta {
+                font-size: 3.5rem;
+            }
+
+            .img-ucsm{
+                min-width: 55%;
+            }
+
+            .img-epis {
+                max-width: 30%;
+            }
+
+            .logos_ucsm {
+                padding: 2rem;
+            }
+
+            .wrapper {
+                width: 30rem;
+                margin: 0 auto;
+                height: 35rem;
+                display: table;
+            }
+
+            .wrapper form{
+                display: table-cell;
+                vertical-align: middle;
+            }
+
+            .labelCodigo {
+                font-size: 2.5rem;
+            }
+
+            .input-box input[type="password"] {
+                width: 100%;
+            }
+
+            .buttonEntrar{
+                width: 60%;
+            }
+
+            .enlacesLogin {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+            }
+
+        }
+    </style>
 </body>
 </html>

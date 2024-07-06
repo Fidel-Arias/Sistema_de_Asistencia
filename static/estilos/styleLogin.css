@@ -20,27 +20,6 @@ body, html {
     
 }
 
-/*Responsive body*/
-
-/* @media (max-width: 412px) {
-    body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        font-family: Arial, sans-serif;
-        background-color: white;
-    }
-    .header_ucsm {
-        background-color: white;
-        display: flex;
-        justify-content: space-between;
-    }
-    .header_ucsm img{
-        max-height: 50px;
-    }
-} */
-
 /*Header*/
 .logos_ucsm{
     display: flex;

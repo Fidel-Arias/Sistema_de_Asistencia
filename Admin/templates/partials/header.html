@@ -1,8 +1,46 @@
 <!-- templates/partials/header.html -->
 {% load static %}
+<style>
+    /* Estilos del header */
+.site-header {
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border-bottom: 3px solid #162652;
+    z-index: 2000;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.header img {
+    width: 150px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.header .escudo__ucsm {
+    width: 4.5%;
+    height: auto;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: bold;
+    color: #253E85;
+}
+</style>
 <header class="site-header">
     <div class="header">
         <img src="{% static 'images/logoJINIS.webp' %}" alt="Logo JINIS">
         <h1>Sistema de Administración</h1>
+        <img class="escudo__ucsm" src="{% static 'images/Escudo-UCSM.png' %}" alt="Escudo UCSM">
     </div>        
 </header>
