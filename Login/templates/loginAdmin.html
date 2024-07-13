@@ -25,7 +25,7 @@
     </div>
 
     <div class='wrapper'>
-        <form action="/platformAdmin/" method="POST">
+        <form action="{% url 'Administrador' %}" method="POST">
             {% csrf_token %}
             <h1 class="labelCorreo">CORREO</h1>
             <div class="input-box">
@@ -34,7 +34,7 @@
 
             <h1 class="labelContraseña">CONTRASEÑA</h1>
             <div class="input-box">
-                <input type="password" name="codigo" required />
+                <input type="password" name="contrasenia" required />
             </div>
             
             <button type="submit" class="buttonEntrar">Entrar</button>
@@ -46,5 +46,80 @@
             </div>
         </form>
     </div>
+    <style>
+         /*Responsive body*/
+ @media (max-width: 412px) {
+    body {
+        height: 100vh;
+    }
+
+    .content {
+        margin-top: 8rem;
+    }
+
+    .content img {
+        max-width: 85%;
+    }
+
+    .etiqueta {
+        font-size: 3.5rem;
+    }
+
+    .img-ucsm{
+        min-width: 55%;
+    }
+
+    .img-epis {
+        max-width: 30%;
+    }
+
+    .logos_ucsm {
+        padding: 2rem;
+    }
+
+    .wrapper {
+        width: 30rem;
+        margin: 0 auto;
+        height: 35rem;
+        display: table;
+    }
+
+    .wrapper form{
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .labelCorreo {
+        font-size: 2.5rem;
+    }
+
+    .labelContraseña {
+        font-size: 2.5rem;
+    }
+
+    .input-box input[type="password"], .input-box input[type="email"]{
+        width: 100%;
+    }
+
+    .buttonEntrar{
+        width: 60%;
+    }
+
+    .enlacesLogin {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .enlacesLogin a {
+        margin: 0;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+}
+    </style>
 </body>
 </html>

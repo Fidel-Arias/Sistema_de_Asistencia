@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import adminView, ingresoAdmin
+from .views import adminView, ingresoAdmin, generar_reporte_documento
 
 urlpatterns = [
     path('', adminView.as_view({'get':'index'}), name='InterfazAdministrador'),
-    path('welcomeAdmin/<str:correo>/<str:pk>', ingresoAdmin, name='Administrador'),
-    path('generar_reporte/', adminView.as_view({'get':'generar_reporte'}), name='GenerarReporte'),
+    path('bienvenido/', ingresoAdmin, name='Administrador'),
+    path('generar_reporte/', generar_reporte_documento, name='GenerarReporte'),
     path('registrar_ponencias/', adminView.as_view({'get':'registrar_ponencia'}), name='RegistrarPonencia'),
     path('registrar_ponentes/', adminView.as_view({'get':'registrar_ponentes'}), name='RegistrarPonentes'),
     path('registrar_universidades/', adminView.as_view({'get':'registrar_universidades'}), name='RegistrarUniversidades'),

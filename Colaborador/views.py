@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from rest_framework import viewsets
 from .serializers import ColaboradorSerializer
 from .models import MaeColaborador
@@ -14,24 +15,37 @@ class Colaborador(viewsets.ViewSet):
     queryset = MaeColaborador.objects.all()
     serializer_class = ColaboradorSerializer
 
-    def ingresoColaborador(self, request, correo, pk):
-        try:
-            colaborador = MaeColaborador.objects.get(contrasenia=pk)
-        except MaeColaborador.DoesNotExist:
-            print("No existe chavo")
-            return render(request, 'loginColaborador.html', {'current_page': 'error_admin'})
-        colaborador_data = ColaboradorSerializer(colaborador)
-        print('probando:', colaborador_data['nombre'].value)
-        bloques_data = MaeBloque.objects.all()
-        congreso_data = MaeCongresoJinis.objects.all()
-        return render(request, 'colaborador.html', {'colaborador_data': colaborador_data.data, 'bloques_data': bloques_data, 'congreso_data': congreso_data})
+    def ingresoColaborador(self, request):
+        if request.method == "POST":
+            correo = request.POST.get('correo')
+            contrasenia = request.POST.get('contrasenia')
+            try:
+                colaborador = MaeColaborador.objects.get(correo=correo, contrasenia=contrasenia)
+                request.session['correoColaborador'] = correo
+                request.session['contraseniaColaborador'] = contrasenia
+            except MaeColaborador.DoesNotExist:
+                print("No existe")
+                return redirect(reverse('LoguingColaborador') + '?error=Usuario-o-contraseña-incorrectos')
+
+            colaborador_data = ColaboradorSerializer(colaborador)
+            bloques_data = MaeBloque.objects.all()
+            congreso_data = MaeCongresoJinis.objects.all()
+            return render(request, 'colaborador.html', {
+                'colaborador_data': colaborador_data.data, 
+                'bloques_data': bloques_data, 
+                'congreso_data': congreso_data, 
+                'correo': correo, 
+                'contrasenia': contrasenia
+            })
 
     def registrar_asistencia(self, request):
         if request.method == "POST":
             codigo = request.POST.get('codigo')
             id_bloque = request.POST.get('id_bloque')
             id_congreso = request.POST.get('id_congreso')
-            # print('ID BLOQUE: ', id_bloque)
+            correoColaborador = request.session.get('correoColaborador')
+            contraseniaColaborador = request.session.get('contraseniaColaborador')
+
             if not codigo:
                 return JsonResponse({'success': False, 'message': 'Código no proporcionado'}, status=400)
             
@@ -46,10 +60,17 @@ class Colaborador(viewsets.ViewSet):
                 mensaje = "Registro exitoso"
                 bloques_data = MaeBloque.objects.all()
                 congreso_data = MaeCongresoJinis.objects.all()
-                return render(request, 'colaborador.html', {'colaborador': None, 'mensaje': mensaje, 'bloques_data': bloques_data, 'congreso_data': congreso_data})
+                colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
+                colaborador_data = ColaboradorSerializer(colaborador)
+
+                return render(request, 'colaborador.html', {
+                    'mensaje': mensaje, 
+                    'bloques_data': bloques_data, 
+                    'congreso_data': congreso_data, 
+                    'colaborador_data': colaborador_data.data,
+                })
             
-            except Exception as e:
-                return JsonResponse({'success': False, 'message': str(e)}, status=500)
-            
+            except Exception:
+                return JsonResponse({'success': False, 'message': 'No existe el participante'}, status=500)
         
         return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)

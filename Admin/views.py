@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.urls import reverse
 from rest_framework import viewsets
 from .serializers import AdminSerializer
+from Asistencia.models import TrsAsistencia
+from Asistencia.serializers import AsistenciaSerializer
 from Participantes.serializers import ParticipanteSerializer
 from Ponencia.serializers import PonenciasSerializer
 from Admin.models import MaeAdministrador
@@ -38,30 +42,35 @@ class adminView(viewsets.ViewSet):
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
     
 
-def ingresoAdmin(request, correo, pk):
+def ingresoAdmin(request):
+    correoAdmin = request.POST.get('correo')
+    contraseniaAdmin = request.POST.get('contrasenia')
     try:
-        admin = MaeAdministrador.objects.get(correo=correo, contrasenia=pk)
+        admin = MaeAdministrador.objects.get(correo=correoAdmin, contrasenia=contraseniaAdmin)
+        request.session['correoAdmin'] = correoAdmin
+        request.session['contraseniaAdmin'] = contraseniaAdmin
+        serializer = AdminSerializer(admin)
+        return render(request, 'interfazAdmin.html', serializer.data)
     except MaeAdministrador.DoesNotExist:
         print("No existe chavo")
-        return render(request, 'login.html', {'current_page': 'error_admin'})
-    serializer = AdminSerializer(admin)
-    print("validacion: ", request.session.get('contrasenia'))
-    return render(request, 'interfazAdmin.html', serializer.data)
-
-
-def generar_reporte_documento(self, request):
-    admin = MaeParticipantes.objects.all()
+        return redirect(reverse('LoguingAdministrador') + '?error=Usuario-o-contraseña-incorrectos')
     
-    parti = ParticipanteSerializer(admin)
-    print(parti['codParticipante'].value, {'apellido'}.value,['email'].value)
-    
-    admin2=MaePonencia.objects.all()
-    Ponen = PonenciasSerializer(admin2)
-    print(Ponen['nombre'])
 
-    admin3=MaeBloque.objects.all()
-    Bloq = BloqueSerializer(admin3)
-    print(Bloq['horainicio'].value,['horaFin'].value,['direccion'].value)
+
+def generar_reporte_documento(request):
+    admin = TrsAsistencia.objects.all()
+    
+    asistencia = AsistenciaSerializer(admin, many=True)
+    print('Participantes: ', asistencia.data)
+    return JsonResponse({'success': True, 'data': asistencia.data})
+    
+    # admin2=MaePonencia.objects.all()
+    # Ponen = PonenciasSerializer(admin2)
+    # print(Ponen['nombre'])
+
+    # admin3=MaeBloque.objects.all()
+    # Bloq = BloqueSerializer(admin3)
+    # print(Bloq['horainicio'].value,['horaFin'].value,['direccion'].value)
 
 
 

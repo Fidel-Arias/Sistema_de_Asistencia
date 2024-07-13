@@ -5,5 +5,5 @@ from .models import TrsAsistencia
 class AsistenciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrsAsistencia
-        fields = '__all__'
+        fields = ('idcongreso','codparticipante','idbloque','fecha','hora','estado')
         read_only_fields = ('fecha', 'hora', 'estado')
