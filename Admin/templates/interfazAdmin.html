@@ -13,5 +13,35 @@
     <!-- Barra Lateral -->
     {% include 'partials/sidebar.html' %}
 
+    <!-- Contenido principal -->
+    <main class="container-Admin">
+        <div class="center">
+            <h1>Bienvenido al Sistema de Asistencia JINIS</h1>
+            <p>Esta es la interfaz de administración del sistema de asistencia JINIS.</p>
+        </div>
+    </main>
+
 </body>
+<style>
+    body{
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding-left: 100px;
+    }
+    .container-Admin{
+        text-align: center;
+        margin: 0;
+        height: 70vh;
+    }
+
+    .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+</style>
 </html>

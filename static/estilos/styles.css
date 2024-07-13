@@ -2,7 +2,7 @@
 
 /* Estilos generales del cuerpo */
 body {
-    margin-left: 200px; /* Margen izquierdo para el sidebar */
+    height: 100%; /* Margen izquierdo para el sidebar */
 }
 
 main {
