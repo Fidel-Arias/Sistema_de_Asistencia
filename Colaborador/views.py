@@ -45,23 +45,24 @@ class Colaborador(viewsets.ViewSet):
             id_congreso = request.POST.get('id_congreso')
             correoColaborador = request.session.get('correoColaborador')
             contraseniaColaborador = request.session.get('contraseniaColaborador')
+            bloques_data = MaeBloque.objects.all()
+            congreso_data = MaeCongresoJinis.objects.all()
+            colaborador_data = None
 
             if not codigo:
                 return JsonResponse({'success': False, 'message': 'Código no proporcionado'}, status=400)
             
             try:
+                colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
+                colaborador_data = ColaboradorSerializer(colaborador)
                 nueva_asistencia = TrsAsistencia(
                     idcongreso_id=id_congreso,
                     codparticipante_id=codigo,
                     idbloque_id=id_bloque,
                 )
-                nueva_asistencia.save()
-                
+
+                nueva_asistencia.save()    
                 mensaje = "Registro exitoso"
-                bloques_data = MaeBloque.objects.all()
-                congreso_data = MaeCongresoJinis.objects.all()
-                colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
-                colaborador_data = ColaboradorSerializer(colaborador)
 
                 return render(request, 'colaborador.html', {
                     'mensaje': mensaje, 
@@ -71,6 +72,7 @@ class Colaborador(viewsets.ViewSet):
                 })
             
             except Exception:
-                return JsonResponse({'success': False, 'message': 'No existe el participante'}, status=500)
+                print(colaborador_data.data)
+                return render(request, 'colaborador.html', {'colaborador_data': colaborador_data.data, 'mensaje': 'Error al guardar la asistencia','bloques_data': bloques_data, 'congreso_data': congreso_data})
         
         return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)

@@ -30,7 +30,9 @@ class adminView(viewsets.ViewSet):
     def generar_reporte(self, request):
         asistenciaObjetcs = TrsAsistencia.objects.all()
         listaAsistencia = AsistenciaSerializer(asistenciaObjetcs, many=True)
-        return render(request, 'pages/generarReporte.html', {'listaAsistencia': listaAsistencia.data})
+        return render(request, 'pages/generarReporte.html', {'current_page':'generar_reportes', 'listaAsistencia': listaAsistencia.data})
+    def registrar_colaboradores(self, request):
+        return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores'})
     def registrar_ponentes(self, request):
         return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes'})
     def registrar_bloques(self, request):
