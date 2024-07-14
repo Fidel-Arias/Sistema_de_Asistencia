@@ -1,13 +1,12 @@
 {% load static %}
 {% load custom_filters %}
-{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar Reportes - Interfaz de Administración</title>
+    <title>Generar Reportes</title>
     <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
     <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
 </head>
@@ -46,7 +45,7 @@
                         <td>{{participante.codparticipante.apellido}}</td>
                         <td>{{participante.iduniversidad.nombre}}</td>
                         <td>{{participante.idcongreso.nombre}}</td>
-                        <td>{{participante.hora|time:"H"}}</td>
+                        <td>{{participante.hora}}</td>
                         <td>{{participante.idbloque.horainicio}}</td>
                         <td>{{participante.idbloque.horafin}}</td>
                         <td>{{participante.fecha|format_fecha}}</td>
