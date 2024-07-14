@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class MaeDia(models.Model):
     iddia = models.AutoField(primary_key=True)
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateField(blank=False, null=False)
 
     class Meta:
         managed = False
