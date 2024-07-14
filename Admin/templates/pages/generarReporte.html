@@ -1,4 +1,6 @@
 {% load static %}
+{% load custom_filters %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="es">
@@ -27,33 +29,31 @@
                         <th>Apellido</th>
                         <th>Universidad</th>
                         <th>Congreso</th>
-                        <th>Fecha Registrada</th>
                         <th>Hora Registrada</th>
                         <th>Hora Inicio del Bloque</th>
                         <th>Hora Fin del Bloque</th>
                         <th>Día</th>
                         <th>Dirección</th>
                         <th>Ponencia</th>
-                        <th>Correo</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Ejemplo de fila de datos -->
+                    {% for participante in listaAsistencia %}
                     <tr>
-                        <td>Dato 1</td>
-                        <td>Dato 2</td>
-                        <td>Dato 3</td>
-                        <td>Dato 4</td>
-                        <td>Dato 5</td>
-                        <td>Dato 6</td>
-                        <td>Dato 7</td>
-                        <td>Dato 8</td>
-                        <td>Dato 9</td>
-                        <td>Dato 10</td>
-                        <td>Dato 11</td>
-                        <td>Dato 12</td>
-                        <td>Dato 13</td>
+                        <td>{{participante.codparticipante.codparticipante}}</td>
+                        <td>{{participante.codparticipante.nombre}}</td>
+                        <td>{{participante.codparticipante.apellido}}</td>
+                        <td>{{participante.iduniversidad.nombre}}</td>
+                        <td>{{participante.idcongreso.nombre}}</td>
+                        <td>{{participante.hora|time:"H"}}</td>
+                        <td>{{participante.idbloque.horainicio}}</td>
+                        <td>{{participante.idbloque.horafin}}</td>
+                        <td>{{participante.fecha|format_fecha}}</td>
+                        <td>{{participante.idbloque.direccion}}</td>
+                        <td>{{participante.idponencia.nombre}}</td>
                     </tr>
+                    {% endfor %}
                     <!-- Agregar más filas según sea necesario -->
                 </tbody>
             </table>
@@ -62,6 +62,11 @@
             <button class="download-button">Descargar</button>
         </div>
     </main>
+    <style>
+        .main {
+            max-width: 1270px;
+        }
+    </style>
 </body>
 {%for }
 </html>
