@@ -6,3 +6,4 @@ class AdminSerializer(serializers.Serializer):
         model = MaeAdministrador
         fields = ('idadministrador', 'nombre', 'apellido', 'correo', 'contrasenia')
         read_only_fields = ('idadministrador')
+    
