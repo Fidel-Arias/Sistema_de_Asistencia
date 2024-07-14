@@ -32,6 +32,12 @@
                 Registrar Universidades
             </a>
         </li>
+        <li>
+            <a href="{% url 'RegistrarColaboradores' %}" class="{% if current_page == 'registrar_colaboradores' %}active{% endif %}">
+                <img src="{% static 'images/colaboradores_icon.png' %}" alt="Icono 5">
+                Registrar Colaboradores
+            </a>
+        </li>
         <!-- Otros elementos de la barra lateral -->
     </ul>
     <div class="logout">
