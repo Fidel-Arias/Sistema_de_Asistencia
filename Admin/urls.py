@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import adminView, ingresoAdmin, generar_reporte_documento
+from .views import adminView, ingresoAdmin
 
 urlpatterns = [
     path('', adminView.as_view({'get':'index'}), name='InterfazAdministrador'),

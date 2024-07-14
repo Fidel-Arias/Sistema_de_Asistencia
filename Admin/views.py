@@ -28,7 +28,9 @@ class adminView(viewsets.ViewSet):
 
 
     def generar_reporte(self, request):
-        return render(request, 'pages/generarReporte.html', {'current_page': 'generar_reportes'})
+        asistenciaObjetcs = TrsAsistencia.objects.all()
+        listaAsistencia = AsistenciaSerializer(asistenciaObjetcs, many=True)
+        return render(request, 'pages/generarReporte.html', {'listaAsistencia': listaAsistencia.data})
     def registrar_ponentes(self, request):
         return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes'})
     def registrar_bloques(self, request):
@@ -55,22 +57,6 @@ def ingresoAdmin(request):
         print("No existe chavo")
         return redirect(reverse('LoguingAdministrador') + '?error=Usuario-o-contraseña-incorrectos')
     
-
-
-def generar_reporte_documento(request):
-    admin = TrsAsistencia.objects.all()
-    
-    asistencia = AsistenciaSerializer(admin, many=True)
-    print('Participantes: ', asistencia.data)
-    return JsonResponse({'success': True, 'data': asistencia.data})
-    
-    # admin2=MaePonencia.objects.all()
-    # Ponen = PonenciasSerializer(admin2)
-    # print(Ponen['nombre'])
-
-    # admin3=MaeBloque.objects.all()
-    # Bloq = BloqueSerializer(admin3)
-    # print(Bloq['horainicio'].value,['horaFin'].value,['direccion'].value)
 
 
 
