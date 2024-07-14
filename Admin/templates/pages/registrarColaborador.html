@@ -1,0 +1,77 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Colaborador</title>
+    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    <!-- Barra Lateral -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <h2>Registrar Colaborador</h2>
+        <form class="register-form">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="apellido">Apellidos</label>
+            <input type="text" id="apellido" name="apellido" required>
+
+            <label for="correo">Correo</label>
+            <input type="email" id="correo" name="correo" required>
+
+            <label for="contrasenia">Contraseña</label>
+            <input type="password" id="contrasenia" name="contrasenia" required>
+
+            <label for="contrasenia">Tipo de Usuario</label>
+            <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
+                <option value="">Seleccionar tipo de usuario...</option>
+                <option value=""></option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+
+            <label for="bloque">Bloque</label>
+            <select class="combobox" name="bloque" id="bloque" required>
+                <option value="">Seleccionar el bloque...</option>
+                <option value=""></option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+
+            <label for="congreso">Congreso</label>
+            <select class="combobox" name="congreso" id="congreso" required>
+                <option value="">Seleccionar el congreso...</option>
+                <option value=""></option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+
+            <div class="button-container">
+                <button type="submit" class="register-button">Registrar</button>
+                <button type="button" class="delete-button">Eliminar</button>
+            </div>
+        </form>
+    </main>
+</body>
+<style>
+    .main-content{
+        margin-top: 1.3%;
+        margin-bottom: 1.3%;
+    }
+    #tipoUsuario{
+        width: 100%;
+    }
+    #congreso{
+        width: 100%;
+    }
+    #bloque{
+        width: 100%;
+    }
+</style>
+</html>
