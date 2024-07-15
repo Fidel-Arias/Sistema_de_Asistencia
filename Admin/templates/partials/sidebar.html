@@ -9,27 +9,27 @@
             </a>
         </li>
         <li>
+            <a href="{% url 'RegistrarCongreso' %}" class="{% if current_page == 'registrar_congreso' %}active{% endif %}">
+                <img src="{% static 'images/congreso_icon.png' %}" alt="Icono 5">
+                Registrar Congreso
+            </a>
+        </li>
+        <li>
             <a href="{% url 'RegistrarPonentes' %}" class="{% if current_page == 'registrar_ponentes' %}active{% endif %}">
-                <img src="{% static 'images/ponentes.png' %}" alt="Icono 2">
+                <img src="{% static 'images/ponentes_icon.png' %}" alt="Icono 2">
                 Registrar Ponentes
             </a>
         </li>
         <li>
             <a href="{% url 'RegistrarPonencia' %}" class="{% if current_page == 'registrar_ponencia' %}active{% endif %}">
-                <img src="{% static 'images/ponencia.png' %}" alt="Icono 4">
+                <img src="{% static 'images/ponencia_icon.png' %}" alt="Icono 4">
                 Registrar Ponencia
             </a>
         </li>
         <li>
             <a href="{% url 'RegistrarBloques' %}" class="{% if current_page == 'registrar_bloques' %}active{% endif %}">
-                <img src="{% static 'images/bloques.png' %}" alt="Icono 3">
+                <img src="{% static 'images/bloques_icon.png' %}" alt="Icono 3">
                 Registrar Bloques
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'RegistrarCongreso' %}" class="{% if current_page == 'registrar_congreso' %}active{% endif %}">
-                <img src="{% static 'images/universidades.png' %}" alt="Icono 5">
-                Registrar Congreso
             </a>
         </li>
         <li>
