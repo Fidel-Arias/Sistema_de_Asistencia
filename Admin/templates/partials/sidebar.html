@@ -15,21 +15,21 @@
             </a>
         </li>
         <li>
-            <a href="{% url 'RegistrarBloques' %}" class="{% if current_page == 'registrar_bloques' %}active{% endif %}">
-                <img src="{% static 'images/bloques.png' %}" alt="Icono 3">
-                Registrar Bloques
-            </a>
-        </li>
-        <li>
             <a href="{% url 'RegistrarPonencia' %}" class="{% if current_page == 'registrar_ponencia' %}active{% endif %}">
                 <img src="{% static 'images/ponencia.png' %}" alt="Icono 4">
                 Registrar Ponencia
             </a>
         </li>
         <li>
-            <a href="{% url 'RegistrarUniversidades' %}" class="{% if current_page == 'registrar_universidades' %}active{% endif %}">
+            <a href="{% url 'RegistrarBloques' %}" class="{% if current_page == 'registrar_bloques' %}active{% endif %}">
+                <img src="{% static 'images/bloques.png' %}" alt="Icono 3">
+                Registrar Bloques
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'RegistrarCongreso' %}" class="{% if current_page == 'registrar_congreso' %}active{% endif %}">
                 <img src="{% static 'images/universidades.png' %}" alt="Icono 5">
-                Registrar Universidades
+                Registrar Congreso
             </a>
         </li>
         <li>
