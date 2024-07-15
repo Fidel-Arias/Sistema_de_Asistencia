@@ -13,6 +13,7 @@ from Bloque.models import MaeBloque
 from Bloque.serializers import BloqueSerializer
 from Ponencia.models import MaePonencia
 from Dia.models import MaeDia
+from Ponente.models import MaePonente
 
 
 
@@ -34,7 +35,33 @@ class adminView(viewsets.ViewSet):
     def registrar_colaboradores(self, request):
         return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores'})
     def registrar_ponentes(self, request):
-        return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes'})
+        if request.method == 'POST':
+            nombrePonente = request.POST.get('nombre')
+            apellidoPonente = request.POST.get('apellido')
+            mensaje = ''
+            status = 0
+            nombrePonente = nombrePonente.strip()
+            apellidoPonente = apellidoPonente.strip()
+            try:
+                if (not(MaePonente.objects.filter(nombre=nombrePonente, apellido=apellidoPonente).exists())):
+                    nuevo_ponente = MaePonente(
+                        nombre=nombrePonente,
+                        apellido=apellidoPonente
+                    )
+                    nuevo_ponente.save()
+                    mensaje = 'Ponente registrado con éxito'
+                    status = 200
+                else:
+                    mensaje = 'Ya existe el ponente'
+                    status = 500
+                return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes', 'message': mensaje, 'status': status})
+            except Exception as e:
+                mensaje = 'Error al registrar ponente'
+                status = 500
+                return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes', 'message': mensaje, 'status': status})
+        else:
+            return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes'})
+
     def registrar_bloques(self, request):
         return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques'})
     def registrar_ponencia(self, request):
