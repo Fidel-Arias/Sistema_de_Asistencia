@@ -65,9 +65,34 @@ class adminView(viewsets.ViewSet):
     def registrar_bloques(self, request):
         return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques'})
     def registrar_ponencia(self, request):
-        return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia'})
-    def registrar_universidades(self, request):
-        return render(request, 'pages/registrarUniversidades.html', {'current_page': 'registrar_universidades'})
+        if request.method == 'POST':
+            ponentes = MaePonente.objects.all()
+            ponente = request.POST.get('ponente')
+            nombrePonencia = request.POST.get('nombre_ponencia')
+            print("Ponente seleccionado:", ponente)
+            print("Ponencia seleccionado:", nombrePonencia)
+            if (not(MaePonencia.objects.filter(nombre=nombrePonencia).exists())):
+                print("vista: ", MaePonente.objects.get(pk=ponente))
+                nueva_ponencia = MaePonencia(
+                    nombre=nombrePonencia,
+                    idponente=MaePonente.objects.get(pk=ponente)
+                )
+                nueva_ponencia.save()
+                mensaje = 'Ponencia registrada con éxito'
+                status = 200
+            else:
+                mensaje = 'Ya existe la ponencia'
+                status = 500
+            return render(request, 'pages/registrarPonencia.html', {'current_page':'registrar_ponencia', 'message': mensaje, 'status':status, 'ponentes': ponentes})
+        else:
+            if ((MaePonente.objects.exists())):
+                ponentes = MaePonente.objects.all()
+                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes})
+            else:
+                print("si entre")
+                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'message': 'No hay ponentes registrados'})
+    def registrar_congreso(self, request):
+        return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_universidades'})
 
     def cerrar_sesion(request):
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
