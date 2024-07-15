@@ -25,11 +25,11 @@
         <h2>Registrar Ponente</h2>
         <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' %}">
             {% csrf_token %}
-            <label for="nombre">Nombre del Ponente:</label>
+            <label for="nombre">Nombre del Ponente</label>
             <!-- onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()"  convierte la entrada del teclado en mayuscula -->
             <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
-            <label for="apellido">Apellido del Ponente:</label>
+            <label for="apellido">Apellido del Ponente</label>
             <input type="text" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
             <div class="button-container">

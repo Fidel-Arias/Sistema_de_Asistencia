@@ -17,19 +17,25 @@
 
     <!-- Contenido principal -->
     <main class="main-content">
+        {% if message %}
+            <div id="message" class="message {% if status == 200 %}success{% else %}error{% endif %}">
+                {{ message }}
+            </div>
+        {% endif %}
         <h2>Registrar Ponencia</h2>
-        <form class="register-form">
-            <label for="ponente">Ponente:</label>
+        <form class="register-form" method="POST" action="{% url 'RegistrarPonencia' %}">
+            <label for="ponente">Ponente</label>
+            
             <select id="ponente" name="ponente" required>
                 <!-- Aquí se deberían cargar dinámicamente los ponentes registrados -->
-                <option value="1">Ponente 1</option>
-                <option value="2">Ponente 2</option>
-                <option value="3">Ponente 3</option>
+                <option value="" disabled selected>Seleccionar un ponente</option>
+                {% for ponente in ponentes %}
+                <option value="{{ponente.idponente}}">{{ponente.nombre}} {{ponente.apellido}}</option>
+                {% endfor %}
                 <!-- Más opciones según los ponentes registrados -->
             </select>
-
-            <label for="nombre_ponencia">Nombre de la Ponencia:</label>
-            <input type="text" id="nombre_ponencia" name="nombre_ponencia" required>
+            <label for="nombre_ponencia">Nombre de la Ponencia</label>
+            <input type="text" id="nombre_ponencia" name="nombre_ponencia" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
             <div class="button-container">
                 <button type="submit" class="register-button">Registrar</button>
@@ -38,4 +44,37 @@
         </form>
     </main>
 </body>
+<style>
+    .message {
+        position: absolute;
+        margin: 0;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        width: 780px;
+        bottom: 20%;
+    }
+    .message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    #ponente{
+        width: 100%;
+    }
+</style>
+<script>
+    // Ocultar el mensaje después de 3 segundos
+    setTimeout(function() {
+        var message = document.getElementById('message');
+        if (message) {
+            message.style.display = 'none';
+        }
+    }, 3000); // 3000 milisegundos = 3 segundos
+</script>
 </html>
