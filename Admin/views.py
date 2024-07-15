@@ -6,7 +6,6 @@ from .serializers import AdminSerializer
 from Asistencia.models import TrsAsistencia
 from Asistencia.serializers import AsistenciaSerializer
 from Admin.models import MaeAdministrador
-from Participantes.models import MaeParticipantes
 from Bloque.models import MaeBloque
 from Ponencia.models import MaePonencia
 from Dia.models import MaeDia
