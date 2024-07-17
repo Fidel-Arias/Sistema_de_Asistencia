@@ -12,7 +12,7 @@ Luego, donde quieras mostrar la fecha formateada:
 '''
 
 from django import template
-from ..models import meses  # importar la función meses de tu models.py
+from Dia.models import meses  # importar la función meses de tu models.py
 
 register = template.Library()
 
