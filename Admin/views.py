@@ -12,6 +12,7 @@ from Ponente.models import MaePonente
 from CongresoJINIS.models import MaeCongresoJinis
 from Colaborador.models import MaeColaborador
 from tipoUsuario.models import MaeTipoUsuario
+from Bloque.serializers import BloqueSerializer
 import pandas as pd
 from datetime import date
 
@@ -100,37 +101,47 @@ class adminView(viewsets.ViewSet):
 
     def registrar_bloques(self, request):
         lista_ponencias = MaePonencia.objects.all()
-        lista_dias = MaeDia.objects.all() 
+        lista_dias = MaeDia.objects.all()
+        hora_final_bd = MaeBloque.objects.last() #Obtiene el ultimo dato ingresado en la base de datos
+        print(hora_final_bd.horafin)
         if request.method == 'POST':
             ponencia = request.POST.get('ponencia')
             dia = request.POST.get('dia')
             horaInicio = request.POST.get('hora_inicio')
             horaFin = request.POST.get('hora_fin')
             direccion = request.POST.get('direccion')
-            if not MaeBloque.objects.filter(idponencia=ponencia).exists(): #verificar el auditorio
-                try:
-                    if horaInicio == horaFin:
-                        mensaje = "La hora de inicio y fin deben ser diferentes"
-                        status = 500
-                    elif horaFin < horaInicio:
-                        mensaje = "La hora de inicio no puede ser mayor a la hora de fin"
-                        status = 500
+            if not MaeBloque.objects.filter(idponencia=ponencia).exists(): #verificar el auditorio la hora que se esta ocupando 
+                if not MaeBloque.objects.filter(horainicio=horaInicio, horafin=horaFin,  direccion=direccion):
+                    if not horaInicio > hora_final_bd.horafin.__str__():
+                        try:
+                            if horaInicio == horaFin: #mas validaciones validar que bloques se usa el auditorio y comparar con los que se vana ingresar para evitar choques
+                                mensaje = "La hora de inicio y fin deben ser diferentes"
+                                status = 500
+                            elif horaFin < horaInicio:
+                                mensaje = "La hora de inicio no puede ser mayor a la hora de fin"
+                                status = 500
+                            else:
+                                nuevo_bloque = MaeBloque(
+                                    idponencia=MaePonencia.objects.get(idponencia=ponencia),
+                                    iddia= MaeDia.objects.get(iddia=dia),
+                                    horainicio=horaInicio,
+                                    horafin=horaFin,
+                                    direccion=direccion
+                                )
+                                nuevo_bloque.save()
+                                mensaje = "El bloque ha sido registrado"
+                                status = 200
+                        except Exception:
+                            mensaje = "Error al registara el bloque"
+                            status = 500
                     else:
-                        nuevo_bloque = MaeBloque(
-                            idponencia=MaePonencia.objects.get(idponencia=ponencia),
-                            iddia= MaeDia.objects.get(iddia=dia),
-                            horainicio=horaInicio,
-                            horafin=horaFin,
-                            direccion=direccion
-                        )
-                        nuevo_bloque.save()
-                        mensaje = "El bloque ha sido registrado"
-                        status = 200
-                except Exception:
-                    mensaje = "El bloque con la ponencia ya existe"
+                        mensaje = "La hora de inicio debe ser mayor a la hora final del bloque anterior"
+                        status = 500
+                else:
+                    mensaje = "El auditorio ya esta siendo ocupado en la hora indicada"
                     status = 500
             else:
-                mensaje = "La ponencia ya existe"
+                mensaje = "El bloque con la ponencia ya existe"
                 status = 500
             return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques', 'ponencias': lista_ponencias, 'dias': lista_dias, 'message': mensaje, 'status': status})
         else:
