@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'Ponente',
     'tipoDocumento',
     'tipoParticipante',
+    'tipoUsuario',
     'Universidad',
     'rest_framework',
 ]
