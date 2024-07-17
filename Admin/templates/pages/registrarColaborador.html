@@ -19,15 +19,15 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <h2>Registrar Colaborador</h2>
-        <form class="register-form">
+        <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' %}">
             <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
             <label for="apellido">Apellidos</label>
-            <input type="text" id="apellido" name="apellido" required>
+            <input type="text" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
             <label for="correo">Correo</label>
-            <input type="email" id="correo" name="correo" required>
+            <input type="email" id="correo" name="correo" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toLowerCase()">
 
             <label for="contrasenia">Contraseña</label>
             <input type="password" id="contrasenia" name="contrasenia" required>
@@ -35,22 +35,25 @@
             <label for="contrasenia">Tipo de Usuario</label>
             <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
                 <option value="" disabled selected>Seleccionar tipo de usuario</option>
-                <option value=""></option>
-                <!-- Agrega más opciones según sea necesario -->
+                {% for usuario in tiposUsuario %}
+                <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
+                {% endfor %}
             </select>
 
             <label for="bloque">Bloque</label>
             <select class="combobox" name="bloque" id="bloque" required>
                 <option value="" disabled selected>Seleccionar el bloque</option>
-                <option value=""></option>
-                <!-- Agrega más opciones según sea necesario -->
+                {% for bloque in bloques %}
+                <option value="{{bloque.idbloque}}">{{bloque}}</option>
+                {% endfor %}
             </select>
 
             <label for="congreso">Congreso</label>
             <select class="combobox" name="congreso" id="congreso" required>
                 <option value="" disabled selected>Seleccionar el congreso</option>
-                <option value=""></option>
-                <!-- Agrega más opciones según sea necesario -->
+                {% for congreso in lista_congresos %}
+                <option value="{{congrso.idcongreso}}">{{congreso.nombre}}</option>
+                {% endfor %}
             </select>
 
             <div class="button-container">
