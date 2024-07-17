@@ -11,9 +11,9 @@ from Dia.models import MaeDia
 from Ponente.models import MaePonente
 from CongresoJINIS.models import MaeCongresoJinis
 from Colaborador.models import MaeColaborador
+from tipoUsuario.models import MaeTipoUsuario
 import pandas as pd
 from datetime import date
-from tipoParticipante.models import MaeTipoParticipante
 
 class adminView(viewsets.ViewSet):
     queryset = MaeAdministrador.objects.all()
@@ -31,10 +31,13 @@ class adminView(viewsets.ViewSet):
         listaAsistencia = AsistenciaSerializer(asistenciaObjetcs, many=True)
         return render(request, 'pages/generarReporte.html', {'current_page':'generar_reportes', 'listaAsistencia': listaAsistencia.data})
     def registrar_colaboradores(self, request):
-        tiposUsuario = MaeTipoParticipante.objects.all()
+        tiposUsuario = MaeTipoUsuario.objects.all()
         bloques = MaeBloque.objects.all()
         congresos = MaeCongresoJinis.objects.all()
         if request.method == 'POST':
+            idTipoUsuario = request.POST.get('tipoUsuario')
+            idbloque = request.POST.get('bloque')
+            idcongreso = request.POST.get('congreso')
             nombreColaborador = request.POST.get('nombre')
             apellidoColaborador = request.POST.get('apellido')
             correoColaborador = request.POST.get('correo')
@@ -44,13 +47,27 @@ class adminView(viewsets.ViewSet):
             nombreColaborador = nombreColaborador.strip()
             correoColaborador = correoColaborador.strip()
             try:
-                if (not(MaeColaborador.objects.filter(nombre=nombreColaborador, apellido=apellidoColaborador, correo=correoColaborador).exists())):
+                if (not(MaeColaborador.objects.filter(nombre=nombreColaborador, apellido=apellidoColaborador, idbloque=idbloque).exists())):
                     nuevo_colaborador = MaeColaborador(
-                        nombre=nombreColaborador,)
-            except Exception:
+                        nombre=nombreColaborador,
+                        apellido=apellidoColaborador,
+                        correo=correoColaborador,
+                        contrasenia=contraseniaColaborador,
+                        idtipo=MaeTipoUsuario.objects.get(pk=idTipoUsuario),
+                        idbloque=MaeBloque.objects.get(pk=idbloque),
+                        idcongreso=MaeCongresoJinis.objects.get(pk=idcongreso)
+                    )
+                    nuevo_colaborador.save()
+                    mensaje = 'Colaborador registrado con éxito'
+                    status = 200
+                else:
+                    mensaje = 'Ya existe el colaborador en el bloque seleccionado'
+                    status = 500
+            except Exception as e:
                 mensaje = 'Error al registrar colaborador'
+                print(e)
                 status = 500
-                return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'message': mensaje, 'status': status})
+            return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'message': mensaje, 'status': status, 'tiposUsuario':tiposUsuario, 'bloques':bloques, 'lista_congresos':congresos})
         else:
             return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'tiposUsuario':tiposUsuario, 'bloques':bloques, 'lista_congresos':congresos})
     def registrar_ponentes(self, request):
