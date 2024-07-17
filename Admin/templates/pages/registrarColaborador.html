@@ -18,6 +18,11 @@
 
     <!-- Contenido principal -->
     <main class="main-content">
+        {% if message %}
+            <div id="message" class="message {% if status == 200 %}success{% else %}error{% endif %}">
+                {{ message }}
+            </div>
+        {% endif %}
         <h2>Registrar Colaborador</h2>
         <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' %}">
             <label for="nombre">Nombre</label>
@@ -52,7 +57,7 @@
             <select class="combobox" name="congreso" id="congreso" required>
                 <option value="" disabled selected>Seleccionar el congreso</option>
                 {% for congreso in lista_congresos %}
-                <option value="{{congrso.idcongreso}}">{{congreso.nombre}}</option>
+                <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
                 {% endfor %}
             </select>
 
@@ -77,5 +82,33 @@
     #bloque{
         width: 100%;
     }
+    .message {
+        position: absolute;
+        margin: 0;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        width: 780px;
+        bottom: 82%;
+    }
+    .message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
 </style>
+<script>
+    // Ocultar el mensaje después de 3 segundos
+    setTimeout(function() {
+        var message = document.getElementById('message');
+        if (message) {
+            message.style.display = 'none';
+        }
+    }, 3000); // 3000 milisegundos = 3 segundos
+</script>
 </html>
