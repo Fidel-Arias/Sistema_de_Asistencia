@@ -57,7 +57,7 @@
 <body>
     <div class="welcomeContainer">
         <img class="logo" src="{% static 'images/logoJINIS.webp' %}" alt="Logo">
-        <h2>Bienvenido, {{ colaborador_data.nombre }}</h2>
+        <h2>BIENVENIDO, {{ colaborador_data.nombre }}</h2>
     </div>
     <div class="container">
         <h2>REGISTRAR ASISTENCIA</h2>
@@ -66,19 +66,21 @@
             <input type="text" id="codigo" name="codigo" class="codigo-input" placeholder="Ingresar código de alumno" required>
             
             <!-- Primer combobox para seleccionar el congreso -->
-            {% for congreso in congreso_data %}
+            
             <select class="combobox" name="id_congreso" id="congreso" required>
-                <option value="">Seleccionar congreso</option>
-                <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
+                <option value="" disabled selected>Seleccionar congreso</option>
+                {% for congreso in congreso_data %}
+                    <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
+                {% endfor %}
                 <!-- Agrega más opciones según sea necesario -->
             </select>
-            {% endfor %}
 
             <!-- Segundo combobox para seleccionar el bloque -->
             
             <select class="combobox" name="id_bloque" id="id_bloque">
+                <option value="" disabled selected>Selecciona un bloque</option>
                 {% for bloque in bloques_data %}
-                    <option value="{{ bloque.idbloque }}">{{ bloque.iddia }}</option>
+                    <option value="{{ bloque.idbloque }}">{{ bloque }}</option>
                 {% endfor %}
             </select>
             

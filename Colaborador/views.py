@@ -48,31 +48,21 @@ class Colaborador(viewsets.ViewSet):
             bloques_data = MaeBloque.objects.all()
             congreso_data = MaeCongresoJinis.objects.all()
             colaborador_data = None
-
-            if not codigo:
-                return JsonResponse({'success': False, 'message': 'Código no proporcionado'}, status=400)
-            
             try:
                 colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
                 colaborador_data = ColaboradorSerializer(colaborador)
-                nueva_asistencia = TrsAsistencia(
-                    idcongreso_id=id_congreso,
-                    codparticipante_id=codigo,
-                    idbloque_id=id_bloque,
-                )
-
-                nueva_asistencia.save()    
-                mensaje = "Registro exitoso"
-
-                return render(request, 'colaborador.html', {
-                    'mensaje': mensaje, 
-                    'bloques_data': bloques_data, 
-                    'congreso_data': congreso_data, 
-                    'colaborador_data': colaborador_data.data,
-                })
-            
+                if not TrsAsistencia.objects.filter(codparticipante=codigo, idbloque=id_bloque).exists():
+                    nueva_asistencia = TrsAsistencia(
+                        idcongreso_id=id_congreso,
+                        codparticipante_id=codigo,
+                        idbloque_id=id_bloque,
+                    )
+                    nueva_asistencia.save()    
+                    mensaje = "Registro exitoso"
+                else:
+                    mensaje = "El código de participante ya se encuentra registrado en este bloque"
             except Exception:
-                print(colaborador_data.data)
-                return render(request, 'colaborador.html', {'colaborador_data': colaborador_data.data, 'mensaje': 'Error al guardar la asistencia','bloques_data': bloques_data, 'congreso_data': congreso_data})
-        
+                mensaje = 'Error al guardar la asistencia'
+            return render(request, 'colaborador.html', {'colaborador_data': colaborador_data.data, 'mensaje': mensaje, 'bloques_data': bloques_data, 'congreso_data': congreso_data})
+            
         return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
