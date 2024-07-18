@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'Colaborador',
     'Asistencia',
     'Bloque',
+    'BloqueColaborador',
+    'Ubicacion',
     'CongresoJINIS',
     'Dia',
     'Participantes',
