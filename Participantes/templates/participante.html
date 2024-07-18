@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="{% static 'estilos/styleParticipant.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
     <title>Sistema de Asistencia - JINIS</title>
-    <script>
-        function redirectTo(url) {
-            window.location.href = url;
-        }
-    </script>
 </head>
 <body>
     <div class="container">
@@ -25,7 +20,7 @@
 
         <div class="middle-section">
             <div class="attendance-text">CANTIDAD DE ASISTENCIAS</div>
-            <div class="attendance-count">0000000</div>
+            <div class="attendance-count">0</div>
             <div class="attendance-text">Codigo</div>
             <div class="student-code">{{participante_data.codparticipante}}</div>            
         </div>

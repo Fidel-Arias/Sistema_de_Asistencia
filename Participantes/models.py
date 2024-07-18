@@ -9,9 +9,9 @@ class MaeParticipantes(models.Model):
     nombre = models.CharField(max_length=10)
     apellido = models.CharField(max_length=20)
     email = models.CharField(max_length=35)
-    idtipodoc = models.ForeignKey(MaeTipodocumento, models.DO_NOTHING, db_column='idtipodoc')
-    iduniversidad = models.ForeignKey(MaeUniversidad, models.DO_NOTHING, db_column='iduniversidad')
-    idtipo = models.ForeignKey(MaeTipoParticipante, models.DO_NOTHING, db_column='idtipo')
+    idtipodoc = models.ForeignKey(MaeTipodocumento, models.DO_NOTHING, db_column='idtipodoc', on_delete=models.CASCADE)
+    iduniversidad = models.ForeignKey(MaeUniversidad, models.DO_NOTHING, db_column='iduniversidad', on_delete=models.CASCADE)
+    idtipo = models.ForeignKey(MaeTipoParticipante, models.DO_NOTHING, db_column='idtipo', on_delete=models.CASCADE)
     estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:

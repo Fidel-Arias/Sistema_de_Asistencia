@@ -1,15 +1,16 @@
 from django.db import models
 from Dia.models import MaeDia
 from Ponencia.models import MaePonencia
+from Ubicacion.models import MaeUbicacion
 
 # Create your models here.
 class MaeBloque(models.Model):
     idbloque = models.AutoField(primary_key=True)
-    idponencia = models.ForeignKey(MaePonencia, models.DO_NOTHING, db_column='idponencia', verbose_name='Ponencia')
-    iddia = models.ForeignKey(MaeDia, models.DO_NOTHING, db_column='iddia', verbose_name='Dia')
+    idponencia = models.ForeignKey(MaePonencia, models.DO_NOTHING, db_column='idponencia', verbose_name='Ponencia', on_delete=models.CASCADE)
+    iddia = models.ForeignKey(MaeDia, models.DO_NOTHING, db_column='iddia', verbose_name='Dia', on_delete=models.CASCADE)
     horainicio = models.TimeField(verbose_name='Desde')
     horafin = models.TimeField(verbose_name='Hasta')
-    idubicacion = models.ForeignKey('MaeUbicacion', models.DO_NOTHING, db_column='idubicacion')
+    idubicacion = models.ForeignKey(MaeUbicacion, models.DO_NOTHING, db_column='idubicacion', on_delete=models.CASCADE)
     estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
