@@ -39,10 +39,39 @@
             <input type="text" id="nombre_ponencia" name="nombre_ponencia" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
             <div class="button-container">
-                <button type="submit" class="register-button">Registrar</button>
-                <button type="button" class="delete-button">Eliminar</button>
+                <button type="submit" class="register-button" id="button">Registrar</button>
+                <button type="submit" class="delete-button">Eliminar</button>
+                <button type="submit" class="edit-button">Editar</button>
             </div>
         </form>
+        {% if status == 501 %}
+            <script>
+                button = document.getElementById('button');
+                button.disabled = true;
+            </script>
+            <style>
+                #button {
+                    background-color: #c8c8c8;
+                    border: none;
+                    cursor: not-allowed;
+                }
+                #button:hover {
+                    background-color: #c8c8c8;
+                }
+            </style>
+        {% elif status == 200 %}
+            <script>
+                button = document.getElementById('button');
+                button.disabled = false;
+            </script>
+            <style>
+                .register-button{
+                    background-color: #4da6ff;
+                    color: white;
+                    cursor: pointer;
+                }
+            </style>
+        {% endif %}
     </main>
 </body>
 <style>
@@ -67,6 +96,23 @@
     }
     #ponente{
         width: 100%;
+    }
+    .edit-button{
+        background-color: #41bb5b;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 48%;
+        text-align: center;
+    }
+    .edit-button:hover{
+        background-color: #53ec74;
+    }
+    .button-container {
+        gap: 1em;
     }
 </style>
 <script>
