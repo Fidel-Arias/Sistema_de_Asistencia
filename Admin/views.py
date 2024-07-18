@@ -102,8 +102,7 @@ class adminView(viewsets.ViewSet):
     def registrar_bloques(self, request):
         lista_ponencias = MaePonencia.objects.all()
         lista_dias = MaeDia.objects.all()
-        hora_final_bd = MaeBloque.objects.last() #Obtiene el ultimo dato ingresado en la base de datos
-        print(hora_final_bd.horafin)
+        # hora_final_bd = MaeBloque.objects.last() #Obtiene el ultimo dato ingresado en la base de datos
         if request.method == 'POST':
             ponencia = request.POST.get('ponencia')
             dia = request.POST.get('dia')
@@ -112,31 +111,29 @@ class adminView(viewsets.ViewSet):
             direccion = request.POST.get('direccion')
             if not MaeBloque.objects.filter(idponencia=ponencia).exists(): #verificar el auditorio la hora que se esta ocupando 
                 if not MaeBloque.objects.filter(horainicio=horaInicio, horafin=horaFin,  direccion=direccion):
-                    if not horaInicio > hora_final_bd.horafin.__str__():
-                        try:
-                            if horaInicio == horaFin: #mas validaciones validar que bloques se usa el auditorio y comparar con los que se vana ingresar para evitar choques
-                                mensaje = "La hora de inicio y fin deben ser diferentes"
-                                status = 500
-                            elif horaFin < horaInicio:
-                                mensaje = "La hora de inicio no puede ser mayor a la hora de fin"
-                                status = 500
-                            else:
-                                nuevo_bloque = MaeBloque(
-                                    idponencia=MaePonencia.objects.get(idponencia=ponencia),
-                                    iddia= MaeDia.objects.get(iddia=dia),
-                                    horainicio=horaInicio,
-                                    horafin=horaFin,
-                                    direccion=direccion
-                                )
-                                nuevo_bloque.save()
-                                mensaje = "El bloque ha sido registrado"
-                                status = 200
-                        except Exception:
-                            mensaje = "Error al registara el bloque"
+                    
+                    try:
+                        if horaInicio == horaFin: #mas validaciones validar que bloques se usa el auditorio y comparar con los que se vana ingresar para evitar choques
+                            mensaje = "La hora de inicio y fin deben ser diferentes"
                             status = 500
-                    else:
-                        mensaje = "La hora de inicio debe ser mayor a la hora final del bloque anterior"
+                        elif horaFin < horaInicio:
+                            mensaje = "La hora de inicio no puede ser mayor a la hora de fin"
+                            status = 500
+                        else:
+                            nuevo_bloque = MaeBloque(
+                                idponencia=MaePonencia.objects.get(idponencia=ponencia),
+                                iddia= MaeDia.objects.get(iddia=dia),
+                                horainicio=horaInicio,
+                                horafin=horaFin,
+                                direccion=direccion
+                            )
+                            nuevo_bloque.save()
+                            mensaje = "El bloque ha sido registrado"
+                            status = 200
+                    except Exception:
+                        mensaje = "Error al registara el bloque"
                         status = 500
+                    
                 else:
                     mensaje = "El auditorio ya esta siendo ocupado en la hora indicada"
                     status = 500
@@ -181,9 +178,12 @@ class adminView(viewsets.ViewSet):
                 return render(request, 'pages/registrarPonencia.html', {'current_page':'registrar_ponencia', 'message': mensaje, 'status':status, 'ponentes': ponentes})
         else:
             if ((MaePonente.objects.exists())):
-                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes})
+                status = 200
+                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes, 'status':status})
             else:
-                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'message': 'No hay ponentes registrados'})
+                mensaje = 'No hay ponentes registrados'
+                status = 501
+                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'message': mensaje, 'status': status})
     def registrar_congreso(self, request):
         if request.method == 'POST':
             nombreCongreso = request.POST.get('nombreCongreso')
