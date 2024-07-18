@@ -4,6 +4,7 @@ from django.db import models
 class MaeDia(models.Model):
     iddia = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=False, null=False)
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False

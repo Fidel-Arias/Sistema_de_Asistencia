@@ -9,10 +9,10 @@ class TrsAsistencia(models.Model):
     idasistencia = models.AutoField(primary_key=True)
     idcongreso = models.ForeignKey(MaeCongresoJinis, models.DO_NOTHING, db_column='idcongreso', blank=False, verbose_name='Congreso')
     codparticipante = models.ForeignKey(MaeParticipantes, models.DO_NOTHING, db_column='codparticipante', verbose_name='DNI o Carnet')
-    idbloque = models.ForeignKey(MaeBloque, models.DO_NOTHING, db_column='idbloque', verbose_name='Bloque')
+    idbc = models.ForeignKey('BloqueColaborador', models.DO_NOTHING, db_column='idbc')
     fecha = models.DateField(auto_now_add=True, blank=False, null=False)
     hora = models.TimeField(auto_now_add=True, blank=False, null=False)
-    estado = models.CharField(max_length=11, blank=False, null=False, default="asistió")
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
         managed = False

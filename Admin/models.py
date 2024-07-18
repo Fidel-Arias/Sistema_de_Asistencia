@@ -5,8 +5,9 @@ class MaeAdministrador(models.Model):
     nombre = models.CharField(max_length=10)
     apellido = models.CharField(max_length=30)
     correo = models.CharField(max_length=50)
-    contrasenia = models.CharField(max_length=8)
+    contrasenia = models.CharField(max_length=20)
     idtipo = models.ForeignKey('MaeTipousuario', models.DO_NOTHING, db_column='idtipo')
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False
@@ -14,14 +15,3 @@ class MaeAdministrador(models.Model):
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
-
-class MaeTipousuario(models.Model):
-    idtipo = models.AutoField(primary_key=True)
-    dstipo = models.CharField(max_length=20)
-
-    class Meta:
-        managed = False
-        db_table = 'mae_tipousuario'
-
-    def __str__(self):
-        return self.dstipo

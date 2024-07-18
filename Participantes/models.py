@@ -12,6 +12,7 @@ class MaeParticipantes(models.Model):
     idtipodoc = models.ForeignKey(MaeTipodocumento, models.DO_NOTHING, db_column='idtipodoc')
     iduniversidad = models.ForeignKey(MaeUniversidad, models.DO_NOTHING, db_column='iduniversidad')
     idtipo = models.ForeignKey(MaeTipoParticipante, models.DO_NOTHING, db_column='idtipo')
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
         managed = False

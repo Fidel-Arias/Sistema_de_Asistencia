@@ -6,6 +6,7 @@ class MaeCongresoJinis(models.Model):
     nombre = models.CharField(max_length=20, blank=True, null=True)
     fechainicio = models.DateField()
     fechafin = models.DateField()
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
         managed = False

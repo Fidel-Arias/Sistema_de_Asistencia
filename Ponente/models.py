@@ -5,6 +5,7 @@ class MaePonente(models.Model):
     idponente = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=10, blank=True, null=True)
     apellido = models.CharField(max_length=20, blank=True, null=True)
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
         managed = False

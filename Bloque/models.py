@@ -9,7 +9,8 @@ class MaeBloque(models.Model):
     iddia = models.ForeignKey(MaeDia, models.DO_NOTHING, db_column='iddia', verbose_name='Dia')
     horainicio = models.TimeField(verbose_name='Desde')
     horafin = models.TimeField(verbose_name='Hasta')
-    direccion = models.CharField(blank=False, null=False, max_length=40)
+    idubicacion = models.ForeignKey('MaeUbicacion', models.DO_NOTHING, db_column='idubicacion')
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
         managed = False
