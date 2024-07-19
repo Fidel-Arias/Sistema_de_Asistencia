@@ -39,9 +39,9 @@
             <input type="text" id="nombre_ponencia" name="nombre_ponencia" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
             <div class="button-container">
-                <button type="submit" class="register-button" id="button">Registrar</button>
-                <button type="submit" class="delete-button">Eliminar</button>
-                <button type="submit" class="edit-button">Editar</button>
+                <button type="submit" class="register-button" id="button" name="action" value="register">Registrar</button>
+                <button type="submit" class="delete-button" name="action" value="delete">Eliminar</button>
+                <button type="submit" class="edit-button" name="action" value="edit">Editar</button>
             </div>
         </form>
         {% if status == 501 %}
