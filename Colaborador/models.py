@@ -10,8 +10,8 @@ class MaeColaborador(models.Model):
     apellido = models.CharField(max_length=30)
     correo = models.CharField(max_length=50)
     contrasenia = models.CharField(max_length=8)
-    idtipo = models.ForeignKey(MaeTipoUsuario, models.DO_NOTHING, db_column='idtipo', on_delete=models.CASCADE)
-    idcongreso = models.ForeignKey(MaeCongresoJinis, models.DO_NOTHING, db_column='idcongreso', on_delete=models.CASCADE)
+    idtipo = models.ForeignKey(MaeTipoUsuario, db_column='idtipo', on_delete=models.CASCADE)
+    idcongreso = models.ForeignKey(MaeCongresoJinis, db_column='idcongreso', on_delete=models.CASCADE)
     estado = models.CharField(max_length=11)
     
     class Meta:

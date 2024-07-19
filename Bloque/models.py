@@ -6,11 +6,11 @@ from Ubicacion.models import MaeUbicacion
 # Create your models here.
 class MaeBloque(models.Model):
     idbloque = models.AutoField(primary_key=True)
-    idponencia = models.ForeignKey(MaePonencia, models.DO_NOTHING, db_column='idponencia', verbose_name='Ponencia', on_delete=models.CASCADE)
-    iddia = models.ForeignKey(MaeDia, models.DO_NOTHING, db_column='iddia', verbose_name='Dia', on_delete=models.CASCADE)
+    idponencia = models.ForeignKey(MaePonencia, db_column='idponencia', verbose_name='Ponencia', on_delete=models.CASCADE)
+    iddia = models.ForeignKey(MaeDia, db_column='iddia', verbose_name='Dia', on_delete=models.CASCADE)
     horainicio = models.TimeField(verbose_name='Desde')
     horafin = models.TimeField(verbose_name='Hasta')
-    idubicacion = models.ForeignKey(MaeUbicacion, models.DO_NOTHING, db_column='idubicacion', on_delete=models.CASCADE)
+    idubicacion = models.ForeignKey(MaeUbicacion, db_column='idubicacion', on_delete=models.CASCADE)
     estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
