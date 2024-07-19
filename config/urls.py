@@ -23,12 +23,7 @@ urlpatterns = [
     path('Administrador/', include('Admin.urls')),
     path('Colaborador/', include('Colaborador.urls')),
     path('Administrador/', include('Asistencia.urls')),
+    path('user/', include('Participantes.urls')),
     path('user/', include('Ponencia.urls')),
-    path('user/', include('Ponente.urls')),
-    path('', include('Bloque.urls')),
-    path('', include('Universidad.urls')),
-    path('', include('Participantes.urls')),
-    # path('participante', viewParticipantes.as_view({'get': 'list'})),
-    # path('participante/<str:pk>', viewParticipantes.as_view({'get': 'retrieve'})),
 ]
  #    path('api/ponentes/<int:pk>', viewPonentes.as_view({'get': 'ponente'})), --------ejemplo --- no se modifica

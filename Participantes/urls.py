@@ -3,6 +3,6 @@ from .views import viewParticipantes
 
 
 urlpatterns = [
-    path('user/', viewParticipantes.as_view({'get': 'participant'})),
-    path('user/<str:pk>', viewParticipantes.as_view({'get': 'retrieve'}), name="Participante"),
+    path('perfil/', viewParticipantes.as_view({'get':'retrieve','post': 'retrieve'}), name="Participante"),
+    path('', viewParticipantes.as_view({'get':'exit'}), name="Salir"),
 ]

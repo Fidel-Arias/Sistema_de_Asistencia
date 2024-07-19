@@ -24,7 +24,7 @@
     </div>
 
     <div class='wrapper'>
-        <form action="/platformUser/<codigo>" method="POST" class="form_login">
+        <form action="{% url 'Participante' %}" method="POST" class="form_login">
             {% csrf_token %}
             <h1 class="labelCodigo">CÓDIGO</h1>
             <div class="input-box">

@@ -1,11 +1,8 @@
 from django.urls import path
-from .views import login, loginColaborador, loginAdmin, user_logged_in, admin_logged_in
+from .views import LoginView
 
 urlpatterns = [
-    path('', login, name='Login'),
-    path('platformUser/<str:pk>', user_logged_in, name="Logueado"),
-    # path('platformAdmin/', admin_logged_in, name="LogueadoAdmin"),
-    # path('platformColaborador/', colaborador_logged_in, name="LogueadoColaborador"),
-    path('loginColaborador/', loginColaborador, name='LoguingColaborador'),
-    path('loginAdmin/', loginAdmin, name='LoguingAdministrador'),
+    path('', LoginView.as_view({'get': 'login_user'}), name='Login'),
+    path('loginColaborador/', LoginView.as_view({'get':'login_colaborador'}), name='LoguingColaborador'),
+    path('loginAdmin/', LoginView.as_view({'get':'login_admin'}), name='LoguingAdministrador'),
 ]

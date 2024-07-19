@@ -242,8 +242,6 @@ def ingresoAdmin(request):
     contraseniaAdmin = request.POST.get('contrasenia')
     try:
         admin = MaeAdministrador.objects.get(correo=correoAdmin, contrasenia=contraseniaAdmin)
-        request.session['correoAdmin'] = correoAdmin
-        request.session['contraseniaAdmin'] = contraseniaAdmin
         serializer = AdminSerializer(admin)
         return render(request, 'interfazAdmin.html', serializer.data)
     except MaeAdministrador.DoesNotExist:

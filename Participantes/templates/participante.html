@@ -39,12 +39,12 @@
                 </a>
             </div>
             <div class="center-button">
-                <a class="button presentations-button" href="{% url 'Ponencias' participante_data.codparticipante %}">
+                <a href="{% url 'Ponencias' %}" class="button presentations-button">
                     <img src="{% static 'images/ponencias.png' %}" alt="Ponencias Icon">Ponencias
                 </a>
             </div>
             <div class="right-button">
-                <a href="{% url 'Login' %}" class="button exit-button" href="#">
+                <a href="{% url 'Salir' %}" class="button exit-button" href="#">
                     <img src="{% static 'images/opened-door-aperture.png' %}" alt="Exit Icon">Salir
                 </a>
             </div>

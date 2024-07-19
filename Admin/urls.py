@@ -2,7 +2,6 @@ from django.urls import path
 from .views import adminView, ingresoAdmin
 
 urlpatterns = [
-    path('', adminView.as_view({'get':'index'}), name='InterfazAdministrador'),
     path('bienvenido/', ingresoAdmin, name='Administrador'),
     path('generar_reporte/', adminView.as_view({'get':'generar_reporte'}), name='GenerarReporte'),
     path('registrar_colaboradores/', adminView.as_view({'get':'registrar_colaboradores', 'post':'registrar_colaboradores'}), name='RegistrarColaboradores'),
