@@ -12,7 +12,7 @@ from Ponente.models import MaePonente
 from CongresoJINIS.models import MaeCongresoJinis
 from Colaborador.models import MaeColaborador
 from tipoUsuario.models import MaeTipoUsuario
-from Bloque.serializers import BloqueSerializer
+from django.contrib import messages
 import pandas as pd
 from datetime import date
 
@@ -155,6 +155,8 @@ class adminView(viewsets.ViewSet):
     def registrar_ponencia(self, request):
         ponentes = MaePonente.objects.all()
         if request.method == 'POST':
+            action = request.POST.get('action')
+            print('action: ' + action)
             ponente = request.POST.get('ponente')
             nombrePonencia = request.POST.get('nombre_ponencia')
             print("Ponente seleccionado:", ponente)
@@ -186,43 +188,50 @@ class adminView(viewsets.ViewSet):
                 return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'message': mensaje, 'status': status})
     def registrar_congreso(self, request):
         if request.method == 'POST':
+            action = request.POST.get('action')
             nombreCongreso = request.POST.get('nombreCongreso')
             fechaHoy = date.today()
             fechaInicio = request.POST.get('fechaInicio')
             fechaFin = request.POST.get('fechaFin')
-            if fechaInicio == fechaFin:
-                mensaje = 'Las fechas de inicio y fin deben ser distintas'
-                status = 500
-                return render(request, 'pages/registrarCongreso.html', {'current_page':'registrar_congreso', 'message': mensaje, 'status': status})
-            elif fechaFin < fechaInicio:
-                mensaje = 'Ingrese correctamente las fechas'
-                status = 500
-                return render(request, 'pages/registrarCongreso.html', {'current_page':'registrar_congreso', 'message': mensaje, 'status': status})
-            elif fechaInicio < fechaHoy.__str__() or fechaFin < fechaHoy.__str__():
-                mensaje = 'La fecha de inicio y fin no puede ser anterior a la fecha de hoy'
-                status = 500
-                return render(request, 'pages/registrarCongreso.html', {'current_page':'registrar_congreso', 'message': mensaje, 'status': status})
-            else:
+            if action == 'register':
+                if fechaInicio == fechaFin:
+                    messages.error(request, 'Las fechas de inicio y fin deben ser distintas')
+                elif fechaFin < fechaInicio:
+                    messages.error(request, 'Ingrese correctamente las fechas')
+                elif fechaInicio < fechaHoy.__str__() or fechaFin < fechaHoy.__str__():
+                    messages.error(request, 'La fecha de inicio y fin no puede ser anterior a la fecha de hoy')
+                else:
+                    try:
+                        if (not(MaeCongresoJinis.objects.filter(nombre=nombreCongreso).exists())):
+                            nueva_congreso = MaeCongresoJinis(
+                                nombre=nombreCongreso,
+                                fechainicio=fechaInicio,
+                                fechafin=fechaFin
+                            )
+                            nueva_congreso.save()
+                            generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin)
+                            messages.success(request, 'Congreso registrado con éxito')
+                        else:
+                            messages.error(request, 'Ya existe el congreso')
+                    except Exception:
+                        messages.error(request, 'Error al registrar el congreso')
+                return redirect('RegistrarCongreso')
+            elif action == 'delete':
                 try:
-                    if (not(MaeCongresoJinis.objects.filter(nombre=nombreCongreso).exists())):
-                        nueva_congreso = MaeCongresoJinis(
-                            nombre=nombreCongreso,
-                            fechainicio=fechaInicio,
-                            fechafin=fechaFin
-                        )
-                        nueva_congreso.save()
-                        mensaje = 'Congreso registrado con éxito'
-                        status = 200
-                        generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin)
-                    else:
-                        mensaje = 'Ya existe el congreso'
-                        status = 500
+                    congreso = MaeCongresoJinis.objects.get(nombre=nombreCongreso)
+                    #ELIMINACION TOTAL
+                    '''congreso.delete()'''
+                    #ELIMINACION LOGICA
+                    congreso.estado = 'NO ACTIVO'
+                    congreso.save()
+                    messages.success(request, 'Congreso desactivado con éxito')
+                except MaeCongresoJinis.DoesNotExist:
+                    messages.error(request, 'No se encontró el congreso')
                 except Exception:
-                    mensaje = 'Error al registrar el congreso'
-                    status = 500
-                return render(request, 'pages/registrarCongreso.html', {'current_page':'registrar_congreso', 'message': mensaje, 'status': status})
+                    messages.error(request, 'Error al eliminar el congreso')
+                return redirect('RegistrarCongreso')
         else:
-            return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_universidades'})
+            return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_congreso'})
 
     def cerrar_sesion(request):
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
@@ -252,9 +261,8 @@ def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin):
             )
             lista_dias.save()
     except Exception:
-        mensaje = 'Error en la generación de días'
-        status = 500
-        return render(request, 'pages/registrarCongreso.html', {'current_page':'registrar_congreso', 'message': mensaje, 'status': status})
+        messages.error(request, 'Error en la generación de días')
+        return redirect('RegistrarCongreso')
 
 
 
