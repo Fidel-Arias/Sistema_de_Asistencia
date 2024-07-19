@@ -1,66 +1,52 @@
 {% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'estilos/stylePonencias.css' %}">
-    <title>University Attendance Management System</title>
-
-    <script>
-        function redirectTo(url) {
-        window.location.href = url;
-        }
-    </script>
+    <link rel="stylesheet" href="{% static 'css/ponencias.css' %}">
+    <title>Ponencias</title>
 </head>
 <body>
-    <div class="container"> 
-        <div class="top-section">
-            <div class="greeting">PONENTES</div>
-        </div>
+    <h1>PONENCIAS</h1>
 
-        <div class="box-container">
-            <!-- Plantilla para una caja -->
-            {% for ponencia in ponencias %}
-            <div class="box">
-                <div class="box-top">
-                    <div class="box-date">Fecha: 27-06-2024</div>
-                    <div class="box-time">Hora: 10:00 AM</div>
-                </div>
-                <div class="box-middle">
-                    <img src="{% static 'images/perfilponente.png' %}" alt="Imagen">
-                    <p><strong>{{ponencia.idponente}}</strong> <br>
-                        {{ponencia.nombre}}
-
-                    </p>
-                </div>
-                <div class="box-bottom">
-                    <div class="box-text-left">
-                        <p>{{ponencia.idponente}}</p>
+    <div class="card-scroll">
+        {% for ponencia in ponencias %}
+        <div class="card">
+            <div class="card-header">
+                <span class="day">DIA 1 - 03/10</span>
+                <span class="time">09:30 - 10:30</span>
+            </div>
+            <div class="card-content">
+                <img src="{% static 'images/perfilponente.png' %}" alt="Speaker Image" class="speaker-image">
+                <div class="speaker-info">
+                    <h3>{{ponencia.idponente}}</h3>
+                    <p>{{ponencia.nombre}}</p>
+                    <div class="location">
+                        <span class="location-icon">📍</span>
+                        <span>Auditorio William Morris</span>
                     </div>
-                    
-                </div>                
+                </div>
             </div>
-            {% endfor %}
-            <!-- Añade más casillas aquí -->
         </div>
-
-        <div class="bottom-section">
-            <div class="left-button">
-                <a class="button profile-button" href="{% url 'Participante' codparticipante %}">
-                    <img src="{% static 'images/perfil.png' %}" alt="Perfil Icon"> Perfil
-                </a>
-            </div>
-            <div class="center-button">
-                <a class="button presentations-button" href="{% url 'Ponencias' codparticipante %}">
-                    <img src="{% static 'images/ponencias.png' %}" alt="Ponencias Icon"><br> Ponencias
-                </a>
-            </div>
-            <div class="right-button">
-                <a href="{% url 'Login' %}" class="button exit-button" href="#">
-                    <img src="{% static 'images/opened-door-aperture.png' %}" alt="Exit Icon"><br> Exit
-                </a>
-            </div>
+        {% endfor %}
+    </div>
+    <div class="bottom-section">
+        <div class="left-button">
+            <a class="button profile-button" href="{% url 'Participante' codparticipante %}l">
+                <img src="{% static 'images/perfil.png' %}" alt="Perfil Icon">Perfil
+            </a>
+        </div>
+        <div class="center-button">
+            <a class="button presentations-button">
+                <img src="{% static 'images/ponencias.png' %}" alt="Ponencias Icon">Ponencias
+            </a>
+        </div>
+        <div class="right-button">
+            <a href="{% url 'Login' %}" class="button exit-button" href="#">
+                <img src="{% static 'images/opened-door-aperture.png' %}" alt="Exit Icon">Salir
+            </a>
         </div>
     </div>
 </body>
