@@ -5,110 +5,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Colaborador</title>
-    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/colaborador.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Colaborador</title>
 </head>
 <body>
     <!-- Header -->
     {% include 'partials/header.html' %}
-    <!-- Barra Lateral -->
+    
+    <!-- Sidebar -->
     {% include 'partials/sidebar.html' %}
 
-    <!-- Contenido principal -->
-    <main class="main-content">
-        {% if message %}
-            <div id="message" class="message {% if status == 200 %}success{% else %}error{% endif %}">
-                {{ message }}
+    <!-- Contenedor principal -->
+    <div class="main-container" id="main">
+        <!-- Tabla de contenido -->
+        <div class="table-container">
+            <h2>Contenido Actual</h2>
+            <div class="table-container-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NOMBRE</th>
+                            <th>APELLIDO</th>
+                            <th>CORREO</th>
+                            <th>BLOQUE</th>
+                            <th>CONTRASEÑA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        <tr>
+                            <td>Carlos</td>
+                            <td>Días</td>
+                            <td>carlos@ucsm.edu.pe</td>
+                            <td>Bloque 1: 10 am</td>
+                            <td class="td-button">
+                                <button type="button">Mostrar</button>
+                            </td>
+                            <td class="check-td">
+                                <button type="button">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         {% endif %}
-        <h2>Registrar Colaborador</h2>
-        <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' %}">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
-            <label for="apellido">Apellidos</label>
-            <input type="text" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+        <!-- Contenido principal -->
+        <div class="content-fondo">
+            <h2>Registrar Colaborador</h2>
+            <main class="main-content">
+                <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' %}">
+                    <div class="flex-nombre-apellido">
+                        <div class="form-group">
+                            <label for="nombre" class="label__nombre">Nombre</label>
+                            <input type="text" class="input__nombre" name="nombre" id="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+                        </div>
 
-            <label for="correo">Correo</label>
-            <input type="email" id="correo" name="correo" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toLowerCase()">
+                        <div class="form-group">
+                            <label for="apellido" class="label__apellido">Apellidos</label>
+                            <input type="text" class="input__apellido" name="apellido" id="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+                        </div>
+                    </div>
 
-            <label for="contrasenia">Contraseña</label>
-            <input type="password" id="contrasenia" name="contrasenia" required>
+                    <div class="flex-correo-password">
+                        <div class="form-group group-correo">
+                            <label for="correo" class="label__correo">Correo</label>
+                            <input type="email" class="input__correo" name="correo" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toLowerCase()">
+                        </div>
 
-            <label for="contrasenia">Tipo de Usuario</label>
-            <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
-                <option value="" disabled selected>Seleccionar tipo de usuario</option>
-                {% for usuario in tiposUsuario %}
-                <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
-                {% endfor %}
-            </select>
+                        <div class="form-group">
+                            <label for="contrasenia" class="label__password">Contraseña</label>
+                            <input type="password" class="input__password" name="contrasenia" required>
+                        </div>
+                    </div>
+                    
+                    <label for="tipoUsuario">Tipo de Usuario</label>
+                    <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
+                        <option value="" disabled selected>Seleccionar tipo de usuario</option>
+                        {% for usuario in tiposUsuario %}
+                            <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
+                        {% endfor %}
+                    </select>
 
-            <label for="bloque">Bloque</label>
-            <select class="combobox" name="bloque" id="bloque" required>
-                <option value="" disabled selected>Seleccionar el bloque</option>
-                {% for bloque in bloques %}
-                <option value="{{bloque.idbloque}}">{{bloque}}</option>
-                {% endfor %}
-            </select>
+                    <label for="bloque">Bloque</label>
+                    <select class="combobox" name="bloque" id="bloque" required>
+                        <option value="" disabled selected>Seleccionar el bloque</option>
+                        {% for bloque in bloques %}
+                            <option value="{{bloque.idbloque}}">{{bloque}}</option>
+                        {% endfor %}
+                    </select>
 
-            <label for="congreso">Congreso</label>
-            <select class="combobox" name="congreso" id="congreso" required>
-                <option value="" disabled selected>Seleccionar el congreso</option>
-                {% for congreso in lista_congresos %}
-                <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
-                {% endfor %}
-            </select>
+                    <label for="congreso">Congreso</label>
+                    <select class="combobox" name="congreso" id="congreso" required>
+                        <option value="" disabled selected>Seleccionar el congreso</option>
+                        {% for congreso in lista_congresos %}
+                            <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
+                        {% endfor %}
+                    </select>
 
-            <div class="button-container">
-                <button type="submit" class="register-button">Registrar</button>
-                <button type="button" class="delete-button">Eliminar</button>
-            </div>
-        </form>
-    </main>
+                    <div class="button-container">
+                        <button type="submit" class="register-button">Registrar</button>
+                        <button type="button" class="edit-button">Editar</button>
+                        <button type="button" class="delete-button">Eliminar</button>
+                    </div>
+                </form>
+            </main>
+        </div>
+        
+    </div>
+
+    <script>
+        // Ocultar el mensaje después de 3 segundos
+        setTimeout(function() {
+            var message = document.getElementById('message');
+            var mainContent = document.getElementById('main');
+            if (message) {
+                message.style.display = 'none';
+                mainContent.style.gap = '2em';
+            }
+        }, 3000); // 3000 milisegundos = 3 segundos
+    </script>
 </body>
-<style>
-    .main-content{
-        margin-top: 1.3%;
-        margin-bottom: 1.3%;
-    }
-    #tipoUsuario{
-        width: 100%;
-    }
-    #congreso{
-        width: 100%;
-    }
-    #bloque{
-        width: 100%;
-    }
-    .message {
-        position: absolute;
-        margin: 0;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: center;
-        width: 780px;
-        bottom: 82%;
-    }
-    .message.success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .message.error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-</style>
-<script>
-    // Ocultar el mensaje después de 3 segundos
-    setTimeout(function() {
-        var message = document.getElementById('message');
-        if (message) {
-            message.style.display = 'none';
-        }
-    }, 3000); // 3000 milisegundos = 3 segundos
-</script>
 </html>
