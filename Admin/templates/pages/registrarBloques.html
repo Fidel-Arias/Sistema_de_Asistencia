@@ -6,99 +6,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Bloques - Interfaz de Administración</title>
-    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bloques.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
 </head>
 <body>
     <!-- Header -->
     {% include 'partials/header.html' %}
-    <!-- Barra Lateral -->
+    
+    <!-- Sidebar -->
     {% include 'partials/sidebar.html' %}
 
     <!-- Contenido principal -->
-    <main class="main-content main-bloques">
-        {% if message %}
-            <div id="message" class="message {% if status == 200 %}success{% else %}error{% endif %}">
-                {{ message }}
+    <div class="main-container" id="main">
+
+        <!-- Tabla de contenido -->
+        <div class="table-container">
+            <h2>Contenido Actual</h2>
+            <div class="table-container-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ponencia</th>
+                            <th>Día</th>
+                            <th>Inicia</th>
+                            <th>Finaliza</th>
+                            <th>Dirección</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        <tr>
+                            <td>Introducción a la chamba</td>
+                            <td>Lunes 12 de Agosto</td>
+                            <td>11:15 am</td>
+                            <td>12:30 pm</td>
+                            <td>Auditorio Santa María</td>
+                            <td class="check-td">
+                                <button type="button">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         {% endif %}
-        <h2>Registrar Bloques</h2>
-        <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarBloques' %}">
-            <label for="ponencia">Ponencia</label>
-            <select id="ponencia" name="ponencia" required>
-                <option value="" selected disabled>Seleccionar una ponencia</option>
-                <!-- Aquí se deberían cargar dinámicamente las ponencias registradas -->
-                {% for ponencia in ponencias %}
-                <option value="{{ponencia.idponencia}}">{{ponencia.nombre}}</option>
-                {% endfor %}
-                <!-- Más opciones según las ponencias registradas -->
-            </select>
 
-            <label for="dia">Día</label>
-            <select id="dia" name="dia" required>
-                <option value="" selected disabled>Seleccionar el dia</option>
-                <!-- Aquí se deberían cargar dinámicamente las ponencias registradas -->
-                {% for dia in dias %}
-                <option value="{{dia.iddia}}">{{dia}}</option>
-                {% endfor %}
-                <!-- Más opciones según las ponencias registradas -->
-            </select>
+        <div class="content-fondo">
+            <h2>Registrar Bloques</h2>
+            <main class="main-content">
+                <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarBloques' %}">
+                    <label for="ponencia">Ponencia</label>
+                    <select id="ponencia" name="ponencia" required style="margin-bottom: 0.2em;">
+                        <option value="" selected disabled>Seleccionar una ponencia</option>
+                        {% for ponencia in ponencias %}
+                            <option value="{{ponencia.idponencia}}">{{ponencia.nombre}}</option>
+                        {% endfor %}
+                    </select>
+    
+                    <label for="dia">Día</label>
+                    <select id="dia" name="dia" required>
+                        <option value="" selected disabled>Seleccionar el dia</option>
+                        {% for dia in dias %}
+                        <option value="{{dia.iddia}}">{{dia}}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <div class="flex-hora">
+                        <div class="form-group">
+                            <label for="hora_inicio" class="label__hora-inicio">Inicia</label>
+                            <input type="time" class="input__hora-inicio" name="hora_inicio" required>
+                        </div>
 
-            <label for="hora_inicio">Hora de Inicio</label>
-            <input type="time" id="hora_inicio" name="hora_inicio" required>
+                        <div class="form-group">
+                            <label for="hora_fin" class="label__hora-fin">Finaliza</label>
+                            <input type="time" class="input__hora-fin" name="hora_fin" required>
+                        </div>
+                    </div>
+                    
+                    <label for="direccion">Ubicación</label>
+                    <select id="ubicacion" name="ubicacion" required>
+                        <option value="" selected disabled>Seleccionar la ubicación</option>
+                        {% for ubicacion in ubicaciones %}
+                            <option value="{{ubicacion.idubicacion}}">{{ubicacion}}</option>
+                        {% endfor %}
+                    </select>
 
-            <label for="hora_fin">Hora de Fin</label>
-            <input type="time" id="hora_fin" name="hora_fin" required>
+                    <div class="button-container">
+                        <button type="submit" class="register-button">Registrar</button>
+                        <button type="button" class="edit-button">Editar</button>
+                        <button type="button" class="delete-button">Eliminar</button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
 
-            <label for="direccion">Dirección</label>
-            <input type="text" id="direccion" name="direccion" required onkeyup="document.getElementById(this.id).value = document.getElementById(this.id).value.toUpperCase()">
-
-            <div class="button-container">
-                <button type="submit" class="register-button">Registrar</button>
-                <button type="button" class="delete-button">Eliminar</button>
-            </div>
-        </form>
-    </main>
+    <script>
+        // Ocultar el mensaje después de 3 segundos
+        setTimeout(function() {
+            var message = document.getElementById('message');
+            var mainContent = document.getElementById('main');
+            if (message) {
+                message.style.display = 'none';
+                mainContent.style.gap = '2em';
+            }
+        }, 3000); // 3000 milisegundos = 3 segundos
+    </script>
 </body>
-<style>
-    .message {
-        position: absolute;
-        margin: 0;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: center;
-        width: 780px;
-        bottom: 82%;
-    }
-    .message.success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .message.error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    #ponencia{
-        width: 100%;
-    }
-
-    .main-bloques{
-        margin-top: 1.5%;
-    }
-    #dia{
-        width: 100%;
-    }
-</style>
-<script>
-    // Ocultar el mensaje después de 3 segundos
-    setTimeout(function() {
-        var message = document.getElementById('message');
-        if (message) {
-            message.style.display = 'none';
-        }
-    }, 3000); // 3000 milisegundos = 3 segundos
-</script>
 </html>
