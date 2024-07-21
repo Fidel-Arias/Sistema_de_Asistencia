@@ -1,49 +1,34 @@
-<!-- templates/partials/sidebar.html -->
-{% load static %}
-<nav class="sidebar">
-    <ul>
-        <li>
-            <a href="{% url 'GenerarReporte' %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
-                <img src="{% static 'images/reporte.png' %}" alt="Icono 1">
-                Generar Reporte
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'RegistrarCongreso' %}" class="{% if current_page == 'registrar_congreso' %}active{% endif %}">
-                <img src="{% static 'images/congreso_icon.png' %}" alt="Icono 5">
-                Registrar Congreso
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'RegistrarPonentes' %}" class="{% if current_page == 'registrar_ponentes' %}active{% endif %}">
-                <img src="{% static 'images/ponentes_icon.png' %}" alt="Icono 2">
-                Registrar Ponentes
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'RegistrarPonencia' %}" class="{% if current_page == 'registrar_ponencia' %}active{% endif %}">
-                <img src="{% static 'images/ponencia_icon.png' %}" alt="Icono 4">
-                Registrar Ponencia
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'RegistrarBloques' %}" class="{% if current_page == 'registrar_bloques' %}active{% endif %}">
-                <img src="{% static 'images/bloques_icon.png' %}" alt="Icono 3">
-                Registrar Bloques
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'RegistrarColaboradores' %}" class="{% if current_page == 'registrar_colaboradores' %}active{% endif %}">
-                <img src="{% static 'images/colaboradores_icon.png' %}" alt="Icono 5">
-                Registrar Colaboradores
-            </a>
-        </li>
-        <!-- Otros elementos de la barra lateral -->
-    </ul>
-    <div class="logout">
-        <a href="{% url 'Login' %}">
-            <img src="{% static 'images/cerrarSesion.png' %}" alt="Icono de Cerrar Sesión">
-            Cerrar Sesión
+    <!-- Barra Lateral -->
+    
+    {% load static %}
+    
+    <div class="sidebar">
+        <a href="{% url 'GenerarReporte' %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
+            <img src="{% static 'images/reporte.png' %}" alt="Reporte_icon">
+            <span>Generar reporte</span>
+        </a>
+        <a href="{% url 'RegistrarCongreso' %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
+            <img src="{% static 'images/congreso_icon.png' %}" alt="Congreso_icon">
+            <span>Registrar Congreso</span>
+        </a>
+        <a href="{% url 'RegistrarPonentes' %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
+            <img src="{% static 'images/ponentes_icon.png' %}" alt="Ponentes_icon">
+            <span>Registrar ponentes</span>
+        </a>
+        <a href="{% url 'RegistrarPonencia' %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
+            <img src="{% static 'images/ponencia_icon.png' %}" alt="Ponencia_icon">
+            <span>Registrar ponencia</span>
+        </a>
+        <a href="{% url 'RegistrarBloques' %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
+            <img src="{% static 'images/bloques_icon.png' %}" alt="Bloques_icon">
+            <span>Registrar bloques</span>
+        </a>
+        <a href="{% url 'RegistrarColaboradores' %}" class="sidebar-colaborador {% if current_page == 'generar_reportes' %}active{% endif %}">
+            <img src="{% static 'images/colaboradores_icon.png' %}" alt="Ponencia_icon">
+            <span>Registrar Colaboradores</span>
+        </a>
+        <a href="#">
+            <img src="{% static 'images/cerrarSesion.png' %}" alt="Cerrar sesión">
+            <span>Cerrar sesión</span>
         </a>
     </div>
-</nav>

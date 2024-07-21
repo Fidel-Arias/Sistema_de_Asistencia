@@ -1,0 +1,59 @@
+/* Estilo de la barra lateral */
+.sidebar {
+    width: 269px;
+    background-color: #9cc1ea;
+    padding-top: 20px;
+    position: fixed;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3em;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    padding: 27px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #000;
+    transition: background-color 0.3s;
+    gap: 0.5em;
+}
+
+.sidebar a:hover {
+    background-color: #d3e4f1;
+}
+
+.sidebar .active {
+    background-color: #d3e4f1;
+}
+
+.sidebar a img {
+    width: 32px; /* Ajusta el tamaño del icono según sea necesario */
+    height: 32px; /* Ajusta el tamaño del icono según sea necesario */
+}
+
+.sidebar a span {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+@media(max-width: 1500px){
+    .sidebar a {
+        width: 82.5%;
+        padding: 23px;
+        gap: 0.5em;
+    }
+
+    .sidebar .sidebar-colaborador{
+        padding: 17px;
+        width: 87%;
+    }
+
+    .sidebar {
+        width: 260px;
+    }
+}

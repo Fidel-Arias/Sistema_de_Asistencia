@@ -1,48 +1,8 @@
-<!-- templates/partials/header.html -->
+<!--  HEADER  -->
 {% load static %}
-<style>
-    /* Estilos del header */
-.site-header {
-    align-items: center;
-    justify-content: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 200px;
-    padding-right: 20px;
-    background-color: #ffffff;
-    border-bottom: 3px solid #162652;
-    z-index: 2000;
-}
 
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.header img {
-    width: 150px;
-    height: auto;
-    margin-right: 10px;
-}
-
-.header .escudo__ucsm {
-    width: 4.5%;
-    height: auto;
-}
-
-.header h1 {
-    margin: 0;
-    font-size: 48px;
-    font-weight: bold;
-    color: #253E85;
-}
-</style>
-<header class="site-header">
-    <div class="header">
-        <img src="{% static 'images/logoJINIS.webp' %}" alt="Logo JINIS">
-        <h1>Sistema de Administración</h1>
-        <img class="escudo__ucsm" src="{% static 'images/Escudo-UCSM.png' %}" alt="Escudo UCSM">
-    </div>        
+<header class="header">
+    <img src="{% static 'images/logoJINIS.webp' %}" alt="Logo Izquierda" class="header-logo logo_jinis">
+    <h1 class="header-title">SISTEMA DE ADMINISTRACIÓN</h1>
+    <img src="{% static 'images/logoUCSM.png' %}" alt="Logo Derecha" class="header-logo logo_ucsm">
 </header>
