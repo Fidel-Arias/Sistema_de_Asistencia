@@ -7,14 +7,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generar Reportes</title>
-    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reporte.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
 </head>
 <body>
     <!-- Header -->
     {% include 'partials/header.html' %}
-    <!-- Barra Lateral -->
+    
+    <!-- Sidebar -->
     {% include 'partials/sidebar.html' %}
 
     <!-- Contenido principal -->
@@ -24,17 +26,16 @@
             <table class="report-table">
                 <thead>
                     <tr>
-                        <th>Código Estudiante</th>
+                        <th>Código</th>
                         <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Universidad</th>
+                        <th>Apellidos</th>
                         <th>Congreso</th>
-                        <th>Hora Registrada</th>
-                        <th>Hora Inicio del Bloque</th>
-                        <th>Hora Fin del Bloque</th>
+                        <th class="th_asistencia">Hora de Asistencia</th>
+                        <th>Inicia</th>
+                        <th>Finaliza</th>
                         <th>Día</th>
-                        <th>Dirección</th>
-                        <th>Ponencia</th>
+                        <th class="th_ubicacion">Ubicación</th>
+                        <th class="th_ponencia">Ponencia</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,13 +45,12 @@
                         <td>{{participante.codparticipante.codparticipante}}</td>
                         <td>{{participante.codparticipante.nombre}}</td>
                         <td>{{participante.codparticipante.apellido}}</td>
-                        <td>{{participante.iduniversidad.nombre}}</td>
                         <td>{{participante.idcongreso.nombre}}</td>
                         <td>{{participante.hora}}</td>
-                        <td>{{participante.idbloque.horainicio}}</td>
-                        <td>{{participante.idbloque.horafin}}</td>
+                        <td>--</td>
+                        <td>--</td>
                         <td>{{participante.fecha|format_fecha}}</td>
-                        <td>{{participante.idbloque.direccion}}</td>
+                        <td>--</td>
                         <td>{{participante.idponencia.nombre}}</td>
                     </tr>
                     {% endfor %}
@@ -58,14 +58,13 @@
                 </tbody>
             </table>
         </div>
-        <div class="download-button-container">
-            <button class="download-button">Descargar</button>
-        </div>
+        <form class="filter-button-container" method="get">
+            <div class="content-text-filter">
+                <label>FILTRAR POR APELLIDO:</label>
+                <input type="text" class="text_filter" id="text_filter" name="text_filter" onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+            </div>
+            <button type="submit" class="filter-button">Filtrar</button>
+        </form>
     </main>
-    <style>
-        .main {
-            max-width: 1270px;
-        }
-    </style>
 </body>
 </html>
