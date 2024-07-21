@@ -243,7 +243,7 @@ def ingresoAdmin(request):
     try:
         admin = MaeAdministrador.objects.get(correo=correoAdmin, contrasenia=contraseniaAdmin)
         serializer = AdminSerializer(admin)
-        return render(request, 'interfazAdmin.html', serializer.data)
+        return render(request, 'interfazBienvenida.html', serializer.data)
     except MaeAdministrador.DoesNotExist:
         print("No existe chavo")
         return redirect(reverse('LoguingAdministrador') + '?error=Usuario-o-contraseña-incorrectos')
