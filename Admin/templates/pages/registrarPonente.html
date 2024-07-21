@@ -5,69 +5,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Ponente</title>
-    <link rel="stylesheet" href="{% static 'estilos/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'estilos/paginasAdmin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ponente.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Ponente</title>
 </head>
 <body>
     <!-- Header -->
     {% include 'partials/header.html' %}
-    <!-- Barra Lateral -->
+    
+    <!-- Sidebar -->
     {% include 'partials/sidebar.html' %}
 
     <!-- Contenido principal -->
-    <main class="main-content">
-        {% if message %}
-            <div id="message" class="message {% if status == 200 %}success{% else %}error{% endif %}">
-                {{ message }}
-            </div>
+    <div class="flex-main">
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         {% endif %}
-        <h2>Registrar Ponente</h2>
-        <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' %}">
-            {% csrf_token %}
-            <label for="nombre">Nombre del Ponente</label>
-            <!-- onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()"  convierte la entrada del teclado en mayuscula -->
-            <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
-
-            <label for="apellido">Apellido del Ponente</label>
-            <input type="text" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
-
-            <div class="button-container">
-                <button type="submit" class="register-button">Registrar</button>
-                <button type="button" class="delete-button">Eliminar</button>
+        <main class="main-content">
+            <!-- Tabla de Congresos -->
+            <h2 class="h2-Contenido-actual">Contenido Actual</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>NOMBRE</th>
+                            <th>APELLIDO</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan</td>
+                            <td>Perez</td>
+                            <td>Activo</td>
+                            <td class="check-td"><button type="button"><img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check"></button></td>
+                        </tr>
+                        <!-- Añade más filas según sea necesario -->
+                    </tbody>
+                </table>
             </div>
-        </form>
-    </main>
-    <style>
-        .message {
-            position: absolute;
-            margin: 0;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            width: 780px;
-            bottom: 20%;
-        }
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
-    <script>
-        // Ocultar el mensaje después de 3 segundos
-        setTimeout(function() {
-            var message = document.getElementById('message');
-            if (message) {
-                message.style.display = 'none';
-            }
-        }, 3000); // 3000 milisegundos = 3 segundos
-    </script>
+
+            <h2>Registrar Ponente</h2>
+            <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' %}">
+                <!-- {% csrf_token %} -->
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+
+                <label for="apellido">Apellidos</label>
+                <input type="text" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+
+                <div class="button-container">
+                    <button type="submit" class="register-button">Registrar</button>
+                    <button type="button" class="delete-button">Eliminar</button>
+                    <button type="button" class="edit-button">Editar</button>
+                </div>
+            </form>
+        </main>
+    </div>
 </body>
+<script>
+    // Ocultar el mensaje despues de 3 segundos
+    setTimeout(function() {
+        var message = document.getElementById('message');
+        if (message) {
+            message.style.display = 'none';
+        }
+    }, 3000); // 3000 milisegundos = 3 segundos
+</script>
 </html>
