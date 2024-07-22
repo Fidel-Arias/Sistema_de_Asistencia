@@ -1,106 +1,51 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preload" href="{% static 'estilos/styleLogin.css' %}" as="style">
-    <link rel="stylesheet" href="{% static 'estilos/styleLogin.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" type="text/css">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
-    <title>Login</title>
+    <title>Iniciar Sesión</title>
 </head>
-<body>     
-    <header class="header_ucsm">
-        <div class="logos_ucsm">
-            <img class="img-ucsm" src="{% static 'images/logoUCSM.png' %}" alt="Logo UCSM" />
-            <img class="img-epis" src="{% static 'images/logoEPIS.png' %}" alt="Logo Epis" />
-            
-        </div>
+<body>
+    <header class="header">
+        <img class="img-ucsm" src="{% static 'images/logoUCSM.png' %}" alt="UCSM" />
+        <img class="img-ucsm-blanco" src="{% static 'images/ucsm_logo_blanco.webp' %}" alt="UCSM">
+        <img class="img-epis" src="{% static 'images/logoEPIS.png' %}" alt="Epis" />
+        <img class="img-epis-blanco" src="{% static 'images/epis_logo_blanco.webp' %}" alt="Epis" />
     </header>
 
-    <div class="content">
-        <img class="jinis" src="{% static 'images/logoJINIS.webp' %}" alt="logo jinis"/>
-        <h2 class="etiqueta">INICIAR SESIÓN</h2>
+    <div id="particles-js"></div>
+
+    <div class='img-login-bloque'>
+        <div class="image-jinis-universidad">
+            <img class="jinis" src="{% static 'images/logo_jinis2024.webp' %}" alt="logo jinis"/>
+            <p>XXXI Jornada Internacional de Ingeniería de Sistemas</p>
+        </div>
+
+        <div class="form-login-bloque">
+            <h1 class="etiqueta">INICIAR SESIÓN</h1>
+            <form action="{% url 'Participante' %}" method="POST" class="form_login">
+                {% csrf_token %}
+                <div class="bloque-icon-input">
+                    <img src="{% static 'images/icon-key.png' %}" alt="key" class="key-disabled">
+                    <img src="{% static 'images/icon-key-blanco.png' %}" alt="key" class="key-active">
+                    <div class="input-box">
+                        <label for="codigo">Código</label>
+                        <input type="password" name="codigo" required />
+                    </div>
+                </div>
+                
+                <button type="submit" class="buttonEntrar">Ingresar</button>
+    
+                <div class="enlaces-login">
+                    <a href="{% url 'LoguingColaborador' %}" class="colaboradorEnlace">Colaborador</a>
+                    <a href="{% url 'LoguingAdministrador' %}" class="administradorEnlace">Administrador</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class='wrapper'>
-        <form action="{% url 'Participante' %}" method="POST" class="form_login">
-            {% csrf_token %}
-            <h1 class="labelCodigo">CÓDIGO</h1>
-            <div class="input-box">
-                <input type="password" name="codigo" required />
-            </div>
-            
-            <button type="submit" class="buttonEntrar">Entrar</button>
-
-            <div class="enlacesLogin">
-                <a href="{% url 'LoguingColaborador' %}" class="colaboradorEnlace">¿Eres colaborador?</a>
-                <a href="{% url 'LoguingAdministrador' %}" class="administradorEnlace">¿Eres administrador?</a>
-            </div>
-        </form>
-    </div>
-    <style>
-        /*Responsive body*/
-@media (max-width: 412px) {
-    body {
-        height: 100vh;
-    }
-
-    .content {
-        margin-top: 8rem;
-    }
-
-    .content img {
-        max-width: 85%;
-    }
-
-    .etiqueta {
-        font-size: 3.5rem;
-    }
-
-    .img-ucsm{
-        min-width: 55%;
-    }
-
-    .img-epis {
-        max-width: 30%;
-    }
-
-    .logos_ucsm {
-        padding: 2rem;
-    }
-
-    .wrapper {
-        width: 30rem;
-        margin: 0 auto;
-        height: 35rem;
-        display: table;
-    }
-
-    .wrapper form{
-        display: table-cell;
-        vertical-align: middle;
-    }
-
-    .labelCodigo {
-        font-size: 2.5rem;
-    }
-
-    .input-box input[type="password"] {
-        width: 100%;
-    }
-
-    .buttonEntrar{
-        width: 60%;
-    }
-
-    .enlacesLogin {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-    }
-
-}
-    </style>
 </body>
 </html>
