@@ -234,6 +234,17 @@ class adminView(viewsets.ViewSet):
                 except Exception:
                     messages.error(request, 'Error al eliminar el congreso')
                 return redirect('RegistrarCongreso')
+            elif action == 'activate':
+                try:
+                    congreso = MaeCongresoJinis.objects.get(nombre=nombreCongreso)
+                    congreso.estado = 'ACTIVO'
+                    congreso.save()
+                    messages.success(request, 'Congreso activado con éxito')
+                except MaeCongresoJinis.DoesNotExist:
+                    messages.error(request, 'No se encontró el congreso')
+                except Exception:
+                    messages.error(request, 'Error al activar el congreso')
+                return redirect('RegistrarCongreso')
             elif action == 'edit':
                 idcongreso = request.POST.get('id')
                 print('id congreso: ', idcongreso)
