@@ -325,8 +325,7 @@ def ingresoAdmin(request):
     contraseniaAdmin = request.POST.get('contrasenia')
     try:
         admin = MaeAdministrador.objects.get(correo=correoAdmin, contrasenia=contraseniaAdmin)
-        serializer = AdminSerializer(admin)
-        return render(request, 'interfazBienvenida.html', serializer.data)
+        return render(request, 'interfazBienvenida.html', {'admin': admin})
     except MaeAdministrador.DoesNotExist:
         return redirect(reverse('LoguingAdministrador') + '?error=Usuario-o-contraseña-incorrectos')
     
