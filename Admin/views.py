@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from rest_framework import viewsets
 from .serializers import AdminSerializer
@@ -10,6 +10,7 @@ from Ponencia.models import MaePonencia
 from Dia.models import MaeDia
 from Ponente.models import MaePonente
 from CongresoJINIS.models import MaeCongresoJinis
+from CongresoJINIS.forms import CongresoJinisForm
 from Colaborador.models import MaeColaborador
 from tipoUsuario.models import MaeTipoUsuario
 from django.contrib import messages
@@ -193,6 +194,7 @@ class adminView(viewsets.ViewSet):
             fechaHoy = date.today()
             fechaInicio = request.POST.get('fechaInicio')
             fechaFin = request.POST.get('fechaFin')
+            asistenciaTotal = request.POST.get('totalAsistencia')
             if action == 'register':
                 if fechaInicio == fechaFin:
                     messages.error(request, 'Las fechas de inicio y fin deben ser distintas')
@@ -206,13 +208,15 @@ class adminView(viewsets.ViewSet):
                             nueva_congreso = MaeCongresoJinis(
                                 nombre=nombreCongreso,
                                 fechainicio=fechaInicio,
-                                fechafin=fechaFin
+                                fechafin=fechaFin,
+                                asistenciatotal=asistenciaTotal
                             )
                             nueva_congreso.save()
                             generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin)
                             messages.success(request, 'Congreso registrado con éxito')
                         else:
                             messages.error(request, 'Ya existe el congreso')
+                            print('bien el mensaje')
                     except Exception:
                         messages.error(request, 'Error al registrar el congreso')
                 return redirect('RegistrarCongreso')
@@ -230,8 +234,36 @@ class adminView(viewsets.ViewSet):
                 except Exception:
                     messages.error(request, 'Error al eliminar el congreso')
                 return redirect('RegistrarCongreso')
+            elif action == 'edit':
+                idcongreso = request.POST.get('id')
+                print('id congreso: ', idcongreso)
+                if fechaInicio == fechaFin:
+                    messages.error(request, 'Las fechas de inicio y fin deben ser distintas')
+                elif fechaFin < fechaInicio:
+                    messages.error(request, 'Ingrese correctamente las fechas')
+                elif fechaInicio < fechaHoy.__str__() or fechaFin < fechaHoy.__str__():
+                    messages.error(request, 'La fecha de inicio y fin no puede ser anterior a la fecha de hoy')
+                try:
+                    congreso = MaeCongresoJinis.objects.get(pk=idcongreso)
+                    congreso_data = {
+                        'nombre': nombreCongreso,
+                        'fechainicio': fechaInicio,
+                        'fechafin': fechaFin,
+                        'asistenciatotal': asistenciaTotal,
+                    }
+                    congreso_actualizado = CongresoJinisForm(congreso_data, instance=congreso)
+                    if congreso_actualizado.is_valid():
+                        congreso_actualizado.save()
+                        # generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin)
+                        messages.success(request, 'Congreso actualizado con éxito')
+                    else:
+                        messages.error(request, congreso_actualizado.errors)
+                except MaeCongresoJinis.DoesNotExist:
+                    messages.error(request, 'El congreso ya no existe')
+                return redirect('RegistrarCongreso')
         else:
-            return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_congreso'})
+            congresos = MaeCongresoJinis.objects.all()
+            return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_congreso', 'congresos':congresos})
 
     def cerrar_sesion(request):
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
