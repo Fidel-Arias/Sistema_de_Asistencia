@@ -34,18 +34,28 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>NOMBRE</th>
-                            <th>APELLIDO</th>
+                            <th>NOMBRES</th>
+                            <th>APELLIDOS</th>
                             <th>ESTADO</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for ponente in ponentes %}
                         <tr>
-                            <td>Juan</td>
-                            <td>Perez</td>
-                            <td>Activo</td>
-                            <td class="check-td"><button type="button"><img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check"></button></td>
+                            <td>{{ponente.nombre}}</td>
+                            <td>{{ponente.apellido}}</td>
+                            <td>{{ponente.estado}}</td>
+                            <td class="check-td">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{ponente.idponente}}"
+                                    data-nombre="{{ponente.nombre}}"
+                                    data-apellido="{{ponente.apellido}}"
+                                    data-estado="{{ponente.estado}}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
                         </tr>
+                        {% endfor %}
                         <!-- Añade más filas según sea necesario -->
                     </tbody>
                 </table>
@@ -55,21 +65,48 @@
             <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' %}">
                 <!-- {% csrf_token %} -->
                 <label for="nombre">Nombre</label>
+                <input type="hidden" name="id" id="ponenteid">
                 <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
                 <label for="apellido">Apellidos</label>
                 <input type="text" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
                 <div class="button-container">
-                    <button type="submit" class="register-button">Registrar</button>
-                    <button type="button" class="delete-button">Eliminar</button>
-                    <button type="button" class="edit-button">Editar</button>
+                    <button type="submit" id="register-button" name="action" value="register" class="register-button">Registrar</button>
+                    <button type="submit" id="delete-button" name="action" value="delete" class="delete-button">Eliminar</button>
+                    <button type="submit" id="edit-button" name="action"  value="edit" class="edit-button">Editar</button>
                 </div>
             </form>
         </main>
     </div>
 </body>
 <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const idponente = event.currentTarget.getAttribute('data-id');
+                const nombre = event.currentTarget.getAttribute('data-nombre');
+                const apellido = event.currentTarget.getAttribute('data-apellido');
+                estado = event.currentTarget.getAttribute('data-estado');
+
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Eliminar";
+                    document.getElementById('delete-button').value = "delete";
+                }
+
+                document.getElementById('ponenteid').value = idponente;
+                document.getElementById('nombre').value = nombre;
+                document.getElementById('apellido').value = apellido;
+            });
+        });
+    });
+
     // Ocultar el mensaje despues de 3 segundos
     setTimeout(function() {
         var message = document.getElementById('message');

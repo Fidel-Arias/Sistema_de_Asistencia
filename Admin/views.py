@@ -9,6 +9,7 @@ from Bloque.models import MaeBloque
 from Ponencia.models import MaePonencia
 from Dia.models import MaeDia
 from Ponente.models import MaePonente
+from Ponente.forms import PonenteForm
 from CongresoJINIS.models import MaeCongresoJinis
 from CongresoJINIS.forms import CongresoJinisForm
 from Colaborador.models import MaeColaborador
@@ -74,31 +75,70 @@ class adminView(viewsets.ViewSet):
             return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'tiposUsuario':tiposUsuario, 'bloques':bloques, 'lista_congresos':congresos})
     def registrar_ponentes(self, request):
         if request.method == 'POST':
+            action = request.POST.get('action')
             nombrePonente = request.POST.get('nombre')
             apellidoPonente = request.POST.get('apellido')
-            mensaje = ''
-            status = 0
-            nombrePonente = nombrePonente.strip()
-            apellidoPonente = apellidoPonente.strip()
-            try:
-                if (not(MaePonente.objects.filter(nombre=nombrePonente, apellido=apellidoPonente).exists())):
-                    nuevo_ponente = MaePonente(
-                        nombre=nombrePonente,
-                        apellido=apellidoPonente
-                    )
-                    nuevo_ponente.save()
-                    mensaje = 'Ponente registrado con éxito'
-                    status = 200
-                else:
-                    mensaje = 'Ya existe el ponente'
-                    status = 500
-                return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes', 'message': mensaje, 'status': status})
-            except Exception:
-                mensaje = 'Error al registrar ponente'
-                status = 500
-                return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes', 'message': mensaje, 'status': status})
+            if action == "register":
+                try:
+                    if (not(MaePonente.objects.filter(nombre=nombrePonente, apellido=apellidoPonente).exists())):
+                        nuevo_ponente = MaePonente(
+                            nombre=nombrePonente,
+                            apellido=apellidoPonente
+                        )
+                        nuevo_ponente.save()
+                        messages.success(request, 'Ponente registrado con éxito')
+                    else:
+                        messages.error(request, 'El ponente ya existe')
+                except Exception:
+                    messages.error(request, 'Error al registrar ponente')
+                return redirect('RegistrarPonentes')
+            elif action == "delete":
+                try:
+                    ponente = MaePonente.objects.get(nombre=nombrePonente, apellido=apellidoPonente)
+                    #ELIMINACION TOTAL
+                    '''congreso.delete()'''
+                    #ELIMINACION LOGICA
+                    ponente.estado = "NO ACTIVO"
+                    ponente.save()
+                    messages.success(request, 'Ponente desactivado con éxito')
+                except ponente.DoesNotExist:
+                    messages.error(request, 'El ponente no existe')
+                except Exception:
+                    messages.error(request, 'Error al desactivar al ponente')
+                return redirect('RegistrarPonentes')
+            elif action == "activate":
+                try:
+                    ponente = MaePonente.objects.get(nombre=nombrePonente, apellido=apellidoPonente)
+                    ponente.estado = "ACTIVO"
+                    ponente.save()
+                    messages.success(request, 'Ponente activado con éxito')
+                except ponente.DoesNotExist:
+                    messages.error(request, 'El ponente no existe')
+                except Exception:
+                    messages.error(request, 'Error al activar al ponente')
+                return redirect('RegistrarPonentes')
+            elif action == 'edit':
+                id_ponente = request.POST.get('id')
+                try:
+                    ponente = MaePonente.objects.get(pk=id_ponente)
+                    contexto = {
+                        'nombre': nombrePonente,
+                        'apellido': apellidoPonente
+                    }
+                    ponente_actualizado = PonenteForm(contexto, instance=ponente)
+                    if ponente_actualizado.is_valid():
+                        ponente_actualizado.save()
+                        messages.success(request, 'Ponente actualizado con éxito')
+                    else:
+                        messages.error(request, 'Error al actualizar al ponente')
+                except ponente.DoesNotExist:
+                    messages.error(request, 'El ponente no existe')
+                except Exception:
+                    messages.error(request, 'Error al actualizar al ponente')
+                return redirect('RegistrarPonentes')
         else:
-            return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes'})
+            ponentes = MaePonente.objects.all()
+            return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes', 'ponentes': ponentes})
 
     def registrar_bloques(self, request):
         lista_ponencias = MaePonencia.objects.all()
@@ -256,13 +296,13 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'La fecha de inicio y fin no puede ser anterior a la fecha de hoy')
                 try:
                     congreso = MaeCongresoJinis.objects.get(pk=idcongreso)
-                    congreso_data = {
+                    contexto = {
                         'nombre': nombreCongreso,
                         'fechainicio': fechaInicio,
                         'fechafin': fechaFin,
                         'asistenciatotal': asistenciaTotal,
                     }
-                    congreso_actualizado = CongresoJinisForm(congreso_data, instance=congreso)
+                    congreso_actualizado = CongresoJinisForm(contexto, instance=congreso)
                     if congreso_actualizado.is_valid():
                         congreso_actualizado.save()
                         # generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin)
@@ -288,7 +328,6 @@ def ingresoAdmin(request):
         serializer = AdminSerializer(admin)
         return render(request, 'interfazBienvenida.html', serializer.data)
     except MaeAdministrador.DoesNotExist:
-        print("No existe chavo")
         return redirect(reverse('LoguingAdministrador') + '?error=Usuario-o-contraseña-incorrectos')
     
 def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin):
