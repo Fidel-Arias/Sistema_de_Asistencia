@@ -29,7 +29,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%; /* Ajusta el ancho del recuadro */
-    max-width: 890px; /* Máximo ancho del recuadro */
+    max-width: auto; /* Máximo ancho del recuadro */
     box-sizing: border-box; /* Incluye padding y border en el tamaño total */
     text-align: center;
 }
@@ -44,7 +44,7 @@ body {
 }
 
 .table-container table {
-    width: 99%;
+    width: 98%;
     border-collapse: collapse;
 }
 
@@ -83,27 +83,6 @@ body {
     text-align: center;
 }
 
-/*Estilos para el campo Contraseña*/
-.table-container .td-button{
-    padding: 0;
-}
-
-.td-button button{
-    width: 85px;
-    height: 30px;
-    border-radius: 1em;
-    background-color: #d44352;
-    border: none;
-    font-size: 16px;
-    color: white;
-    font-weight: bold;
-}
-
-.td-button button:hover{
-    background-color: #ee7981;
-    cursor: pointer;
-}
-
 /* Estilo del contenedor principal */
 .content-fondo{
     width: 55%;
@@ -123,7 +102,7 @@ body {
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     border-radius: 10px;
-    width: 80%; /* Ajusta el ancho del recuadro */
+    width: 84%; /* Ajusta el ancho del recuadro */
 }
 
 h2{
@@ -170,6 +149,14 @@ h2{
     width: 100%;
 }
 
+.form-group {
+    width: 100%;
+}
+
+.form-nombres {
+    width: 85%;
+}
+
 .flex-correo-password{
     margin-top: 1em;
     display: flex;
@@ -178,7 +165,7 @@ h2{
     align-items: center;
     gap: 1em;
     width: 100%;
-    margin-bottom: 0.8em;
+    margin-bottom: 1em;
 }
 
 .register-form .label__nombre,
@@ -199,8 +186,111 @@ h2{
     width: 100%;
 }
 
+.register-form .input__correo {
+    width: 256px;
+}
+
+.register-form .input__nombre {
+    width: 256px;
+}
+
 .flex-correo-password .group-correo{
     width: 56%;
+}
+
+/*Flex para el campo select*/
+.flex-select{
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    width: 100%;
+}
+
+.group-usuario {
+    max-width: 256px;
+}
+
+.group-congreso {
+    max-width: 265px;
+}
+
+.form-group select {
+    width: 100%;
+}
+
+/*flex para los bloques de colaboradores*/
+.flex-bloques-selected{
+    display: grid;
+    max-height: 180px;
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    gap: 10px;
+    overflow-y: auto; /* Para manejar el desbordamiento vertical */
+    width: 100%;
+}
+
+.bloques-container {
+    display: contents; /* Permite que los elementos secundarios participen en el diseño de la cuadrícula */
+}
+
+.form-bloque input,
+.form-bloque label {
+    margin: 0.5em;
+}
+
+/* Ocultar el checkbox original */
+.form-bloque input[type="checkbox"] {
+    display: none;
+}
+
+/* Estilo personalizado para el checkbox */
+.form-bloque label {
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 20px;
+    color: #000;
+    width: 84%;
+    margin-left: 0;
+}
+
+/* Estilo para el pseudo-elemento del checkbox */
+.form-bloque label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #000;
+    background-color: #fff;
+    border-radius: 3px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Estilo al hacer hover en el label */
+.form-bloque input[type="checkbox"]:hover + label::before {
+    border-color: rgb(32, 119, 43);
+}
+
+/* Estilo cuando el checkbox está seleccionado */
+.form-bloque input[type="checkbox"]:checked + label::before {
+    background-color: #67c967;
+    border-color: #358a35;
+}
+
+/* Estilo para el checkmark */
+.form-bloque input[type="checkbox"]:checked + label::after {
+    content: '\2713'; /* Unicode del checkmark */
+    position: absolute;
+    left: 4px;
+    top: -1px;
+    font-size: 15px;
+    color: #fff;
+}
+
+.bloques-active{
+    display: none; /*table-cell para aparecer*/
 }
 
 /* Estilo del contenedor de botones */

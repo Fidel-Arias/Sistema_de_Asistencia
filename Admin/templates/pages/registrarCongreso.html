@@ -104,35 +104,34 @@
     <script>
         
         document.addEventListener('DOMContentLoaded', (event) => {
-        const buttons = document.querySelectorAll('.fill-btn');
-        var estado;
+            const buttons = document.querySelectorAll('.fill-btn');
+            var estado;
 
-        buttons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                const idcongreso = event.currentTarget.getAttribute('data-id');
-                const nombre = event.currentTarget.getAttribute('data-nombre');
-                const fechainicio = event.currentTarget.getAttribute('data-fechainicio');
-                const fechafin = event.currentTarget.getAttribute('data-fechafin');
-                estado = event.currentTarget.getAttribute('data-estado');
-                const asistenciatotal = event.currentTarget.getAttribute('data-asistenciatotal');
+            buttons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const idcongreso = event.currentTarget.getAttribute('data-id');
+                    const nombre = event.currentTarget.getAttribute('data-nombre');
+                    const fechainicio = event.currentTarget.getAttribute('data-fechainicio');
+                    const fechafin = event.currentTarget.getAttribute('data-fechafin');
+                    estado = event.currentTarget.getAttribute('data-estado');
+                    const asistenciatotal = event.currentTarget.getAttribute('data-asistenciatotal');
 
-                if (estado === "NO ACTIVO") {
-                    document.getElementById('delete-button').innerText = "Activar";
-                    document.getElementById('delete-button').value = "activate";
-                } else {
-                    document.getElementById('delete-button').innerText = "Eliminar";
-                    document.getElementById('delete-button').value = "delete";
-                }
+                    if (estado === "NO ACTIVO") {
+                        document.getElementById('delete-button').innerText = "Activar";
+                        document.getElementById('delete-button').value = "activate";
+                    } else {
+                        document.getElementById('delete-button').innerText = "Eliminar";
+                        document.getElementById('delete-button').value = "delete";
+                    }
 
-                document.getElementById('congresoid').value = idcongreso;
-                document.getElementById('nombre').value = nombre;
-                document.getElementById('fechaInicio').value = fechainicio;
-                document.getElementById('fechaFin').value = fechafin;
-                document.getElementById('totalAsistencia').value = asistenciatotal;
+                    document.getElementById('congresoid').value = idcongreso;
+                    document.getElementById('nombre').value = nombre;
+                    document.getElementById('fechaInicio').value = fechainicio;
+                    document.getElementById('fechaFin').value = fechafin;
+                    document.getElementById('totalAsistencia').value = asistenciatotal;
+                });
             });
-
         });
-    });
 
         // Ocultar el mensaje después de 3 segundos
         setTimeout(function() {

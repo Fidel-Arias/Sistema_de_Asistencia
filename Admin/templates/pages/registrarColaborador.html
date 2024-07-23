@@ -21,35 +21,43 @@
     <!-- Contenedor principal -->
     <div class="main-container" id="main">
         <!-- Tabla de contenido -->
+         
         <div class="table-container">
             <h2>Contenido Actual</h2>
             <div class="table-container-scroll">
                 <table>
                     <thead>
                         <tr>
-                            <th>NOMBRE</th>
-                            <th>APELLIDO</th>
-                            <th>CORREO</th>
-                            <th>BLOQUE</th>
-                            <th>CONTRASEÑA</th>
+                            <tr>
+                                <th>NOMBRE</th>
+                                <th>APELLIDO</th>
+                                <th>CORREO</th>
+                                <th>CONGRESO</th>
+                                <th>ESTADO</th>
+                            </tr>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        {% for colaborador in colaboradores %}
                         <tr>
-                            <td>Carlos</td>
-                            <td>Días</td>
-                            <td>carlos@ucsm.edu.pe</td>
-                            <td>Bloque 1: 10 am</td>
-                            <td class="td-button">
-                                <button type="button">Mostrar</button>
-                            </td>
-                            <td class="check-td">
-                                <button type="button">
+                            <td style="width: 180px;">{{colaborador.nombre}}</td>
+                            <td style="width: 180px;">{{colaborador.apellido}}</td>
+                            <td style="width: 195px;">{{colaborador.correo}}</td>
+                            <td style="width: 90px;">{{colaborador.idcongreso}}</td>
+                            <td style="width: 100px;">{{colaborador.estado}}</td>
+                            <td class="check-td" style="width: 190px;">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{colaborador.idcolaborador.idcolaborador}}"
+                                    data-nombre="{{colaborador.nombre}}"
+                                    data-apellido="{{colaborador.apellido}}"
+                                    data-congreso="{{colaborador.idcongreso.idcongreso}}"
+                                    data-estado="{{colaborador.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
                             </td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -67,9 +75,10 @@
         <div class="content-fondo">
             <h2>Registrar Colaborador</h2>
             <main class="main-content">
-                <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' %}">
+                <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' %}">
+                    {% csrf_token %}
                     <div class="flex-nombre-apellido">
-                        <div class="form-group">
+                        <div class="form-group form-nombres">
                             <label for="nombre" class="label__nombre">Nombre</label>
                             <input type="text" class="input__nombre" name="nombre" id="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
                         </div>
@@ -92,29 +101,27 @@
                         </div>
                     </div>
                     
-                    <label for="tipoUsuario">Tipo de Usuario</label>
-                    <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
-                        <option value="" disabled selected>Seleccionar tipo de usuario</option>
-                        {% for usuario in tiposUsuario %}
-                            <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="flex-select">
+                        <div class="form-group group-usuario">
+                            <label for="tipoUsuario">Tipo de Usuario</label>
+                            <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
+                                <option value="" disabled selected>Seleccionar tipo de usuario</option>
+                                {% for usuario in tiposUsuario %}
+                                    <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                    <label for="bloque">Bloque</label>
-                    <select class="combobox" name="bloque" id="bloque" required>
-                        <option value="" disabled selected>Seleccionar el bloque</option>
-                        {% for bloque in bloques %}
-                            <option value="{{bloque.idbloque}}">{{bloque}}</option>
-                        {% endfor %}
-                    </select>
-
-                    <label for="congreso">Congreso</label>
-                    <select class="combobox" name="congreso" id="congreso" required>
-                        <option value="" disabled selected>Seleccionar el congreso</option>
-                        {% for congreso in lista_congresos %}
-                            <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
-                        {% endfor %}
-                    </select>
+                        <div class="form-group group-congreso">
+                            <label for="congreso">Congreso</label>
+                            <select class="combobox" name="congreso" id="congreso" required>
+                                <option value="" disabled selected>Seleccionar el congreso</option>
+                                    {% for congreso in lista_congresos %}
+                                        <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
+                                    {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="button-container">
                         <button type="submit" class="register-button">Registrar</button>
@@ -124,10 +131,38 @@
                 </form>
             </main>
         </div>
-        
-    </div>
 
+    </div>
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const buttons = document.querySelectorAll('.fill-btn');
+            var estado;
+
+            buttons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const idcolaborador = event.currentTarget.getAttribute('data-id');
+                    const nombre = event.currentTarget.getAttribute('data-nombre');
+                    const apellido = event.currentTarget.getAttribute('data-apellido');
+                    const congreso = event.currentTarget.getAttribute('data-congreso');
+                    estado = event.currentTarget.getAttribute('data-estado');
+
+
+                    if (estado === "NO ACTIVO") {
+                        document.getElementById('delete-button').innerText = "Activar";
+                        document.getElementById('delete-button').value = "activate";
+                    } else {
+                        document.getElementById('delete-button').innerText = "Eliminar";
+                        document.getElementById('delete-button').value = "delete";
+                    }
+
+                    document.getElementById('congresoid').value = idcongreso;
+                    document.getElementById('nombre').value = nombre;
+                    document.getElementById('fechaInicio').value = fechainicio;
+                    document.getElementById('fechaFin').value = fechafin;
+                    document.getElementById('totalAsistencia').value = asistenciatotal;
+                });
+            });
+        });
         // Ocultar el mensaje después de 3 segundos
         setTimeout(function() {
             var message = document.getElementById('message');
