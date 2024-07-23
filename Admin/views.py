@@ -470,6 +470,8 @@ class adminView(viewsets.ViewSet):
         return render(request, 'pages/bloqueColaborador.html', {'current_page': 'registrar_bloques_colaboradores'})
     
     def cerrar_sesion(selft, request):
+        del request.session['correo_admin']
+        del request.session['contrasenia_admin']
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
     
 
@@ -488,8 +490,6 @@ def ingresoAdmin(request):
         correoAdmin = request.session.get('correo_admin')
         contraseniaAdmin = request.session.get('contrasenia_admin')
         admin = MaeAdministrador.objects.get(correo=correoAdmin, contrasenia=contraseniaAdmin)
-        del request.session['correo_admin']
-        del request.session['contrasenia_admin']
         return render(request, 'interfazBienvenida.html', {'admin': admin})
     
 def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin):
