@@ -179,14 +179,11 @@ h2 {
     font-weight: bold;
 }
 
-.data-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
 /*Estilos para el check-edit*/
 .table-container .check-td{
     padding: 0;
     border: none;
+    width: 8%;
     max-width: 20px;
 }
 

@@ -26,7 +26,7 @@ h2 {
     flex-direction: column;
 }
 .main-content {
-    margin: 30px 260px 20px 500px; /* Centra el contenido horizontalmente */
+    margin: 20px 260px 20px 500px; /* Centra el contenido horizontalmente */
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
@@ -169,10 +169,6 @@ h2 {
 .data-table th {
     background-color: #f2f2f2;
     font-weight: bold;
-}
-
-.data-table tr:nth-child(even) {
-    background-color: #f9f9f9;
 }
 
 /*Estilos para el check-edit*/

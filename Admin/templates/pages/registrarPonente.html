@@ -63,9 +63,9 @@
 
             <h2>Registrar Ponente</h2>
             <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' %}">
-                <!-- {% csrf_token %} -->
-                <label for="nombre">Nombre</label>
+                {% csrf_token %}
                 <input type="hidden" name="id" id="ponenteid">
+                <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
                 <label for="apellido">Apellidos</label>

@@ -12,7 +12,7 @@
             <span>Registrar Congreso</span>
         </a>
         <a href="{% url 'RegistrarUbicaciones' %}" class="sidebar-ubicaciones {% if current_page == 'registrar_ubicaciones' %}active{% endif %}">
-            <img src="images/ubicacion-icon.png" alt="Ubicacion_icon">
+            <img src="{% static 'images/ubicacion-icon.png' %}" alt="Ubicacion_icon">
             <span>Registrar Ubicaciones</span>
         </a>
         <a href="{% url 'RegistrarPonentes' %}" class="{% if current_page == 'registrar_ponentes' %}active{% endif %}">
