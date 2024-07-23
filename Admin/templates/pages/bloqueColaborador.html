@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bloque_colaborador.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Colaborador y Bloques</title>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <div class="main-container" id="main">
+        <!-- Tabla de contenido -->
+        <div class="table-container">
+            <h2>Contenido Actual</h2>
+            <div class="table-container-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>COLABORADOR</th>
+                            <th>BLOQUES ASIGNADOS</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        <tr>
+                            <td style="width: 180px;">CARLOS RAMIREZ</td>
+                            <td style="width: 200px;">
+                                Miercoles 12: 10:30 - 11:30 <br>
+                                Miercoles 12: 10:30 - 11:30 <br>
+                                Miercoles 12: 10:30 - 11:30 <br>
+                            </td>
+                            <td style="width: 100px;">ACTIVO</td>
+                            <td class="check-td" style="width: 190px;">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{blcl.idbc}}"
+                                    data-colaborador="{{blcl.nombre}}"
+                                    data-bloques="{{blcl.apellido}}"
+                                    data-estado="{{blcl.estado}}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="message" class="message success">¡Mensaje de ejemplo exitoso!</div>
+
+        <!-- Contenido principal -->
+        <div class="content-fondo">
+            <h2>Seleecionar Bloques para el Colaborador</h2>
+            <main class="main-content">
+                <form class="register-form" method="POST" action="{% url 'bloquesColaborador' %}">
+                    <div class="group-usuario">
+                        <label for="tipoUsuario">Colaborador</label>
+                        <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
+                            <option value="" disabled selected>Seleccionar el colaborador</option>
+                            {% for usuario in tiposUsuario %}
+                                <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <h2>Bloques disponibles</h2>
+                    <div class="flex-bloques-selected">
+                        <div class="bloques-container">
+                            <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                            <div class="form-bloque">
+                                <input type="checkbox" id="bloque1" name="bloques" value="" >
+                                <label for="bloque1">MIERCOLES 12: 10:30 - 11:30</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit" class="register-button">Registrar</button>
+                        <button type="button" class="edit-button">Editar</button>
+                        <button type="button" class="delete-button">Eliminar</button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const idcolaborador = event.currentTarget.getAttribute('data-id');
+                const nombre = event.currentTarget.getAttribute('data-nombre');
+                const apellido = event.currentTarget.getAttribute('data-apellido');
+                const congreso = event.currentTarget.getAttribute('data-congreso');
+                const bloques = event.currentTarget.getAttribute('data-bloques');
+                estado = event.currentTarget.getAttribute('data-estado');
+                
+
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Eliminar";
+                    document.getElementById('delete-button').value = "delete";
+                }
+
+                document.getElementById('congresoid').value = idcongreso;
+                document.getElementById('nombre').value = nombre;
+                document.getElementById('fechaInicio').value = fechainicio;
+                document.getElementById('fechaFin').value = fechafin;
+                document.getElementById('totalAsistencia').value = asistenciatotal;
+            });
+        });
+    });
+    // Ocultar el mensaje después de 3 segundos
+    setTimeout(function() {
+        var message = document.getElementById('message');
+        var mainContent = document.getElementById('main');
+        if (message) {
+            message.style.display = 'none';
+            mainContent.style.gap = '2em';
+        }
+    }, 3000); // 3000 milisegundos = 3 segundos
+</script>
+</html>

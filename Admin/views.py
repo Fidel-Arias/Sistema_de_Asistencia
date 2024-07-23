@@ -466,6 +466,9 @@ class adminView(viewsets.ViewSet):
             ubicaciones = MaeUbicacion.objects.all()
             return render(request, 'pages/registrarUbicaciones.html', {'current_page': 'registrar_ubicaciones', 'ubicaciones':ubicaciones})
     
+    def registrar_bloques_colaboradores(self, request):
+        return render(request, 'pages/bloqueColaborador.html', {'current_page': 'registrar_bloques_colaboradores'})
+    
     def cerrar_sesion(selft, request):
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
     
