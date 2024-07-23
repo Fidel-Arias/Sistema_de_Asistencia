@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.db import connection, transaction
 from rest_framework import viewsets
 from Asistencia.models import TrsAsistencia
 from Asistencia.serializers import AsistenciaSerializer
 from Admin.models import MaeAdministrador
 from Bloque.models import MaeBloque
+from Bloque.forms import BloqueForm
 from Ponencia.models import MaePonencia
 from Ponencia.forms import PonenciaForm
 from Dia.models import MaeDia
@@ -141,58 +143,100 @@ class adminView(viewsets.ViewSet):
             return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes', 'ponentes': ponentes})
 
     def registrar_bloques(self, request):
-        lista_ponencias = MaePonencia.objects.all()
-        lista_dias = MaeDia.objects.all()
         # hora_final_bd = MaeBloque.objects.last() #Obtiene el ultimo dato ingresado en la base de datos
         if request.method == 'POST':
             ponencia = request.POST.get('ponencia')
             dia = request.POST.get('dia')
             horaInicio = request.POST.get('hora_inicio')
             horaFin = request.POST.get('hora_fin')
-            direccion = request.POST.get('direccion')
-            if not MaeBloque.objects.filter(idponencia=ponencia).exists(): #verificar el auditorio la hora que se esta ocupando 
-                if not MaeBloque.objects.filter(horainicio=horaInicio, horafin=horaFin,  direccion=direccion):
-                    
+            ubicacion = request.POST.get('ubicacion')
+            action = request.POST.get('action')
+            if action == 'register':
+                if not MaeBloque.objects.filter(idponencia=ponencia).exists():
                     try:
                         if horaInicio == horaFin: #mas validaciones validar que bloques se usa el auditorio y comparar con los que se vana ingresar para evitar choques
-                            mensaje = "La hora de inicio y fin deben ser diferentes"
-                            status = 500
+                            messages.error(request, "La hora inicial y final deben ser diferentes")
                         elif horaFin < horaInicio:
-                            mensaje = "La hora de inicio no puede ser mayor a la hora de fin"
-                            status = 500
+                            messages.error(request, "La hora inicial no puede ser mayor a la hora final")
                         else:
-                            nuevo_bloque = MaeBloque(
-                                idponencia=MaePonencia.objects.get(idponencia=ponencia),
-                                iddia= MaeDia.objects.get(iddia=dia),
-                                horainicio=horaInicio,
-                                horafin=horaFin,
-                                direccion=direccion
-                            )
-                            nuevo_bloque.save()
-                            mensaje = "El bloque ha sido registrado"
-                            status = 200
+                            resultado = verificar_ubicacion(0, ponencia, horaInicio, horaFin, ubicacion)
+                            if resultado == 'OK':
+                                nuevo_bloque = MaeBloque(
+                                    idponencia=MaePonencia.objects.get(pk=ponencia),
+                                    iddia= MaeDia.objects.get(pk=dia),
+                                    horainicio=horaInicio,
+                                    horafin=horaFin,
+                                    idubicacion=MaeUbicacion.objects.get(pk=ubicacion)
+                                )
+                                nuevo_bloque.save()
+                                messages.success(request, "El bloque ha sido creado exitosamente")
+                            else:
+                                messages.error(request, "El auditorio no esta disponible para la hora indicada")
                     except Exception:
-                        mensaje = "Error al registara el bloque"
-                        status = 500
-                    
+                        messages.error(request, 'Se produjo un error al crear el bloque')
                 else:
-                    mensaje = "El auditorio ya esta siendo ocupado en la hora indicada"
-                    status = 500
-            else:
-                mensaje = "El bloque con la ponencia ya existe"
-                status = 500
-            return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques', 'ponencias': lista_ponencias, 'dias': lista_dias, 'message': mensaje, 'status': status})
+                    messages.error(request, "Ya existe una ponencia en los bloques")
+                return redirect('RegistrarBloques')
+            elif action == 'delete':
+                try:
+                    bloque = MaeBloque.objects.get(idponencia=ponencia, iddia=dia, horainicio=horaInicio, horafin=horaFin, idubicacion=ubicacion)
+                    #ELIMINACION TOTAL
+                    '''bloque.delete()'''
+                    #ELIMINACION LOGICA
+                    bloque.estado = "NO ACTIVO"
+                    bloque.save()
+                    messages.success(request, 'El bloque ha sido desactivado exitosamente')
+                except bloque.DoesNotExist:
+                    messages.error(request, 'El bloque no existe')
+                except Exception:
+                    messages.error(request, 'Se produjo un error al desactivar el bloque')
+                return redirect('RegistrarBloques')
+            elif action == 'activate':
+                try:
+                    bloque = MaeBloque.objects.get(idponencia=ponencia, iddia=dia, horainicio=horaInicio, horafin=horaFin, idubicacion=ubicacion)
+                    bloque.estado = "ACTIVO"
+                    bloque.save()
+                    messages.success(request, 'El bloque ha sido activado exitosamente')
+                except bloque.DoesNotExist:
+                    messages.error(request, 'El bloque no existe')
+                except Exception:
+                    messages.error(request, 'Se produjo un error al activar el bloque')
+                return redirect('RegistrarBloques')
+            elif action == 'edit':
+                idbloque = request.POST.get('id');
+                try:
+                    bloque = MaeBloque.objects.get(pk=idbloque)
+                    contexto = {
+                        'idponencia': ponencia,
+                        'iddia': dia,
+                        'horainicio': horaInicio,
+                        'horafin': horaFin,
+                        'idubicacion': ubicacion
+                    }
+                    bloque_actualizado = BloqueForm(contexto, instance=bloque)
+                    if bloque_actualizado.is_valid():
+                        bloque_actualizado.save()
+                        messages.success(request, 'El bloque ha sido actualizado exitosamente')
+                    else:
+                        messages.error(request, 'Se produjo un error al actualizar el bloque')
+                except bloque.DoesNotExist:
+                    messages.error(request, 'El bloque no existe')
+                except Exception:
+                    messages.error(request, 'Se produjo un error al actualizar el bloque')
+                return redirect('RegistrarBloques')
         else:
-            if (not(MaePonencia.objects.exists())):
-                mensaje = 'No hay ponencias registradas, por favor registre al menos una'
-                status = 500
-                return render(request, 'pages/registrarBloques.html', {'current_page':'registrar_bloques', 'message': mensaje, 'status': status, 'dias': lista_dias})
-            elif (not(MaeDia.objects.exists())):
-                mensaje = 'No hay días registrados, por favor registre al menos un día'
-                status = 500
-                return render(request, 'pages/registrarBloques.html', {'current_page':'registrar_bloques', 'message': mensaje, 'status': status, 'ponencias': lista_dias})
-            else:
-                return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques', 'ponencias': lista_ponencias, 'dias': lista_dias})
+            lista_ponencias = MaePonencia.objects.filter(estado='ACTIVO')
+            lista_dias = MaeDia.objects.filter(estado='ACTIVO')
+            ubicaciones = MaeUbicacion.objects.filter(estado='ACTIVO')
+            bloques = MaeBloque.objects.filter(estado='ACTIVO')
+            
+            if not MaePonencia.objects.filter(estado='ACTIVO').exists():
+                messages.warning(request,'No hay ponencias registradas, por favor registre al menos una')
+            elif not MaeDia.objects.filter(estado='ACTIVO').exists():
+                messages.warning(request, 'No hay días registrados, por favor registre al menos un día')
+            elif not MaeUbicacion.objects.filter(estado='ACTIVO').exists():
+                messages.warning(request, 'No hay ubicaciones registradas, por favor registre al menos una ubicación')
+            return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques', 'ponencias': lista_ponencias, 'dias': lista_dias, 'ubicaciones':ubicaciones, 'bloques':bloques})
     def registrar_ponencia(self, request):
         if request.method == 'POST':
             action = request.POST.get('action')
@@ -459,6 +503,8 @@ def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin):
         messages.error(request, 'Error en la generación de días')
         return redirect('RegistrarCongreso')
 
-
-
-        
+def verificar_ubicacion(id, fecha, hora_inicio, hora_fin, ubicacion):
+    cursor = connection.cursor()
+    cursor.callproc('verificar_ubicacion', [id, fecha, hora_inicio, hora_fin, ubicacion])
+    resultado = cursor.fetchone()[0]
+    return resultado

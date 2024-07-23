@@ -28,27 +28,38 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Ponencia</th>
-                            <th>Día</th>
-                            <th>Inicia</th>
-                            <th>Finaliza</th>
-                            <th>Ubicación</th>
+                            <th style="width: 185px;">PONENCIA</th>
+                            <th style="width: 170px;">DÍA</th>
+                            <th style="width: 70px">INICIO</th>
+                            <th style="width: 70px">FIN</th>
+                            <th style="width: 175px;">UBICACIÓN</th>
+                            <th style="width: 165px;">ESTADO</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        {% for bloque in bloques %}
                         <tr>
-                            <td>Introducción a la chamba</td>
-                            <td>Lunes 12 de Agosto</td>
-                            <td>11:15 am</td>
-                            <td>12:30 pm</td>
-                            <td>Auditorio Santa María</td>
+                            <td>{{bloque.idponencia}}</td>
+                            <td>{{bloque.iddia.fecha|date:"d/m/Y"}}</td>
+                            <td>{{bloque.horainicio|time:"H:i A"}}</td>
+                            <td>{{bloque.horafin|time:"H:i A"}}</td>
+                            <td>{{bloque.idubicacion}}</td>
+                            <td>{{bloque.estado}}</td>
                             <td class="check-td">
-                                <button type="button">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{bloque.idbloque}}"
+                                    data-ponencia="{{bloque.idponencia.idponencia}}"
+                                    data-dia="{{bloque.iddia.iddia}}"
+                                    data-horainicio="{{bloque.horainicio|time:'H:i'}}"
+                                    data-horafin="{{bloque.horafin|time:'H:i'}}"
+                                    data-ubicacion="{{bloque.idubicacion.idubicacion}}"
+                                    data-estado="{{bloque.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
                             </td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -66,6 +77,8 @@
             <h2>Registrar Bloques</h2>
             <main class="main-content">
                 <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarBloques' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" id="bloqueid">
                     <label for="ponencia">Ponencia</label>
                     <select id="ponencia" name="ponencia" required style="margin-bottom: 0.2em;">
                         <option value="" selected disabled>Seleccionar una ponencia</option>
@@ -85,12 +98,12 @@
                     <div class="flex-hora">
                         <div class="form-group">
                             <label for="hora_inicio" class="label__hora-inicio">Inicia</label>
-                            <input type="time" class="input__hora-inicio" name="hora_inicio" required>
+                            <input type="time" class="input__hora-inicio" id="hora_inicio" name="hora_inicio" required>
                         </div>
 
                         <div class="form-group">
                             <label for="hora_fin" class="label__hora-fin">Finaliza</label>
-                            <input type="time" class="input__hora-fin" name="hora_fin" required>
+                            <input type="time" class="input__hora-fin" id="hora_fin" name="hora_fin" required>
                         </div>
                     </div>
                     
@@ -103,9 +116,9 @@
                     </select>
 
                     <div class="button-container">
-                        <button type="submit" class="register-button">Registrar</button>
-                        <button type="button" class="edit-button">Editar</button>
-                        <button type="button" class="delete-button">Eliminar</button>
+                        <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
+                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Eliminar</button>
+                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Editar</button>
                     </div>
                 </form>
             </main>
@@ -113,6 +126,70 @@
     </div>
 
     <script>
+        //Desactivar botones
+        const messageWarning = document.querySelector('.warning');
+    const messageSuccess = document.querySelector('.success');
+    const buttonRegister = document.getElementById('register-button');
+    const buttonDelete = document.getElementById('delete-button');
+    const buttonEdit = document.getElementById('edit-button');
+
+    if (messageWarning) {
+        buttonRegister.disabled = true;
+        buttonDelete.disabled = true;
+        buttonEdit.disabled = true;
+        //estilos
+        buttonRegister.style.backgroundColor = '#c8c8c8';
+        buttonRegister.style.cursor = 'not-allowed';
+        buttonDelete.style.backgroundColor = '#c8c8c8';
+        buttonDelete.style.cursor = 'not-allowed';
+        buttonEdit.style.backgroundColor = '#c8c8c8';
+        buttonEdit.style.cursor = 'not-allowed';
+    } else if (messageSuccess) {
+        buttonRegister.disabled = false;
+        buttonDelete.disabled = false;
+        buttonEdit.disabled = false;
+        //estilos
+        buttonRegister.style.backgroundColor = '#007bff';
+        buttonRegister.style.cursor = 'pointer';
+        buttonDelete.style.backgroundColor = '#dc3545';
+        buttonDelete.style.cursor = 'pointer';
+        buttonEdit.style.backgroundColor = '#28a745';
+        buttonEdit.style.cursor = 'pointer';
+    }
+
+        //Obtener datos de la tabla
+        document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const idbloque = event.currentTarget.getAttribute('data-id');
+                const ponencia = event.currentTarget.getAttribute('data-ponencia');
+                const dia = event.currentTarget.getAttribute('data-dia');
+                const horaInicio = event.currentTarget.getAttribute('data-horainicio');
+                const horaFin = event.currentTarget.getAttribute('data-horafin');
+                const ubicacion = event.currentTarget.getAttribute('data-ubicacion');
+                estado = event.currentTarget.getAttribute('data-estado');
+
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Eliminar";
+                    document.getElementById('delete-button').value = "delete";
+                }
+
+                document.getElementById('bloqueid').value = idbloque;
+                document.getElementById('ponencia').value = ponencia;
+                document.getElementById('dia').value = dia;
+                document.getElementById('hora_inicio').value = horaInicio;
+                document.getElementById('hora_fin').value = horaFin;
+                document.getElementById('ubicacion').value = ubicacion;
+            });
+
+        });
+    });
         // Ocultar el mensaje después de 3 segundos
         setTimeout(function() {
             var message = document.getElementById('message');

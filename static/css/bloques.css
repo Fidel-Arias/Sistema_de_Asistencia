@@ -230,6 +230,12 @@ h2{
     border: 1px solid #f5c6cb;
 }
 
+.message.warning {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
 @media (max-width: 1500px) {
     .button-container {
         gap: 1em;
