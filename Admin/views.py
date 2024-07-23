@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from rest_framework import viewsets
-from .serializers import AdminSerializer
 from Asistencia.models import TrsAsistencia
 from Asistencia.serializers import AsistenciaSerializer
 from Admin.models import MaeAdministrador
@@ -15,13 +14,13 @@ from CongresoJINIS.models import MaeCongresoJinis
 from CongresoJINIS.forms import CongresoJinisForm
 from Colaborador.models import MaeColaborador
 from tipoUsuario.models import MaeTipoUsuario
+from Ubicacion.models import MaeUbicacion
+from Ubicacion.forms import UbicacionForm
 from django.contrib import messages
 import pandas as pd
 from datetime import date
 
 class adminView(viewsets.ViewSet):
-    queryset = MaeAdministrador.objects.all()
-    serializer_class = AdminSerializer
 
     def index(self, request):
         contexto = {
@@ -360,20 +359,91 @@ class adminView(viewsets.ViewSet):
             return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_congreso', 'congresos':congresos})
 
     def registrar_ubicacion(self, request):
-        return render(request, 'pages/registrarUbicaciones.html', {'current_page': 'registrar_ubicaciones'})
+        if request.method == 'POST':
+            nombreUbicacion = request.POST.get('nombre_ubicacion')
+            action = request.POST.get('action')
+            if action == 'register':
+                try:
+                    if (not(MaeUbicacion.objects.filter(nombre=nombreUbicacion).exists())):
+                        nueva_ubicacion = MaeUbicacion(
+                            nombre=nombreUbicacion,
+                        )
+                        nueva_ubicacion.save()
+                        messages.success(request, 'Ubicación registrada con éxito')
+                    else:
+                        messages.error(request, 'Ya existe la ubicación')
+                except Exception:
+                    messages.error(request, 'Error al registrar la ubicación')
+                return redirect('RegistrarUbicaciones')
+            elif action == 'delete':
+                try:
+                    ubicacion = MaeUbicacion.objects.get(ubicacion=nombreUbicacion)
+                    #ELIMINACION TOTAL
+                    '''ubicacion.delete()'''
+                    #ELIMINACION LOGICA
+                    ubicacion.estado = 'NO ACTIVO'
+                    ubicacion.save()
+                    messages.success(request, 'Ubicación desactivada con éxito')
+                except MaeUbicacion.DoesNotExist:
+                    messages.error(request, 'No se encontró la ubicación')
+                except Exception:
+                    messages.error(request, 'Error al desactivar la ubicación')
+                return redirect('RegistrarUbicaciones')
+            elif action == 'activate':
+                try:
+                    ubicacion = MaeUbicacion.objects.get(ubicacion=nombreUbicacion)
+                    ubicacion.estado = 'ACTIVO'
+                    ubicacion.save()
+                    messages.success(request, 'Ubicación activada con éxito')
+                except MaeUbicacion.DoesNotExist:
+                    messages.error(request, 'No se encontró la ubicación')
+                except Exception:
+                    messages.error(request, 'Error al activar la ubicación')
+                return redirect('RegistrarUbicaciones')
+            elif action == 'edit':
+                idubicacion = request.POST.get('id')
+                try:
+                    ubicacion = MaeUbicacion.objects.get(pk=idubicacion)
+                    contexto = {
+                        'ubicacion': nombreUbicacion,
+                    }
+                    ubicacion_actualizada = UbicacionForm(contexto, instance=ubicacion)
+                    if ubicacion_actualizada.is_valid():
+                        ubicacion_actualizada.save()
+                        messages.success(request, 'Ubicación actualizada con éxito')
+                    else:
+                        messages.error(request, 'Error al actualizar la ubicación')
+                except MaeUbicacion.DoesNotExist:
+                    messages.error(request, 'La ubicación ya no existe')
+                except Exception:
+                    messages.error(request, 'Error al actualizar la ubicación')
+                return redirect('RegistrarUbicaciones')
+        else:
+            ubicaciones = MaeUbicacion.objects.all()
+            return render(request, 'pages/registrarUbicaciones.html', {'current_page': 'registrar_ubicaciones', 'ubicaciones':ubicaciones})
     
     def cerrar_sesion(selft, request):
+        del request.session['correo_admin']
+        del request.session['contrasenia_admin']
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
     
 
 def ingresoAdmin(request):
-    correoAdmin = request.POST.get('correo')
-    contraseniaAdmin = request.POST.get('contrasenia')
-    try:
+    if request.method == 'POST':
+        correoAdmin = request.POST.get('correo')
+        contraseniaAdmin = request.POST.get('contrasenia')
+        try:
+            admin = MaeAdministrador.objects.get(correo=correoAdmin, contrasenia=contraseniaAdmin)
+            request.session['correo_admin'] = admin.correo
+            request.session['contrasenia_admin'] = admin.contrasenia
+            return redirect('Administrador')
+        except MaeAdministrador.DoesNotExist:
+            return redirect(reverse('LoguingAdministrador') + '?error=Usuario-o-contraseña-incorrectos')
+    else:
+        correoAdmin = request.session.get('correo_admin')
+        contraseniaAdmin = request.session.get('contrasenia_admin')
         admin = MaeAdministrador.objects.get(correo=correoAdmin, contrasenia=contraseniaAdmin)
         return render(request, 'interfazBienvenida.html', {'admin': admin})
-    except MaeAdministrador.DoesNotExist:
-        return redirect(reverse('LoguingAdministrador') + '?error=Usuario-o-contraseña-incorrectos')
     
 def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin):
     try:
