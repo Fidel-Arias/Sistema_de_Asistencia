@@ -87,7 +87,6 @@
     </div>
 </body>
 <script>
-    // Ocultar el mensaje después de 3 segundos
     const messageWarning = document.querySelector('.warning');
     const messageSuccess = document.querySelector('.success');
     const buttonRegister = document.getElementById('register-button');
@@ -143,6 +142,8 @@
             });
         });
     });
+
+     // Ocultar el mensaje después de 3 segundos
     setTimeout(function() {
         var message = document.getElementById('message');
         if (message) {
