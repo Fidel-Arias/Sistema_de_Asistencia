@@ -1,3 +1,5 @@
+{% load static%}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,13 +56,19 @@
             </div>
         </div>
         
-        <div id="message" class="message success">¡Mensaje de ejemplo exitoso!</div>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <!-- Contenido principal -->
         <div class="content-fondo">
             <h2>Seleecionar Bloques para el Colaborador</h2>
             <main class="main-content">
-                <form class="register-form" method="POST" action="{% url 'bloquesColaborador' %}">
+                <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' %}">
                     <div class="group-usuario">
                         <label for="tipoUsuario">Colaborador</label>
                         <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
