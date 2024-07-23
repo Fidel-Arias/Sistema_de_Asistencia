@@ -2,7 +2,6 @@
 .sidebar {
     width: 269px;
     background-color: #9cc1ea;
-    padding-top: 20px;
     position: fixed;
     height: 100%;
     display: flex;
@@ -15,12 +14,24 @@
     display: flex;
     align-items: center;
     width: 80%;
-    padding: 27px;
+    padding-right: 27px;
+    padding-left: 27px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     text-decoration: none;
     font-size: 18px;
     color: #000;
     transition: background-color 0.3s;
     gap: 0.5em;
+}
+
+.sidebar .sidebar-colaborador,
+.sidebar .sidebar-ubicaciones {
+    padding-left: 27px;
+    padding-right: 27px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 80%;
 }
 
 .sidebar a:hover {
@@ -43,12 +54,13 @@
 
 @media(max-width: 1500px){
     .sidebar a {
-        width: 82.5%;
-        padding: 23px;
+        width: 84%;
+        padding: 21px;
         gap: 0.5em;
     }
 
-    .sidebar .sidebar-colaborador{
+    .sidebar .sidebar-colaborador,
+    .sidebar .sidebar-ubicaciones{
         padding: 17px;
         width: 87%;
     }

@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ubicaciones.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Ubicaciones</title>
+</head>
+<body>
+     <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="flex-main">
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <main class="main-content">
+            <!-- Tabla de Congresos -->
+            <h2 class="h2-Contenido-actual">Contenido Actual</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 320px;">NOMBRE</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AUDITORIO SANTA MARIA</td>
+                            <td>ACTIVO</td>
+                            <td class="check-td"><button type="button"><img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check"></button></td>
+                        </tr>
+                        <!-- Añade más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>Registrar Ubicaciones</h2>
+            <form class="register-form" method="POST" action="{% url 'RegistrarUbicaciones' %}">
+                {% csrf_token %}
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+
+                <div class="button-container">
+                    <button type="submit" class="register-button">Registrar</button>
+                    <button type="button" class="delete-button">Eliminar</button>
+                    <button type="button" class="edit-button">Editar</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+<script>
+    // Ocultar el mensaje despues de 3 segundos
+    setTimeout(function() {
+        var message = document.getElementById('message');
+        if (message) {
+            message.style.display = 'none';
+        }
+    }, 3000); // 3000 milisegundos = 3 segundos
+</script>
+</html>
