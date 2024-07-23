@@ -7,6 +7,7 @@ from Asistencia.serializers import AsistenciaSerializer
 from Admin.models import MaeAdministrador
 from Bloque.models import MaeBloque
 from Ponencia.models import MaePonencia
+from Ponencia.forms import PonenciaForm
 from Dia.models import MaeDia
 from Ponente.models import MaePonente
 from Ponente.forms import PonenteForm
@@ -194,39 +195,81 @@ class adminView(viewsets.ViewSet):
             else:
                 return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques', 'ponencias': lista_ponencias, 'dias': lista_dias})
     def registrar_ponencia(self, request):
-        ponentes = MaePonente.objects.all()
         if request.method == 'POST':
             action = request.POST.get('action')
-            print('action: ' + action)
             ponente = request.POST.get('ponente')
             nombrePonencia = request.POST.get('nombre_ponencia')
-            print("Ponente seleccionado:", ponente)
-            print("Ponencia seleccionado:", nombrePonencia)
-            try:
-                if (not(MaePonencia.objects.filter(nombre=nombrePonencia).exists())):
-                    nueva_ponencia = MaePonencia(
-                        nombre=nombrePonencia,
-                        idponente=MaePonente.objects.get(pk=ponente)
-                    )
-                    nueva_ponencia.save()
-                    mensaje = 'Ponencia registrada con éxito'
-                    status = 200
-                else:
-                    mensaje = 'Ya existe la ponencia'
-                    status = 500
-                return render(request, 'pages/registrarPonencia.html', {'current_page':'registrar_ponencia', 'message': mensaje, 'status':status, 'ponentes': ponentes})
-            except Exception:
-                mensaje = 'Error al registrar la ponencia'
-                status = 500
-                return render(request, 'pages/registrarPonencia.html', {'current_page':'registrar_ponencia', 'message': mensaje, 'status':status, 'ponentes': ponentes})
+            if action == 'register':
+                try:
+                    if (not(MaePonencia.objects.filter(nombre=nombrePonencia).exists())):
+                        nueva_ponencia = MaePonencia(
+                            nombre=nombrePonencia,
+                            idponente=MaePonente.objects.get(pk=ponente)
+                        )
+                        nueva_ponencia.save()
+                        messages.success(request, 'Ponencia registrada con éxito')
+                    else:
+                        messages.error(request, 'Ya existe la ponencia')
+                except Exception:
+                    messages.error(request, 'Error al registrar la ponencia')
+                return redirect('RegistrarPonencia')
+            elif action == 'delete':
+                try:
+                    ponencia = MaePonencia.objects.get(nombre=nombrePonencia)
+                    #ELIMINACION TOTAL
+                    '''ponencia.delete()'''
+                    #ELIMINACION LOGICA
+                    ponencia.estado = 'NO ACTIVO'
+                    ponencia.save()
+                    messages.success(request, 'Ponencia desactivada con éxito')
+                except MaeCongresoJinis.DoesNotExist:
+                    messages.error(request, 'No se encontró la ponencia')
+                except Exception:
+                    messages.error(request, 'Error al desactivar la ponencia')
+                return redirect('RegistrarPonencia')
+            elif action == 'activate':
+                idponencia = request.POST.get('id')
+                try:
+                    ponencia = MaePonencia.objects.get(pk=idponencia)
+                    #ELIMINACION TOTAL
+                    '''ponencia.delete()'''
+                    #ELIMINACION LOGICA
+                    ponencia.estado = 'ACTIVO'
+                    ponencia.save()
+                    messages.success(request, 'Ponencia activada con éxito')
+                except MaeCongresoJinis.DoesNotExist:
+                    messages.error(request, 'No se encontró la ponencia')
+                except Exception:
+                    messages.error(request, 'Error al activar la ponencia')
+                return redirect('RegistrarPonencia')
+            elif action == 'edit':
+                idponencia = request.POST.get('id')
+                print('Ponente', ponente)
+                try:
+                    ponencia = MaePonencia.objects.get(pk=idponencia)
+                    contexto = {
+                        'idponente': ponente,
+                        'nombre': nombrePonencia
+                    }
+                    ponencia_actualizada = PonenciaForm(contexto, instance=ponencia)
+                    if ponencia_actualizada.is_valid():
+                        ponencia_actualizada.save()
+                        messages.success(request, 'Ponencia actualizada con éxito')
+                    else:
+                        messages.error(request, 'Error al actualizar la ponencia')
+                except ponencia.DoesNotExist:
+                    messages.error(request, 'No se encontró la ponencia')
+                except Exception:
+                    messages.error(request, 'Error al actualizar la ponencia')
+                return redirect('RegistrarPonencia')
         else:
-            if ((MaePonente.objects.exists())):
-                status = 200
-                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes, 'status':status})
+            ponencias = MaePonencia.objects.all()
+            if (MaePonente.objects.filter(estado="ACTIVO").exists()):
+                ponentes = MaePonente.objects.filter(estado="ACTIVO")
+                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes, 'ponencias': ponencias})
             else:
-                mensaje = 'No hay ponentes registrados'
-                status = 501
-                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'message': mensaje, 'status': status})
+                messages.warning(request, 'No existe ponentes')
+                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponencias': ponencias})
     def registrar_congreso(self, request):
         if request.method == 'POST':
             action = request.POST.get('action')
@@ -316,7 +359,10 @@ class adminView(viewsets.ViewSet):
             congresos = MaeCongresoJinis.objects.all()
             return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_congreso', 'congresos':congresos})
 
-    def cerrar_sesion(request):
+    def registrar_ubicacion(self, request):
+        return render(request, 'pages/registrarUbicaciones.html', {'current_page': 'registrar_ubicaciones'})
+    
+    def cerrar_sesion(selft, request):
         return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
     
 
