@@ -1,7 +1,7 @@
 {% load static%}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,24 +33,27 @@
                     </thead>
                     <tbody>
                         <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        {% for colaborador, bloques in bloques_por_colaborador.items %}
                         <tr>
-                            <td style="width: 180px;">CARLOS RAMIREZ</td>
+                            <td style="width: 180px;">{{colaborador}}</td>
                             <td style="width: 200px;">
-                                Miercoles 12: 10:30 - 11:30 <br>
-                                Miercoles 12: 10:30 - 11:30 <br>
-                                Miercoles 12: 10:30 - 11:30 <br>
+                                 <!-- Mostrar todos los bloques del colaborador -->
+                                {% for bloque in bloques %}
+                                    {{ bloque.idbloque }}<br>
+                                {% endfor %}
                             </td>
-                            <td style="width: 100px;">ACTIVO</td>
+                            <td style="width: 100px;">{{bloques.0.estado}}</td>
                             <td class="check-td" style="width: 190px;">
                                 <button type="button" class="fill-btn"
-                                    data-id="{{blcl.idbc}}"
-                                    data-colaborador="{{blcl.nombre}}"
-                                    data-bloques="{{blcl.apellido}}"
-                                    data-estado="{{blcl.estado}}">
+                                    data-id="{{ bloques.0.idbc }}"
+                                    data-colaborador="{{colaborador.idcolaborador}}"
+                                    data-bloques="{% for blcl in bloques %}{{ blcl.idbloque.idbloque }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                                    data-estado="{{ bloques.0.estado }}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
                             </td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -69,12 +72,14 @@
             <h2>Seleecionar Bloques para el Colaborador</h2>
             <main class="main-content">
                 <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" id="blclid">
                     <div class="group-usuario">
                         <label for="tipoUsuario">Colaborador</label>
-                        <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
+                        <select class="combobox" name="colaborador" id="colaborador" required>
                             <option value="" disabled selected>Seleccionar el colaborador</option>
-                            {% for usuario in tiposUsuario %}
-                                <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
+                            {% for colaborador in colaboradores %}
+                                <option value="{{colaborador.idcolaborador}}">{{colaborador}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -83,17 +88,19 @@
                     <div class="flex-bloques-selected">
                         <div class="bloques-container">
                             <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                            {% for bloque in bloques %}
                             <div class="form-bloque">
-                                <input type="checkbox" id="bloque1" name="bloques" value="" >
-                                <label for="bloque1">MIERCOLES 12: 10:30 - 11:30</label>
+                                <input type="checkbox" id="bloque_{{bloque.idbloque}}" name="bloques" value="{{bloque.idbloque}}" >
+                                <label for="bloque_{{bloque.idbloque}}">{{bloque}}</label>
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
 
                     <div class="button-container">
-                        <button type="submit" class="register-button">Registrar</button>
-                        <button type="button" class="edit-button">Editar</button>
-                        <button type="button" class="delete-button">Eliminar</button>
+                        <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
+                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Eliminar</button>
+                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Editar</button>
                     </div>
                 </form>
             </main>
@@ -107,11 +114,9 @@
 
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
-                const idcolaborador = event.currentTarget.getAttribute('data-id');
-                const nombre = event.currentTarget.getAttribute('data-nombre');
-                const apellido = event.currentTarget.getAttribute('data-apellido');
-                const congreso = event.currentTarget.getAttribute('data-congreso');
-                const bloques = event.currentTarget.getAttribute('data-bloques');
+                const idblcl = event.currentTarget.getAttribute('data-id');
+                const colaborador = event.currentTarget.getAttribute('data-colaborador');
+                const bloques = event.currentTarget.getAttribute('data-bloques').split(',').map(Number);
                 estado = event.currentTarget.getAttribute('data-estado');
                 
 
@@ -123,11 +128,21 @@
                     document.getElementById('delete-button').value = "delete";
                 }
 
-                document.getElementById('congresoid').value = idcongreso;
-                document.getElementById('nombre').value = nombre;
-                document.getElementById('fechaInicio').value = fechainicio;
-                document.getElementById('fechaFin').value = fechafin;
-                document.getElementById('totalAsistencia').value = asistenciatotal;
+                document.getElementById('blclid').value = idblcl;
+                document.getElementById('colaborador').value = colaborador;
+                 // Limpiar todos los checkboxes primero
+                const checkboxes = document.querySelectorAll('input[type="checkbox"][name="bloques"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                // Marcar los checkboxes correspondientes
+                bloques.forEach(bloqueId => {
+                    const checkbox = document.getElementById(`bloque_${bloqueId}`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
             });
         });
     });

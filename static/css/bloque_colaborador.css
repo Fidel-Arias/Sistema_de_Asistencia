@@ -102,7 +102,7 @@ body {
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     border-radius: 10px;
-    width: 84%; /* Ajusta el ancho del recuadro */
+    width: 94%; /* Ajusta el ancho del recuadro */
 }
 
 h2{
@@ -208,11 +208,11 @@ h2{
 
 .form-bloque input[type="checkbox"]:checked + label::before {
     background-color: #1fa31f;
-    border-color: #1fa31f;
+    border-color: #236637;
 }
 
 .form-bloque input[type="checkbox"]:hover + label::before {
-    border-color: rgb(250, 67, 67);
+    border-color: rgb(49, 126, 75);
 }
 
 .form-bloque input[type="checkbox"]:checked + label::after {

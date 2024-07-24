@@ -6,6 +6,7 @@ class BloqueColaborador(models.Model):
     idbc = models.AutoField(primary_key=True)
     idcolaborador = models.ForeignKey(MaeColaborador, db_column='idcolaborador', on_delete=models.CASCADE)
     idbloque = models.ForeignKey(MaeBloque, db_column='idbloque', on_delete=models.CASCADE)
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:
         managed = False

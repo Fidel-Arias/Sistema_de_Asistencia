@@ -9,6 +9,9 @@ from Colaborador.models import MaeColaborador
 
 class LoginView(viewsets.ViewSet):
     def login_user(self, request):
+        if request.session.get('correo_admin') and request.session.get('contrasenia_admin'):
+            del request.session['correo_admin']
+            del request.session['contrasenia_admin']
         return render(request, 'login.html')
     
     def login_colaborador(self, request):

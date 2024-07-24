@@ -33,6 +33,7 @@
                                 <th>APELLIDO</th>
                                 <th>CORREO</th>
                                 <th>CONGRESO</th>
+                                <th>TIPO</th>
                                 <th>ESTADO</th>
                             </tr>
                         </tr>
@@ -45,13 +46,17 @@
                             <td style="width: 180px;">{{colaborador.apellido}}</td>
                             <td style="width: 195px;">{{colaborador.correo}}</td>
                             <td style="width: 90px;">{{colaborador.idcongreso}}</td>
+                            <td style="width: 90px;">{{colaborador.idtipo}}</td>
                             <td style="width: 100px;">{{colaborador.estado}}</td>
                             <td class="check-td" style="width: 190px;">
                                 <button type="button" class="fill-btn"
-                                    data-id="{{colaborador.idcolaborador.idcolaborador}}"
+                                    data-id="{{colaborador.idcolaborador}}"
                                     data-nombre="{{colaborador.nombre}}"
                                     data-apellido="{{colaborador.apellido}}"
+                                    data-correo="{{colaborador.correo}}"
+                                    data-password="{{colaborador.contrasenia}}"
                                     data-congreso="{{colaborador.idcongreso.idcongreso}}"
+                                    data-usuario="{{colaborador.idtipo.idtipo}}"
                                     data-estado="{{colaborador.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
@@ -73,10 +78,11 @@
 
         <!-- Contenido principal -->
         <div class="content-fondo">
-            <h2>Registrar Colaborador</h2>
+            <h2>Registrar Colaborador o Administrador</h2>
             <main class="main-content">
-                <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' %}">
+                <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' %}">
                     {% csrf_token %}
+                    <input type="hidden" name="id" id="colaboradorid">
                     <div class="flex-nombre-apellido">
                         <div class="form-group form-nombres">
                             <label for="nombre" class="label__nombre">Nombre</label>
@@ -92,12 +98,12 @@
                     <div class="flex-correo-password">
                         <div class="form-group group-correo">
                             <label for="correo" class="label__correo">Correo</label>
-                            <input type="email" class="input__correo" name="correo" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toLowerCase()">
+                            <input type="email" class="input__correo" id="correo" name="correo" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toLowerCase()">
                         </div>
 
                         <div class="form-group">
                             <label for="contrasenia" class="label__password">Contraseña</label>
-                            <input type="password" class="input__password" name="contrasenia" required>
+                            <input type="password" class="input__password" id="contrasenia" name="contrasenia" required>
                         </div>
                     </div>
                     
@@ -124,9 +130,9 @@
                     </div>
 
                     <div class="button-container">
-                        <button type="submit" class="register-button">Registrar</button>
-                        <button type="button" class="edit-button">Editar</button>
-                        <button type="button" class="delete-button">Eliminar</button>
+                        <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
+                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Eliminar</button>
+                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Editar</button>
                     </div>
                 </form>
             </main>
@@ -143,9 +149,11 @@
                     const idcolaborador = event.currentTarget.getAttribute('data-id');
                     const nombre = event.currentTarget.getAttribute('data-nombre');
                     const apellido = event.currentTarget.getAttribute('data-apellido');
+                    const correo = event.currentTarget.getAttribute('data-correo');
+                    const password = event.currentTarget.getAttribute('data-password');
+                    const tipoUsuario = event.currentTarget.getAttribute('data-usuario');
                     const congreso = event.currentTarget.getAttribute('data-congreso');
                     estado = event.currentTarget.getAttribute('data-estado');
-
 
                     if (estado === "NO ACTIVO") {
                         document.getElementById('delete-button').innerText = "Activar";
@@ -155,11 +163,13 @@
                         document.getElementById('delete-button').value = "delete";
                     }
 
-                    document.getElementById('congresoid').value = idcongreso;
+                    document.getElementById('colaboradorid').value = idcolaborador;
                     document.getElementById('nombre').value = nombre;
-                    document.getElementById('fechaInicio').value = fechainicio;
-                    document.getElementById('fechaFin').value = fechafin;
-                    document.getElementById('totalAsistencia').value = asistenciatotal;
+                    document.getElementById('apellido').value = apellido;
+                    document.getElementById('correo').value = correo;
+                    document.getElementById('contrasenia').value = password;
+                    document.getElementById('tipoUsuario').value = tipoUsuario;
+                    document.getElementById('congreso').value = congreso;
                 });
             });
         });

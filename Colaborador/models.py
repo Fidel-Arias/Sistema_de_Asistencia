@@ -9,14 +9,14 @@ class MaeColaborador(models.Model):
     nombre = models.CharField(max_length=10)
     apellido = models.CharField(max_length=30)
     correo = models.CharField(max_length=50)
-    contrasenia = models.CharField(max_length=8)
+    contrasenia = models.CharField(max_length=20)
     idtipo = models.ForeignKey(MaeTipoUsuario, db_column='idtipo', on_delete=models.CASCADE)
     idcongreso = models.ForeignKey(MaeCongresoJinis, db_column='idcongreso', on_delete=models.CASCADE)
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
     
     class Meta:
         managed = False
         db_table = 'mae_colaborador'
 
     def __str__(self) -> str:
-        return self.nombre
+        return self.nombre + ' ' + self.apellido

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.db import connection, transaction
@@ -15,9 +16,11 @@ from Ponente.forms import PonenteForm
 from CongresoJINIS.models import MaeCongresoJinis
 from CongresoJINIS.forms import CongresoJinisForm
 from Colaborador.models import MaeColaborador
+from Colaborador.forms import ColaboradorForm
 from tipoUsuario.models import MaeTipoUsuario
 from Ubicacion.models import MaeUbicacion
 from Ubicacion.forms import UbicacionForm
+from BloqueColaborador.models import BloqueColaborador
 from django.contrib import messages
 import pandas as pd
 from datetime import date
@@ -32,49 +35,89 @@ class adminView(viewsets.ViewSet):
 
 
     def generar_reporte(self, request):
-        asistenciaObjetcs = TrsAsistencia.objects.all()
+        asistenciaObjetcs = TrsAsistencia.objects.all().order_by('pk')
         listaAsistencia = AsistenciaSerializer(asistenciaObjetcs, many=True)
         return render(request, 'pages/generarReporte.html', {'current_page':'generar_reportes', 'listaAsistencia': listaAsistencia.data})
     def registrar_colaboradores(self, request):
-        tiposUsuario = MaeTipoUsuario.objects.all()
-        bloques = MaeBloque.objects.all()
-        congresos = MaeCongresoJinis.objects.all()
         if request.method == 'POST':
             idTipoUsuario = request.POST.get('tipoUsuario')
-            idbloque = request.POST.get('bloque')
             idcongreso = request.POST.get('congreso')
             nombreColaborador = request.POST.get('nombre')
             apellidoColaborador = request.POST.get('apellido')
             correoColaborador = request.POST.get('correo')
             contraseniaColaborador = request.POST.get('contrasenia')
-            mensaje = ''
-            status = 0
-            nombreColaborador = nombreColaborador.strip()
-            correoColaborador = correoColaborador.strip()
-            try:
-                if (not(MaeColaborador.objects.filter(nombre=nombreColaborador, apellido=apellidoColaborador, idbloque=idbloque).exists())):
-                    nuevo_colaborador = MaeColaborador(
-                        nombre=nombreColaborador,
-                        apellido=apellidoColaborador,
-                        correo=correoColaborador,
-                        contrasenia=contraseniaColaborador,
-                        idtipo=MaeTipoUsuario.objects.get(pk=idTipoUsuario),
-                        idbloque=MaeBloque.objects.get(pk=idbloque),
-                        idcongreso=MaeCongresoJinis.objects.get(pk=idcongreso)
-                    )
-                    nuevo_colaborador.save()
-                    mensaje = 'Colaborador registrado con éxito'
-                    status = 200
-                else:
-                    mensaje = 'Ya existe el colaborador en el bloque seleccionado'
-                    status = 500
-            except Exception as e:
-                mensaje = 'Error al registrar colaborador'
-                print(e)
-                status = 500
-            return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'message': mensaje, 'status': status, 'tiposUsuario':tiposUsuario, 'bloques':bloques, 'lista_congresos':congresos})
+            action = request.POST.get('action')
+            if action == 'register':
+                try:
+                    if (not(MaeColaborador.objects.filter(nombre=nombreColaborador, apellido=apellidoColaborador).exists())):
+                        nuevo_colaborador = MaeColaborador(
+                            nombre=nombreColaborador,
+                            apellido=apellidoColaborador,
+                            correo=correoColaborador,
+                            contrasenia=contraseniaColaborador,
+                            idtipo=MaeTipoUsuario.objects.get(pk=idTipoUsuario),
+                            idcongreso=MaeCongresoJinis.objects.get(pk=idcongreso)
+                        )
+                        nuevo_colaborador.save()
+                        messages.success(request, 'Colaborador registrado con éxito')
+                    else:
+                        messages.error(request, 'El colaborador registrado ya existe')
+                except Exception as e:
+                    messages.error(request, 'Error al registrar colaborador')
+                return redirect('RegistrarColaboradores')
+            elif action == 'delete':
+                try:
+                    colaborador = MaeColaborador.objects.get(nombre=nombreColaborador, apellido=apellidoColaborador)
+                    #ELIMINACION TOTAL
+                    '''colaborador.delete()'''
+                    #ELIMINACION LOGICA
+                    colaborador.estado = "NO ACTIVO"
+                    colaborador.save()
+                    messages.success(request, 'El colaborador ha sido desactivado con éxito')
+                except MaeColaborador.DoesNotExist:
+                    messages.error(request, 'No se encontró al colaborador')
+                except Exception:
+                    messages.error(request, 'Error al desactivar al colaborador')
+                return redirect('RegistrarColaboradores')
+            elif action == 'activate':
+                try:
+                    colaborador = MaeColaborador.objects.get(nombre=nombreColaborador, apellido=apellidoColaborador)
+                    colaborador.estado = "ACTIVO"
+                    colaborador.save()
+                    messages.success(request, 'El colaborador ha sido activado con éxito')
+                except MaeColaborador.DoesNotExist:
+                    messages.error(request, 'No se encontró al colaborador')
+                except Exception:
+                    messages.error(request, 'Error al activar al colaborador')
+                return redirect('RegistrarColaboradores')
+            elif action == 'edit':
+                idcolaborador = request.POST.get('id')
+                try:
+                    colaborador = MaeColaborador.objects.get(pk=idcolaborador)
+                    contexto = {
+                        'nombre': nombreColaborador,
+                        'apellido': apellidoColaborador,
+                        'correo': correoColaborador,
+                        'contrasenia': contraseniaColaborador,
+                        'idtipo': MaeTipoUsuario.objects.get(idtipo=idTipoUsuario),
+                        'idcongreso': MaeCongresoJinis.objects.get(idcongreso=idcongreso)
+                    }
+                    colaborador_actualizado = ColaboradorForm(contexto, instance=colaborador)
+                    if colaborador_actualizado.is_valid():
+                        colaborador_actualizado.save()
+                        messages.success(request, 'El colaborador se ha actualizado con éxito')
+                    else:
+                        messages.error(request, 'Error al actualizar al colaborador')
+                except MaeColaborador.DoesNotExist:
+                    messages.error(request, 'No se encontró al colaborador')
+                except Exception as e:
+                    messages.error(request, e)
+                return redirect('RegistrarColaboradores')
         else:
-            return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'tiposUsuario':tiposUsuario, 'bloques':bloques, 'lista_congresos':congresos})
+            tiposUsuario = MaeTipoUsuario.objects.all().order_by('pk')
+            congresos = MaeCongresoJinis.objects.all().order_by('pk')
+            colaboradores = MaeColaborador.objects.all().order_by('pk')
+            return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'colaboradores':colaboradores, 'tiposUsuario':tiposUsuario, 'lista_congresos':congresos})
     def registrar_ponentes(self, request):
         if request.method == 'POST':
             action = request.POST.get('action')
@@ -103,7 +146,7 @@ class adminView(viewsets.ViewSet):
                     ponente.estado = "NO ACTIVO"
                     ponente.save()
                     messages.success(request, 'Ponente desactivado con éxito')
-                except ponente.DoesNotExist:
+                except MaePonente.DoesNotExist:
                     messages.error(request, 'El ponente no existe')
                 except Exception:
                     messages.error(request, 'Error al desactivar al ponente')
@@ -139,7 +182,7 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'Error al actualizar al ponente')
                 return redirect('RegistrarPonentes')
         else:
-            ponentes = MaePonente.objects.all()
+            ponentes = MaePonente.objects.all().order_by('pk')
             return render(request, 'pages/registrarPonente.html', {'current_page': 'registrar_ponentes', 'ponentes': ponentes})
 
     def registrar_bloques(self, request):
@@ -186,7 +229,7 @@ class adminView(viewsets.ViewSet):
                     bloque.estado = "NO ACTIVO"
                     bloque.save()
                     messages.success(request, 'El bloque ha sido desactivado exitosamente')
-                except bloque.DoesNotExist:
+                except MaeBloque.DoesNotExist:
                     messages.error(request, 'El bloque no existe')
                 except Exception:
                     messages.error(request, 'Se produjo un error al desactivar el bloque')
@@ -197,7 +240,7 @@ class adminView(viewsets.ViewSet):
                     bloque.estado = "ACTIVO"
                     bloque.save()
                     messages.success(request, 'El bloque ha sido activado exitosamente')
-                except bloque.DoesNotExist:
+                except MaeBloque.DoesNotExist:
                     messages.error(request, 'El bloque no existe')
                 except Exception:
                     messages.error(request, 'Se produjo un error al activar el bloque')
@@ -219,16 +262,16 @@ class adminView(viewsets.ViewSet):
                         messages.success(request, 'El bloque ha sido actualizado exitosamente')
                     else:
                         messages.error(request, 'Se produjo un error al actualizar el bloque')
-                except bloque.DoesNotExist:
+                except MaeBloque.DoesNotExist:
                     messages.error(request, 'El bloque no existe')
                 except Exception:
                     messages.error(request, 'Se produjo un error al actualizar el bloque')
                 return redirect('RegistrarBloques')
         else:
-            lista_ponencias = MaePonencia.objects.filter(estado='ACTIVO')
-            lista_dias = MaeDia.objects.filter(estado='ACTIVO')
-            ubicaciones = MaeUbicacion.objects.filter(estado='ACTIVO')
-            bloques = MaeBloque.objects.filter(estado='ACTIVO')
+            lista_ponencias = MaePonencia.objects.filter(estado='ACTIVO').order_by('pk')
+            lista_dias = MaeDia.objects.filter(estado='ACTIVO').order_by('pk')
+            ubicaciones = MaeUbicacion.objects.filter(estado='ACTIVO').order_by('pk')
+            bloques = MaeBloque.objects.filter(estado='ACTIVO').order_by('pk')
             
             if not MaePonencia.objects.filter(estado='ACTIVO').exists():
                 messages.warning(request,'No hay ponencias registradas, por favor registre al menos una')
@@ -265,7 +308,7 @@ class adminView(viewsets.ViewSet):
                     ponencia.estado = 'NO ACTIVO'
                     ponencia.save()
                     messages.success(request, 'Ponencia desactivada con éxito')
-                except MaeCongresoJinis.DoesNotExist:
+                except MaePonencia.DoesNotExist:
                     messages.error(request, 'No se encontró la ponencia')
                 except Exception:
                     messages.error(request, 'Error al desactivar la ponencia')
@@ -280,7 +323,7 @@ class adminView(viewsets.ViewSet):
                     ponencia.estado = 'ACTIVO'
                     ponencia.save()
                     messages.success(request, 'Ponencia activada con éxito')
-                except MaeCongresoJinis.DoesNotExist:
+                except MaePonencia.DoesNotExist:
                     messages.error(request, 'No se encontró la ponencia')
                 except Exception:
                     messages.error(request, 'Error al activar la ponencia')
@@ -300,13 +343,13 @@ class adminView(viewsets.ViewSet):
                         messages.success(request, 'Ponencia actualizada con éxito')
                     else:
                         messages.error(request, 'Error al actualizar la ponencia')
-                except ponencia.DoesNotExist:
+                except MaePonencia.DoesNotExist:
                     messages.error(request, 'No se encontró la ponencia')
                 except Exception:
                     messages.error(request, 'Error al actualizar la ponencia')
                 return redirect('RegistrarPonencia')
         else:
-            ponencias = MaePonencia.objects.all()
+            ponencias = MaePonencia.objects.all().order_by('pk')
             if (MaePonente.objects.filter(estado="ACTIVO").exists()):
                 ponentes = MaePonente.objects.filter(estado="ACTIVO")
                 return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes, 'ponencias': ponencias})
@@ -399,7 +442,7 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'El congreso ya no existe')
                 return redirect('RegistrarCongreso')
         else:
-            congresos = MaeCongresoJinis.objects.all()
+            congresos = MaeCongresoJinis.objects.all().order_by('pk')
             return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_congreso', 'congresos':congresos})
 
     def registrar_ubicacion(self, request):
@@ -463,16 +506,89 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'Error al actualizar la ubicación')
                 return redirect('RegistrarUbicaciones')
         else:
-            ubicaciones = MaeUbicacion.objects.all()
+            ubicaciones = MaeUbicacion.objects.all().order_by('pk')
             return render(request, 'pages/registrarUbicaciones.html', {'current_page': 'registrar_ubicaciones', 'ubicaciones':ubicaciones})
     
     def registrar_bloques_colaboradores(self, request):
-        return render(request, 'pages/bloqueColaborador.html', {'current_page': 'registrar_bloques_colaboradores'})
-    
-    def cerrar_sesion(selft, request):
-        del request.session['correo_admin']
-        del request.session['contrasenia_admin']
-        return render(request, 'loginAdmin.html', {'current_page': 'cerrar_sesion'})
+        if request.method == 'POST':
+            colaborador = request.POST.get('colaborador')
+            bloques = request.POST.getlist('bloques')
+            action = request.POST.get('action')
+            if action == 'register':
+                try:
+                    if (not(BloqueColaborador.objects.filter(idcolaborador=colaborador).exists())):
+                        with transaction.atomic():
+                            for i in range(0, len(bloques)):
+                                nuevo_bloqueColaborador = BloqueColaborador(
+                                    idcolaborador=MaeColaborador.objects.get(pk=colaborador),
+                                    idbloque=MaeBloque.objects.get(pk=bloques[i]),
+                                )
+                                nuevo_bloqueColaborador.save()
+                            messages.success(request, 'Se registró exitosamente los bloques del colaborador')
+                    else:
+                        messages.error(request, 'Ya existe el colaborador con sus bloques')
+                except BloqueColaborador.DoesNotExist:
+                    messages.error(request, 'No se encontró al colaborador o a los bloques')
+                except Exception as e:    
+                    messages.error(request, e) #unsupported operand type(s) for +: 'int' and 'str'
+                return redirect('RegistrarBloqueColaborador')
+            elif action == 'delete':
+                try:
+                    bloques_colaborador = BloqueColaborador.objects.filter(idcolaborador=colaborador)
+                    with transaction.atomic():
+                        for bloque_colaborador in bloques_colaborador:
+                            bloque_colaborador.estado = 'NO ACTIVO'
+                            bloque_colaborador.save()
+                    messages.success(request, 'Bloque del colaborador desactivado con éxito')
+                except BloqueColaborador.DoesNotExist:
+                    messages.error(request, 'No se encontró al colaborador o al bloque')
+                except Exception as e:    
+                    messages.error(request, e)
+                return redirect('RegistrarBloqueColaborador')
+            elif action == 'activate':
+                try:
+                    bloques_colaborador = BloqueColaborador.objects.filter(idcolaborador=colaborador)
+                    with transaction.atomic():
+                        for bloque_colaborador in bloques_colaborador:
+                            bloque_colaborador.estado = 'ACTIVO'
+                            bloque_colaborador.save()
+                    messages.success(request, 'Bloque del colaborador activado con éxito')
+                except BloqueColaborador.DoesNotExist:
+                    messages.error(request, 'No se encontró al colaborador o al bloque')
+                except Exception:    
+                    messages.error(request, 'Error al activar el bloque del colaborador') #unsupported operand type(s) for +: 'int' and 'str'
+                return redirect('RegistrarBloqueColaborador')
+            elif action == 'edit':
+                idblcl = request.POST.get('id')
+                try:
+                    bloque_colaborador = BloqueColaborador.objects.get(pk=idblcl)
+                    colaborador_obj = MaeColaborador.objects.get(pk=colaborador)
+
+                    # Eliminar los bloques actuales del colaborador
+                    BloqueColaborador.objects.filter(idcolaborador=colaborador_obj).delete()
+                    # Agregar los nuevos bloques seleccionados
+                    with transaction.atomic():
+                        # Agregar los nuevos bloques seleccionados
+                        for i in range(len(bloques)):
+                            nuevo_bloqueColaborador = BloqueColaborador(
+                                idcolaborador=colaborador_obj,
+                                idbloque=MaeBloque.objects.get(pk=bloques[i]),
+                            )
+                            nuevo_bloqueColaborador.save()
+                        messages.success(request, 'Bloques del colaborador actualizado con éxito')
+                except BloqueColaborador.DoesNotExist:
+                    messages.error(request, 'No se encontró al colaborador o al bloque')
+                return redirect('RegistrarBloqueColaborador')
+        else:
+            colaboradores = MaeColaborador.objects.filter(estado='ACTIVO').order_by('pk')
+            bloques = MaeBloque.objects.filter(estado='ACTIVO').order_by('pk')
+            bloquesToColaboradores = BloqueColaborador.objects.all().order_by('pk')
+
+            # Agrupar bloques por colaborador
+            bloques_por_colaborador = defaultdict(list)
+            for blcl in bloquesToColaboradores:
+                bloques_por_colaborador[blcl.idcolaborador].append(blcl)
+            return render(request, 'pages/bloqueColaborador.html', {'current_page': 'registrar_bloques_colaboradores', 'bloques_por_colaborador':dict(bloques_por_colaborador), 'colaboradores': colaboradores, 'bloques':bloques})
     
 
 def ingresoAdmin(request):

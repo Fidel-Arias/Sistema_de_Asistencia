@@ -18,5 +18,5 @@ class MaeBloque(models.Model):
         db_table = 'mae_bloque'
 
     def __str__(self):
-        return f'{self.iddia} : {self.horainicio.strftime("%H:%M %p")} - {self.horafin.strftime("%H:%M %p")}'
+        return f'{self.iddia} : {(self.horainicio.strftime("%H:%M %p")).lower()} - {(self.horafin.strftime("%H:%M %p")).lower()}'
 
