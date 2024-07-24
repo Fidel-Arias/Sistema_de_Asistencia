@@ -114,9 +114,11 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, e)
                 return redirect('RegistrarColaboradores')
         else:
+            colaboradores = MaeColaborador.objects.all().order_by('pk')
+            if not MaeCongresoJinis.objects.filter(estado='ACTIVO').exists() or not MaeCongresoJinis.objects.filter().exists():
+                messages.warning(request, 'No hay congresos registrados o activos, registre al menos uno')
             tiposUsuario = MaeTipoUsuario.objects.all().order_by('pk')
             congresos = MaeCongresoJinis.objects.all().order_by('pk')
-            colaboradores = MaeColaborador.objects.all().order_by('pk')
             return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'colaboradores':colaboradores, 'tiposUsuario':tiposUsuario, 'lista_congresos':congresos})
     def registrar_ponentes(self, request):
         if request.method == 'POST':
@@ -268,17 +270,17 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'Se produjo un error al actualizar el bloque')
                 return redirect('RegistrarBloques')
         else:
+            bloques = MaeBloque.objects.filter().order_by('pk')
+            if not MaePonencia.objects.filter(estado='ACTIVO').exists() or not MaePonencia.objects.filter().exists():
+                messages.warning(request,'No hay ponencias registradas o activas, por favor registre al menos una')
+            elif not MaeDia.objects.filter(estado='ACTIVO').exists() or not MaeDia.objects.filter().exists():
+                messages.warning(request, 'No hay días registrados o activos, por favor registre al menos un día')
+            elif not MaeUbicacion.objects.filter(estado='ACTIVO').exists() or not MaeUbicacion.objects.filter().exists():
+                messages.warning(request, 'No hay ubicaciones registradas o activas, por favor registre al menos una ubicación')
+            
             lista_ponencias = MaePonencia.objects.filter(estado='ACTIVO').order_by('pk')
             lista_dias = MaeDia.objects.filter(estado='ACTIVO').order_by('pk')
             ubicaciones = MaeUbicacion.objects.filter(estado='ACTIVO').order_by('pk')
-            bloques = MaeBloque.objects.filter(estado='ACTIVO').order_by('pk')
-            
-            if not MaePonencia.objects.filter(estado='ACTIVO').exists():
-                messages.warning(request,'No hay ponencias registradas, por favor registre al menos una')
-            elif not MaeDia.objects.filter(estado='ACTIVO').exists():
-                messages.warning(request, 'No hay días registrados, por favor registre al menos un día')
-            elif not MaeUbicacion.objects.filter(estado='ACTIVO').exists():
-                messages.warning(request, 'No hay ubicaciones registradas, por favor registre al menos una ubicación')
             return render(request, 'pages/registrarBloques.html', {'current_page': 'registrar_bloques', 'ponencias': lista_ponencias, 'dias': lista_dias, 'ubicaciones':ubicaciones, 'bloques':bloques})
     def registrar_ponencia(self, request):
         if request.method == 'POST':
@@ -349,13 +351,11 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'Error al actualizar la ponencia')
                 return redirect('RegistrarPonencia')
         else:
+            if not MaePonente.objects.filter(estado="ACTIVO").exists() or not MaePonente.objects.filter().exists():
+                messages.warning(request, 'No hay ponentes registrados o activos, registre al menos uno')
             ponencias = MaePonencia.objects.all().order_by('pk')
-            if (MaePonente.objects.filter(estado="ACTIVO").exists()):
-                ponentes = MaePonente.objects.filter(estado="ACTIVO")
-                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes, 'ponencias': ponencias})
-            else:
-                messages.warning(request, 'No existe ponentes')
-                return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponencias': ponencias})
+            ponentes = MaePonente.objects.filter(estado="ACTIVO")
+            return render(request, 'pages/registrarPonencia.html', {'current_page': 'registrar_ponencia', 'ponentes':ponentes, 'ponencias': ponencias})
     def registrar_congreso(self, request):
         if request.method == 'POST':
             action = request.POST.get('action')
@@ -580,8 +580,13 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'No se encontró al colaborador o al bloque')
                 return redirect('RegistrarBloqueColaborador')
         else:
+            if not MaeColaborador.objects.filter(estado='ACTIVO').exists() or not MaeColaborador.objects.filter().exists():
+                messages.warning(request, 'No hay colaboradores registrados o activos, registre al menos uno')
+            elif not MaeBloque.objects.filter(estado='ACTIVO').exists() or not MaeBloque.objects.filter().exists():
+                messages.warning(request, 'No hay bloques registrados o activos, registre al menos uno')
             colaboradores = MaeColaborador.objects.filter(estado='ACTIVO').order_by('pk')
             bloques = MaeBloque.objects.filter(estado='ACTIVO').order_by('pk')
+                
             bloquesToColaboradores = BloqueColaborador.objects.all().order_by('pk')
 
             # Agrupar bloques por colaborador
