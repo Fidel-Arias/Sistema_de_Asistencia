@@ -38,7 +38,7 @@ class adminView(viewsets.ViewSet):
         asistenciaObjetcs = TrsAsistencia.objects.all().order_by('pk')
         listaAsistencia = AsistenciaSerializer(asistenciaObjetcs, many=True)
         return render(request, 'pages/generarReporte.html', {'current_page':'generar_reportes', 'listaAsistencia': listaAsistencia.data})
-    def registrar_colaboradores(self, request):
+    def registrar_cargos_usuarios(self, request):
         if request.method == 'POST':
             idTipoUsuario = request.POST.get('tipoUsuario')
             idcongreso = request.POST.get('congreso')
@@ -64,7 +64,7 @@ class adminView(viewsets.ViewSet):
                         messages.error(request, 'El colaborador registrado ya existe')
                 except Exception as e:
                     messages.error(request, 'Error al registrar colaborador')
-                return redirect('RegistrarColaboradores')
+                return redirect('RegistrarCargosUsuarios')
             elif action == 'delete':
                 try:
                     colaborador = MaeColaborador.objects.get(nombre=nombreColaborador, apellido=apellidoColaborador)
@@ -78,7 +78,7 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'No se encontró al colaborador')
                 except Exception:
                     messages.error(request, 'Error al desactivar al colaborador')
-                return redirect('RegistrarColaboradores')
+                return redirect('RegistrarCargosUsuarios')
             elif action == 'activate':
                 try:
                     colaborador = MaeColaborador.objects.get(nombre=nombreColaborador, apellido=apellidoColaborador)
@@ -89,7 +89,7 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'No se encontró al colaborador')
                 except Exception:
                     messages.error(request, 'Error al activar al colaborador')
-                return redirect('RegistrarColaboradores')
+                return redirect('RegistrarCargosUsuarios')
             elif action == 'edit':
                 idcolaborador = request.POST.get('id')
                 try:
@@ -112,14 +112,14 @@ class adminView(viewsets.ViewSet):
                     messages.error(request, 'No se encontró al colaborador')
                 except Exception as e:
                     messages.error(request, e)
-                return redirect('RegistrarColaboradores')
+                return redirect('RegistrarCargosUsuarios')
         else:
             colaboradores = MaeColaborador.objects.all().order_by('pk')
             if not MaeCongresoJinis.objects.filter(estado='ACTIVO').exists() or not MaeCongresoJinis.objects.filter().exists():
                 messages.warning(request, 'No hay congresos registrados o activos, registre al menos uno')
             tiposUsuario = MaeTipoUsuario.objects.all().order_by('pk')
             congresos = MaeCongresoJinis.objects.all().order_by('pk')
-            return render(request, 'pages/registrarColaborador.html', {'current_page':'registrar_colaboradores', 'colaboradores':colaboradores, 'tiposUsuario':tiposUsuario, 'lista_congresos':congresos})
+            return render(request, 'pages/registrarCargosUsuario.html', {'current_page':'registrar_cargos_usuarios', 'colaboradores':colaboradores, 'tiposUsuario':tiposUsuario, 'lista_congresos':congresos})
     def registrar_ponentes(self, request):
         if request.method == 'POST':
             action = request.POST.get('action')
