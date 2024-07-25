@@ -73,8 +73,8 @@
 
                 <div class="button-container">
                     <button type="submit" id="register-button" name="action" value="register" class="register-button">Registrar</button>
-                    <button type="submit" id="delete-button" name="action" value="delete" class="delete-button">Eliminar</button>
-                    <button type="submit" id="edit-button" name="action"  value="edit" class="edit-button">Editar</button>
+                    <button type="submit" id="delete-button" name="action" value="delete" class="delete-button">Desactivar</button>
+                    <button type="submit" id="edit-button" name="action"  value="edit" class="edit-button">Actualizar</button>
                 </div>
             </form>
         </main>
@@ -85,8 +85,22 @@
         const buttons = document.querySelectorAll('.fill-btn');
         var estado;
 
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonActualizar = document.getElementById('edit-button');
+        const buttonRegister = document.getElementById('register-button');
+
+        buttonActualizar.style.display = 'none';
+        buttonDesactivado.style.display='none';
+
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
+                //Agregando los botones
+                buttonActualizar.style.display='block';
+                buttonDesactivado.style.display='block';
+                buttonRegister.style.display = 'none';
+
+                //Extrayendo datos
                 const idponente = event.currentTarget.getAttribute('data-id');
                 const nombre = event.currentTarget.getAttribute('data-nombre');
                 const apellido = event.currentTarget.getAttribute('data-apellido');
@@ -96,7 +110,7 @@
                     document.getElementById('delete-button').innerText = "Activar";
                     document.getElementById('delete-button').value = "activate";
                 } else {
-                    document.getElementById('delete-button').innerText = "Eliminar";
+                    document.getElementById('delete-button').innerText = "Desactivar";
                     document.getElementById('delete-button').value = "delete";
                 }
 

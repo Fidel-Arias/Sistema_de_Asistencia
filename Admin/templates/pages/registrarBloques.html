@@ -117,8 +117,8 @@
 
                     <div class="button-container">
                         <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
-                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Eliminar</button>
-                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Editar</button>
+                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
+                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
                     </div>
                 </form>
             </main>
@@ -162,8 +162,22 @@
         const buttons = document.querySelectorAll('.fill-btn');
         var estado;
 
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonActualizar = document.getElementById('edit-button');
+        const buttonRegister = document.getElementById('register-button');
+
+        buttonActualizar.style.display = 'none';
+        buttonDesactivado.style.display='none';
+
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
+                //Agregando los botones
+                buttonActualizar.style.display='block';
+                buttonDesactivado.style.display='block';
+                buttonRegister.style.display = 'none';
+
+                //Extrayendo datos
                 const idbloque = event.currentTarget.getAttribute('data-id');
                 const ponencia = event.currentTarget.getAttribute('data-ponencia');
                 const dia = event.currentTarget.getAttribute('data-dia');
@@ -176,7 +190,7 @@
                     document.getElementById('delete-button').innerText = "Activar";
                     document.getElementById('delete-button').value = "activate";
                 } else {
-                    document.getElementById('delete-button').innerText = "Eliminar";
+                    document.getElementById('delete-button').innerText = "Desactivar";
                     document.getElementById('delete-button').value = "delete";
                 }
 
