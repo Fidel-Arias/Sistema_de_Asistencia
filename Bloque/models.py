@@ -2,6 +2,7 @@ from django.db import models
 from Dia.models import MaeDia
 from Ponencia.models import MaePonencia
 from Ubicacion.models import MaeUbicacion
+from CongresoJINIS.models import MaeCongresoJinis
 
 # Create your models here.
 class MaeBloque(models.Model):
@@ -11,6 +12,7 @@ class MaeBloque(models.Model):
     horainicio = models.TimeField(verbose_name='Desde')
     horafin = models.TimeField(verbose_name='Hasta')
     idubicacion = models.ForeignKey(MaeUbicacion, db_column='idubicacion', on_delete=models.CASCADE)
+    idcongreso = models.ForeignKey(MaeCongresoJinis, db_column='idcongreso', null=False, on_delete=models.CASCADE)
     estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:

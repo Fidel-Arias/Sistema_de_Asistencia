@@ -66,6 +66,15 @@
                     </tbody>
                 </table>
             </div>
+
+            {% if not congresos or congresos.estado == 'NO ACTIVO' %}
+                <script>
+                    var enlaces = document.querySelector('.sidebar').querySelectorAll('.nav');
+                    enlaces.forEach(enlace => {
+                        enlace.classList.add('action');
+                    })
+                </script>
+            {% endif %}
     
             <h2>Registrar Congreso</h2>
             <form class="register-form" method="POST" action="{% url 'RegistrarCongreso' %}">
@@ -100,60 +109,51 @@
         </main>
 
     </div>
-    
-    <script>
+</body>
+<script>
         
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const buttons = document.querySelectorAll('.fill-btn');
-            var estado;
-            //Botones desactivados Desactivar y Eliminar 
-            const buttonDesactivado = document.getElementById('delete-button');
-            const buttonActualizar = document.getElementById('edit-button');
-            const buttonRegister = document.getElementById('register-button');
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonActualizar = document.getElementById('edit-button');
+        const buttonRegister = document.getElementById('register-button');
 
-            buttonActualizar.style.display = 'none';
-            buttonDesactivado.style.display='none';
+        buttonActualizar.style.display = 'none';
+        buttonDesactivado.style.display='none';
 
-            buttons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    //Agregando los botones
-                    buttonActualizar.style.display='block';
-                    buttonDesactivado.style.display='block';
-                    buttonRegister.style.display = 'none';
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                //Agregando los botones
+                buttonActualizar.style.display='block';
+                buttonDesactivado.style.display='block';
+                buttonRegister.style.display = 'none';
 
-                    //Datos
-                    const idcongreso = event.currentTarget.getAttribute('data-id');
-                    const nombre = event.currentTarget.getAttribute('data-nombre');
-                    const fechainicio = event.currentTarget.getAttribute('data-fechainicio');
-                    const fechafin = event.currentTarget.getAttribute('data-fechafin');
-                    estado = event.currentTarget.getAttribute('data-estado');
-                    const asistenciatotal = event.currentTarget.getAttribute('data-asistenciatotal');
+                //Datos
+                const idcongreso = event.currentTarget.getAttribute('data-id');
+                const nombre = event.currentTarget.getAttribute('data-nombre');
+                const fechainicio = event.currentTarget.getAttribute('data-fechainicio');
+                const fechafin = event.currentTarget.getAttribute('data-fechafin');
+                estado = event.currentTarget.getAttribute('data-estado');
+                const asistenciatotal = event.currentTarget.getAttribute('data-asistenciatotal');
 
-                    if (estado === "NO ACTIVO") {
-                        document.getElementById('delete-button').innerText = "Activar";
-                        document.getElementById('delete-button').value = "activate";
-                    } else {
-                        document.getElementById('delete-button').innerText = "Desactivar";
-                        document.getElementById('delete-button').value = "delete";
-                    }
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Desactivar";
+                    document.getElementById('delete-button').value = "delete";
+                }
 
-                    document.getElementById('congresoid').value = idcongreso;
-                    document.getElementById('nombre').value = nombre;
-                    document.getElementById('fechaInicio').value = fechainicio;
-                    document.getElementById('fechaFin').value = fechafin;
-                    document.getElementById('totalAsistencia').value = asistenciatotal;
-                });
+                document.getElementById('congresoid').value = idcongreso;
+                document.getElementById('nombre').value = nombre;
+                document.getElementById('fechaInicio').value = fechainicio;
+                document.getElementById('fechaFin').value = fechafin;
+                document.getElementById('totalAsistencia').value = asistenciatotal;
             });
         });
-
-        // Ocultar el mensaje después de 3 segundos
-        setTimeout(function() {
-            var message = document.getElementById('message');
-            if (message) {
-                message.style.display = 'none';
-            }
-        }, 3000); // 3000 milisegundos = 3 segundos
-
-    </script>
-</body>
+    });
+</script>
+<script src="{% static 'js/messageTime.js' %}"></script>
 </html>

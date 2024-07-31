@@ -78,6 +78,13 @@
     font-weight: 500;
 }
 
+.sidebar .action { /*Desactiva los enlaces*/
+    pointer-events: none;
+    background-color: #4389D9;
+    cursor: not-allowed;
+    color: #FFFFFF;
+}
+
 @media(max-width: 1500px){
     .sidebar a {
         width: 84%;

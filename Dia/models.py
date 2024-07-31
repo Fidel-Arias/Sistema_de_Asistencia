@@ -1,10 +1,12 @@
 from django.db import models
+from CongresoJINIS.models import MaeCongresoJinis
 
 # Create your models here.
 class MaeDia(models.Model):
     iddia = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=False, null=False)
     estado = models.CharField(max_length=11, default='ACTIVO')
+    idcongreso = models.ForeignKey(MaeCongresoJinis, null=False, db_column='idcongreso', on_delete=models.CASCADE)
 
     class Meta:
         managed = False

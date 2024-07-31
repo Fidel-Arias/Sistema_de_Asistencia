@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'static',
-    'Login',
     'Admin',
     'Colaborador',
     'Asistencia',
@@ -52,9 +51,7 @@ INSTALLED_APPS = [
     'Ponencia',
     'Ponente',
     'tipoDocumento',
-    'tipoParticipante',
     'tipoUsuario',
-    'Universidad',
     'rest_framework',
 ]
 
@@ -73,7 +70,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,3 +148,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    'Participantes.backends.CodParticipanteAuthBackend',
+    'Colaborador.backends.ColaboradorAuthBackend',
+    'Admin.backends.AdminAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',  # Opcional: Mantener el backend predeterminado
+]
+
+LOGIN_URL = '/accounts/login/'  # Ruta de inicio de sesión personalizada
+LOGIN_REDIRECT_URL = '/participante/'  # Redirige aquí después de iniciar sesión

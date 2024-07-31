@@ -30,40 +30,49 @@
         <main class="main-content">
             <!-- Tabla de Ponencias -->
             <h2 class="h2-Contenido-actual">Contenido Actual</h2>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 250px;">NOMBRE</th>
-                                <th style="width: 230px;">PONENTE</th>
-                                <th style="width: 100px;">ESTADO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for ponencia in ponencias %}
-                            <tr>
-                                <td>{{ponencia.nombre}}</td>
-                                <td>{{ponencia.idponente}}</td>
-                                <td>{{ponencia.estado}}</td>
-                                <td class="check-td">
-                                    <button type="button" class="fill-btn"
-                                        data-id="{{ponencia.idponencia}}"
-                                        data-nombre="{{ponencia.nombre}}"
-                                        data-ponente="{{ponencia.idponente.idponente}}"
-                                        data-estado="{{ponencia.estado}}">
-                                        <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            <!-- Añade más filas según sea necesario -->
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 250px;">NOMBRE</th>
+                            <th style="width: 230px;">PONENTE</th>
+                            <th style="width: 100px;">ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ponencia in ponencias %}
+                        <tr>
+                            <td>{{ponencia.nombre}}</td>
+                            <td>{{ponencia.idponente}}</td>
+                            <td>{{ponencia.estado}}</td>
+                            <td class="check-td">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{ponencia.idponencia}}"
+                                    data-nombre="{{ponencia.nombre}}"
+                                    data-ponente="{{ponencia.idponente.idponente}}"
+                                    data-estado="{{ponencia.estado}}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <!-- Añade más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
 
             <h2>Registrar Ponencia</h2>
             <form class="register-form" method="POST" action="{% url 'RegistrarPonencia' %}">
                 {% csrf_token %}
+                <label for="congreso">Congreso</label>
+                <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">
+                    <option value="" {% if not selected_congreso %}selected{% endif %} disabled>Seleccione el congreso</option>
+                    {% for congreso in congresos %}
+                        <option value="{{congreso.idcongreso}}" {% if selected_congreso == congreso.idcongreso %}selected{% endif %}>{{congreso.nombre}}</option>
+                    {% endfor %}
+                </select>
+
+                {% if selected_congreso %}
                 <input type="hidden" name="id" id="ponenciaid">
                 <label for="ponente">Ponente</label>
                 <select id="ponente" name="ponente" required>
@@ -81,42 +90,14 @@
                     <button type="submit" class="delete-button" id="delete-button" name="action" value="delete">Desactivar</button>
                     <button type="submit" class="edit-button" id="edit-button" name="action" value="edit">Actualizar</button>
                 </div>
+                {% endif %}
             </form>
 
         </main>
     </div>
 </body>
+<script src="{% static 'js/buttonConfiguration.js' %}"></script>
 <script>
-    const messageWarning = document.querySelector('.warning');
-    const messageSuccess = document.querySelector('.success');
-    const buttonRegister = document.getElementById('register-button');
-    const buttonDelete = document.getElementById('delete-button');
-    const buttonEdit = document.getElementById('edit-button');
-
-    if (messageWarning) {
-        buttonRegister.disabled = true;
-        buttonDelete.disabled = true;
-        buttonEdit.disabled = true;
-        //estilos
-        buttonRegister.style.backgroundColor = '#c8c8c8';
-        buttonRegister.style.cursor = 'not-allowed';
-        buttonDelete.style.backgroundColor = '#c8c8c8';
-        buttonDelete.style.cursor = 'not-allowed';
-        buttonEdit.style.backgroundColor = '#c8c8c8';
-        buttonEdit.style.cursor = 'not-allowed';
-    } else if (messageSuccess) {
-        buttonRegister.disabled = false;
-        buttonDelete.disabled = false;
-        buttonEdit.disabled = false;
-        //estilos
-        buttonRegister.style.backgroundColor = '#007bff';
-        buttonRegister.style.cursor = 'pointer';
-        buttonDelete.style.backgroundColor = '#dc3545';
-        buttonDelete.style.cursor = 'pointer';
-        buttonEdit.style.backgroundColor = '#28a745';
-        buttonEdit.style.cursor = 'pointer';
-    }
-
     document.addEventListener('DOMContentLoaded', (event) => {
         const buttons = document.querySelectorAll('.fill-btn');
         var estado;
@@ -156,13 +137,6 @@
             });
         });
     });
-
-     // Ocultar el mensaje después de 3 segundos
-    setTimeout(function() {
-        var message = document.getElementById('message');
-        if (message) {
-            message.style.display = 'none';
-        }
-    }, 3000); // 3000 milisegundos = 3 segundos
 </script>
+<script src="{% static 'js/messageTime.js' %}"></script>
 </html>

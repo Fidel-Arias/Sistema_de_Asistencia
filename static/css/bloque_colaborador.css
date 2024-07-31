@@ -135,7 +135,7 @@ h2{
     border: 1px solid #ddd;
     border-radius: 5px;
     width: 100%; /* Ajusta el ancho de los campos de entrada */
-    
+    outline: none;
     font-size: 16px;
 }
 
@@ -145,12 +145,6 @@ h2{
     align-items: center;
     gap: 1em;
     width: 100%;
-}
-
-.group-usuario {
-    display: flex;
-    flex-direction: column;
-    width: 310px;
 }
 
 .group-congreso {
@@ -294,6 +288,12 @@ h2{
 
 /* Estilo específico para mensajes de error */
 .message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message.warning {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;

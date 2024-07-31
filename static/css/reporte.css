@@ -116,6 +116,32 @@ h2 {
     background-color: #0056b3;
 }
 
+.data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.data-container label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+    text-align: left; /* Alinea las etiquetas a la izquierda */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 60%; /* Maximo ancho disponible */
+}
+
+.data-container span {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%; /* Ajusta el ancho de los campos de entrada */
+    max-width: 60%; /* Maximo ancho disponible */
+    box-sizing: border-box; /* Incluye padding y border en el tamano total */
+    font-size: 16px;
+}
+
 /* Media Queries para dispositivos móviles */
 @media (max-width: 1024px) {
     .main-content-reporte {

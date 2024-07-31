@@ -4,7 +4,7 @@ from django.db import models
 class MaeUbicacion(models.Model):
     idubicacion = models.AutoField(primary_key=True)
     ubicacion = models.CharField(max_length=60)
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     def __str__(self) -> str:
         return self.ubicacion

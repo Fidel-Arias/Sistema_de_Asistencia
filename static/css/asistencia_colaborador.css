@@ -1,0 +1,112 @@
+body {
+    height: 100vh;
+}
+
+/*Flex al header*/
+.flex-header {
+    max-width: 100%;
+    max-height: 30%;
+    padding: 0.5em;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 30px 0 30px;
+}
+
+.ucsm_logo {
+    width: 25%;
+    height: 100%;
+}
+
+.epis_logo {
+    width: 13%;
+    height: 65%;
+}
+
+.canvas {
+    width: 40%;
+    align-self: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.select-small {
+    width: auto;
+    max-width: 250px; /* Ajusta el tamaño del select */
+}
+
+.select-small option {
+    white-space: nowrap; /* Evita que las opciones se envuelvan en varias líneas */
+    overflow: hidden; /* Oculta el desbordamiento de texto */
+    text-overflow: ellipsis; /* Añade puntos suspensivos al final del texto que no cabe */
+}
+
+@media(max-width:789px) {
+    body {
+        gap: 2em;
+    }
+
+    /*Flex al header*/
+    .flex-header {
+        max-width: 100%;
+        max-height: 40%;
+        padding: 0.5em;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 30px 0 30px;
+    }
+
+    .ucsm_logo {
+        width: 45%;
+        height: 100%;
+    }
+
+    .epis_logo {
+        width: 25%;
+        height: 80%;
+    }
+
+    .canvas {
+        width: 70%;
+        align-self: center;
+    }
+
+    .data p{
+        font-size: 25px;
+    }
+}
+
+@media(max-width:418px){
+    body {
+        gap: 2em;
+    }
+
+    .canvas {
+        width: 100%;
+        align-self: center;
+    }
+
+    .flex-header {
+        max-width: 100%;
+        max-height: 10%;
+        padding: 0.5em;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0;
+    }
+    
+    .ucsm_logo {
+        width: 60%;
+        height: 100%;
+    }
+    
+    .epis_logo {
+        width: 30%;
+        height: 80%;
+    }
+
+    .data p{
+        font-size: 20px;
+    }
+}

@@ -65,6 +65,25 @@
             </div>
             <button type="submit" class="filter-button">Filtrar</button>
         </form>
+        <h2>Datos del participante</h2>
+        <div class="data-container">
+            <label for="name">Nombre del participante</label>
+            <span id="name">[Nombre]</span>
+            <label for="codigo">Código del participante</label>
+            <span id="codigo">[Codigo]</span>
+            <label for="numero-asistencias">Número de asistencias</label>
+            <span id="numero-asistencias">[---]</span>
+            <label for="congreso">Congreso</label>
+            <span id="congreso">[congreso]</span>
+        </div>
     </main>
 </body>
+{% if not congresos %}
+    <script>
+        var enlaces = document.querySelector('.sidebar').querySelectorAll('.nav');
+        enlaces.forEach(enlace => {
+            enlace.classList.add('action');
+        })
+    </script>
+{% endif %}
 </html>

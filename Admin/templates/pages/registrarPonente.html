@@ -64,18 +64,28 @@
             <h2>Registrar Ponente</h2>
             <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' %}">
                 {% csrf_token %}
-                <input type="hidden" name="id" id="ponenteid">
-                <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+                <label for="congreso">Congreso</label>
+                <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">
+                    <option value="" {% if not selected_congreso %}selected{% endif %} disabled>Seleccione el congreso</option>
+                    {% for congreso in congresos %}
+                        <option value="{{congreso.idcongreso}}" {% if selected_congreso == congreso.idcongreso %}selected{% endif %}>{{congreso.nombre}}</option>
+                    {% endfor %}
+                </select>
 
-                <label for="apellido">Apellidos</label>
-                <input type="text" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+                {% if selected_congreso %}
+                <input type="hidden" name="id" id="ponenteid" class="function">
+                <label for="nombre" class="function">Nombre</label>
+                <input type="text" class="function" id="nombre" name="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
 
-                <div class="button-container">
+                <label for="apellido" class="function">Apellidos</label>
+                <input type="text" class="function" id="apellido" name="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+
+                <div class="button-container function">
                     <button type="submit" id="register-button" name="action" value="register" class="register-button">Registrar</button>
                     <button type="submit" id="delete-button" name="action" value="delete" class="delete-button">Desactivar</button>
                     <button type="submit" id="edit-button" name="action"  value="edit" class="edit-button">Actualizar</button>
                 </div>
+                {% endif %}
             </form>
         </main>
     </div>
@@ -120,13 +130,6 @@
             });
         });
     });
-
-    // Ocultar el mensaje despues de 3 segundos
-    setTimeout(function() {
-        var message = document.getElementById('message');
-        if (message) {
-            message.style.display = 'none';
-        }
-    }, 3000); // 3000 milisegundos = 3 segundos
 </script>
+<script src="{% static 'js/messageTime.js' %}"></script>
 </html>

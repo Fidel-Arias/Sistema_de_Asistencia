@@ -73,16 +73,25 @@
             <main class="main-content">
                 <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' %}">
                     {% csrf_token %}
+
+                    <label for="congreso">Congreso</label>
+                    <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">
+                        <option value="" {% if not selected_congreso %}selected{% endif %} disabled>Seleccione el congreso</option>
+                        {% for congreso in congresos %}
+                            <option value="{{congreso.idcongreso}}" {% if selected_congreso == congreso.idcongreso %}selected{% endif %}>{{congreso.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    {% if selected_congreso %}
                     <input type="hidden" name="id" id="blclid">
-                    <div class="group-usuario">
-                        <label for="tipoUsuario">Colaborador</label>
-                        <select class="combobox" name="colaborador" id="colaborador" required>
-                            <option value="" disabled selected>Seleccionar el colaborador</option>
-                            {% for colaborador in colaboradores %}
-                                <option value="{{colaborador.idcolaborador}}">{{colaborador}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+
+                    <label for="tipoUsuario">Colaborador</label>
+                    <select class="combobox" name="colaborador" id="colaborador" required>
+                        <option value="" disabled selected>Seleccionar el colaborador</option>
+                        {% for colaborador in colaboradores %}
+                            <option value="{{colaborador.idcolaborador}}">{{colaborador}}</option>
+                        {% endfor %}
+                    </select>
 
                     <h2>Bloques disponibles</h2>
                     <div class="flex-bloques-selected">
@@ -102,41 +111,14 @@
                         <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
                         <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
                     </div>
+                    {% endif %}
                 </form>
             </main>
         </div>
     </div>
 </body>
+<script src="{% static 'js/buttonConfiguration.js' %}"></script>
 <script>
-    const messageWarning = document.querySelector('.warning');
-        const messageSuccess = document.querySelector('.success');
-        const buttonRegister = document.getElementById('register-button');
-        const buttonDelete = document.getElementById('delete-button');
-        const buttonEdit = document.getElementById('edit-button');
-
-        if (messageWarning) {
-            buttonRegister.disabled = true;
-            buttonDelete.disabled = true;
-            buttonEdit.disabled = true;
-            //estilos
-            buttonRegister.style.backgroundColor = '#c8c8c8';
-            buttonRegister.style.cursor = 'not-allowed';
-            buttonDelete.style.backgroundColor = '#c8c8c8';
-            buttonDelete.style.cursor = 'not-allowed';
-            buttonEdit.style.backgroundColor = '#c8c8c8';
-            buttonEdit.style.cursor = 'not-allowed';
-        } else if (messageSuccess) {
-            buttonRegister.disabled = false;
-            buttonDelete.disabled = false;
-            buttonEdit.disabled = false;
-            //estilos
-            buttonRegister.style.backgroundColor = '#007bff';
-            buttonRegister.style.cursor = 'pointer';
-            buttonDelete.style.backgroundColor = '#dc3545';
-            buttonDelete.style.cursor = 'pointer';
-            buttonEdit.style.backgroundColor = '#28a745';
-            buttonEdit.style.cursor = 'pointer';
-        }
     document.addEventListener('DOMContentLoaded', (event) => {
         const buttons = document.querySelectorAll('.fill-btn');
         var estado;

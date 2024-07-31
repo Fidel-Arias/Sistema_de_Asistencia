@@ -16,14 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from Participantes.views import viewParticipantes
+from Participantes.views import LoginView
+from Colaborador.views import LoginColaborador
+from Admin.login_admin import LoginAdmin
+
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
-    path('', include('Login.urls')),
-    path('Administrador/', include('Admin.urls')),
-    path('Colaborador/', include('Colaborador.urls')),
-    path('Administrador/', include('Asistencia.urls')),
-    path('user/', include('Participantes.urls')),
-    path('user/', include('Ponencia.urls')),
+    path('', RedirectView.as_view(url='/accounts/login/', permanent=True)),
+    path('accounts/login/', LoginView.as_view(), name='Login'),  # URL para la vista de inicio de sesión personalizada
+    path('accounts/login-admin/', LoginAdmin.as_view(), name='LoginAdmin'),  # URL para la vista de inicio de sesión personalizada
+    path('accounts/login-colaborador/', LoginColaborador.as_view(), name='LoginColaborador'),  # URL para la vista de inicio de sesión personalizada
+    path('participante/', include('Participantes.urls')),  # Incluye las URLs de la aplicación Participantes    
+    path('administrador/', include('Admin.urls')),
+    path('colaborador/', include('Colaborador.urls')),
+    path('', include('Ponencia.urls')),
 ]
  #    path('api/ponentes/<int:pk>', viewPonentes.as_view({'get': 'ponente'})), --------ejemplo --- no se modifica

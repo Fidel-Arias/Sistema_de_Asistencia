@@ -1,56 +1,46 @@
-from django.http import JsonResponse
+from django.contrib.auth import authenticate, login
+from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from rest_framework import viewsets
-from .serializers import ColaboradorSerializer
 from .models import MaeColaborador
 from Bloque.models import MaeBloque
 from CongresoJINIS.models import MaeCongresoJinis
 from Asistencia.models import TrsAsistencia
-
 from Bloque.models import MaeBloque
 from CongresoJINIS.models import MaeCongresoJinis
+from datetime import date
+
+class LoginColaborador(View):
+    def get(self, request):
+        error = request.session.pop('error', None)  # Obtiene y elimina el mensaje de error de la sesión
+        return render(request, 'registration/loginColaborador.html', {'error': error})
+    
+    def post(self, request):
+        correo = request.POST.get('correo')
+        contrasenia = request.POST.get('contrasenia')
+        user = authenticate(username=correo, password=contrasenia)
+        if user is not None:
+            login(request, user)
+            request.session['correoColaborador'] = correo
+            request.session['contraseniaColaborador'] = contrasenia
+            return redirect('InterfazColaborador')
+        else:
+            request.session['error'] = 'Credenciales incorrectas'
+            return redirect('LoginColaborador')
 
 class Colaborador(viewsets.ViewSet):
-    queryset = MaeColaborador.objects.all()
-    serializer_class = ColaboradorSerializer
-
-    def ingresoColaborador(self, request):
-        if request.method == "POST":
-            correo = request.POST.get('correo')
-            contrasenia = request.POST.get('contrasenia')
-            try:
-                colaborador = MaeColaborador.objects.get(correo=correo, contrasenia=contrasenia)
-                request.session['correoColaborador'] = correo
-                request.session['contraseniaColaborador'] = contrasenia
-            except MaeColaborador.DoesNotExist:
-                print("No existe")
-                return redirect(reverse('LoguingColaborador') + '?error=Usuario-o-contraseña-incorrectos')
-
-            colaborador_data = ColaboradorSerializer(colaborador)
-            bloques_data = MaeBloque.objects.all()
-            congreso_data = MaeCongresoJinis.objects.all()
-            return render(request, 'colaborador.html', {
-                'colaborador_data': colaborador_data.data, 
-                'bloques_data': bloques_data, 
-                'congreso_data': congreso_data, 
-                'correo': correo, 
-                'contrasenia': contrasenia
-            })
-
-    def registrar_asistencia(self, request):
-        if request.method == "POST":
+    @method_decorator(login_required)
+    def interfaz_colaborador(self, request):
+        if request.method == 'POST':
             codigo = request.POST.get('codigo')
             id_bloque = request.POST.get('id_bloque')
             id_congreso = request.POST.get('id_congreso')
             correoColaborador = request.session.get('correoColaborador')
             contraseniaColaborador = request.session.get('contraseniaColaborador')
-            bloques_data = MaeBloque.objects.all()
-            congreso_data = MaeCongresoJinis.objects.all()
-            colaborador_data = None
             try:
                 colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
-                colaborador_data = ColaboradorSerializer(colaborador)
                 if not TrsAsistencia.objects.filter(codparticipante=codigo, idbloque=id_bloque).exists():
                     nueva_asistencia = TrsAsistencia(
                         idcongreso_id=id_congreso,
@@ -63,6 +53,17 @@ class Colaborador(viewsets.ViewSet):
                     mensaje = "El código de participante ya se encuentra registrado en este bloque"
             except Exception:
                 mensaje = 'Error al guardar la asistencia'
-            return render(request, 'colaborador.html', {'colaborador_data': colaborador_data.data, 'mensaje': mensaje, 'bloques_data': bloques_data, 'congreso_data': congreso_data})
-            
-        return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
+            return redirect('InterfazColaborador')
+        else:
+            correoColaborador = request.session.get('correoColaborador')
+            contraseniaColaborador = request.session.get('contraseniaColaborador')
+            colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
+            dia_actual = date.today()
+            dia_actual = dia_actual.strftime('%d/%m/%Y')
+            bloques = MaeBloque.objects.filter(idcongreso=colaborador.idcongreso)
+            return render(request, 'asistencia_colaborador.html', {
+                'colaborador': colaborador, 
+                'bloques': bloques, 
+                'congreso': colaborador.idcongreso,
+                'dia_actual': dia_actual
+            })

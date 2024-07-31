@@ -180,6 +180,10 @@ body {
     outline: none;
 }
 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px rgb(241, 241, 241) inset !important;
+}
+
 /*Estilos al boton del form*/
 .form_login button {
     background-color: rgb(67, 67, 117);

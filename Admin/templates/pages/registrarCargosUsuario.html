@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/colaborador.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cargosUsuario.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
     <title>Registrar Colaborador</title>
 </head>
@@ -63,6 +63,30 @@
                             </td>
                         </tr>
                         {% endfor %}
+
+                        {% for administrador in administradores %}
+                        <tr>
+                            <td style="width: 180px;">{{administrador.nombre}}</td>
+                            <td style="width: 180px;">{{administrador.apellido}}</td>
+                            <td style="width: 195px;">{{administrador.correo}}</td>
+                            <td style="width: 90px;">{{administrador.idcongreso}}</td>
+                            <td style="width: 90px;">{{administrador.idtipo}}</td>
+                            <td style="width: 100px;">{{administrador.estado}}</td>
+                            <td class="check-td" style="width: 190px;">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{administrador.idcolaborador}}"
+                                    data-nombre="{{administrador.nombre}}"
+                                    data-apellido="{{administrador.apellido}}"
+                                    data-correo="{{administrador.correo}}"
+                                    data-password="{{administrador.contrasenia}}"
+                                    data-congreso="{{administrador.idcongreso.idcongreso}}"
+                                    data-usuario="{{administrador.idtipo.idtipo}}"
+                                    data-estado="{{administrador.estado}}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -82,7 +106,17 @@
             <main class="main-content">
                 <form class="register-form" method="POST" action="{% url 'RegistrarCargosUsuarios' %}">
                     {% csrf_token %}
-                    <input type="hidden" name="id" id="colaboradorid">
+                    
+                    <label for="congreso">Congreso</label>
+                    <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">
+                        <option value="" {% if not selected_congreso %}selected{% endif %} disabled>Seleccione el congreso</option>
+                        {% for congreso in congresos %}
+                            <option value="{{congreso.idcongreso}}" {% if selected_congreso == congreso.idcongreso %}selected{% endif %}>{{congreso.nombre}}</option>
+                        {% endfor %}
+                    </select>
+
+                    {% if selected_congreso %}
+                    <input type="hidden" name="id" id="usuarioid">
                     <div class="flex-nombre-apellido">
                         <div class="form-group form-nombres">
                             <label for="nombre" class="label__nombre">Nombre</label>
@@ -118,15 +152,6 @@
                             </select>
                         </div>
 
-                        <div class="form-group group-congreso">
-                            <label for="congreso">Congreso</label>
-                            <select class="combobox" name="congreso" id="congreso" required>
-                                <option value="" disabled selected>Seleccionar el congreso</option>
-                                    {% for congreso in lista_congresos %}
-                                        <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
-                                    {% endfor %}
-                            </select>
-                        </div>
                     </div>
 
                     <div class="button-container">
@@ -134,98 +159,62 @@
                         <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
                         <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
                     </div>
+                    {% endif %}
                 </form>
             </main>
         </div>
 
     </div>
-    <script>
-        const messageWarning = document.querySelector('.warning');
-        const messageSuccess = document.querySelector('.success');
+</body>
+<script src="{% static 'js/buttonConfiguration.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonActualizar = document.getElementById('edit-button');
         const buttonRegister = document.getElementById('register-button');
-        const buttonDelete = document.getElementById('delete-button');
-        const buttonEdit = document.getElementById('edit-button');
 
-        if (messageWarning) {
-            buttonRegister.disabled = true;
-            buttonDelete.disabled = true;
-            buttonEdit.disabled = true;
-            //estilos
-            buttonRegister.style.backgroundColor = '#c8c8c8';
-            buttonRegister.style.cursor = 'not-allowed';
-            buttonDelete.style.backgroundColor = '#c8c8c8';
-            buttonDelete.style.cursor = 'not-allowed';
-            buttonEdit.style.backgroundColor = '#c8c8c8';
-            buttonEdit.style.cursor = 'not-allowed';
-        } else if (messageSuccess) {
-            buttonRegister.disabled = false;
-            buttonDelete.disabled = false;
-            buttonEdit.disabled = false;
-            //estilos
-            buttonRegister.style.backgroundColor = '#007bff';
-            buttonRegister.style.cursor = 'pointer';
-            buttonDelete.style.backgroundColor = '#dc3545';
-            buttonDelete.style.cursor = 'pointer';
-            buttonEdit.style.backgroundColor = '#28a745';
-            buttonEdit.style.cursor = 'pointer';
-        }
+        buttonActualizar.style.display = 'none';
+        buttonDesactivado.style.display='none';
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const buttons = document.querySelectorAll('.fill-btn');
-            var estado;
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                //Agregando los botones
+                buttonActualizar.style.display='block';
+                buttonDesactivado.style.display='block';
+                buttonRegister.style.display = 'none';
 
-            //Botones desactivados Desactivar y Eliminar 
-            const buttonDesactivado = document.getElementById('delete-button');
-            const buttonActualizar = document.getElementById('edit-button');
-            const buttonRegister = document.getElementById('register-button');
+                //Extrayendo datos
+                const id = event.currentTarget.getAttribute('data-id');
+                const nombre = event.currentTarget.getAttribute('data-nombre');
+                const apellido = event.currentTarget.getAttribute('data-apellido');
+                const correo = event.currentTarget.getAttribute('data-correo');
+                const password = event.currentTarget.getAttribute('data-password');
+                const tipoUsuario = event.currentTarget.getAttribute('data-usuario');
+                const congreso = event.currentTarget.getAttribute('data-congreso');
+                estado = event.currentTarget.getAttribute('data-estado');
 
-            buttonActualizar.style.display = 'none';
-            buttonDesactivado.style.display='none';
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Desactivar";
+                    document.getElementById('delete-button').value = "delete";
+                }
 
-            buttons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    //Agregando los botones
-                    buttonActualizar.style.display='block';
-                    buttonDesactivado.style.display='block';
-                    buttonRegister.style.display = 'none';
-
-                    //Extrayendo datos
-                    const idcolaborador = event.currentTarget.getAttribute('data-id');
-                    const nombre = event.currentTarget.getAttribute('data-nombre');
-                    const apellido = event.currentTarget.getAttribute('data-apellido');
-                    const correo = event.currentTarget.getAttribute('data-correo');
-                    const password = event.currentTarget.getAttribute('data-password');
-                    const tipoUsuario = event.currentTarget.getAttribute('data-usuario');
-                    const congreso = event.currentTarget.getAttribute('data-congreso');
-                    estado = event.currentTarget.getAttribute('data-estado');
-
-                    if (estado === "NO ACTIVO") {
-                        document.getElementById('delete-button').innerText = "Activar";
-                        document.getElementById('delete-button').value = "activate";
-                    } else {
-                        document.getElementById('delete-button').innerText = "Desactivar";
-                        document.getElementById('delete-button').value = "delete";
-                    }
-
-                    document.getElementById('colaboradorid').value = idcolaborador;
-                    document.getElementById('nombre').value = nombre;
-                    document.getElementById('apellido').value = apellido;
-                    document.getElementById('correo').value = correo;
-                    document.getElementById('contrasenia').value = password;
-                    document.getElementById('tipoUsuario').value = tipoUsuario;
-                    document.getElementById('congreso').value = congreso;
-                });
+                document.getElementById('usuarioid').value = id;
+                document.getElementById('nombre').value = nombre;
+                document.getElementById('apellido').value = apellido;
+                document.getElementById('correo').value = correo;
+                document.getElementById('contrasenia').value = password;
+                document.getElementById('tipoUsuario').value = tipoUsuario;
+                document.getElementById('congreso').value = congreso;
             });
         });
-        // Ocultar el mensaje después de 3 segundos
-        setTimeout(function() {
-            var message = document.getElementById('message');
-            var mainContent = document.getElementById('main');
-            if (message) {
-                message.style.display = 'none';
-                mainContent.style.gap = '2em';
-            }
-        }, 3000); // 3000 milisegundos = 3 segundos
-    </script>
-</body>
+    });
+</script>
+<script src="{% static 'js/messageTime.js' %}"></script>
 </html>

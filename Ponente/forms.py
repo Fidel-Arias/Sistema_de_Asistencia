@@ -4,4 +4,4 @@ from .models import MaePonente
 class PonenteForm(forms.ModelForm):
     class Meta:
         model = MaePonente
-        fields = ('idponente', 'nombre', 'apellido')
+        fields = ('idponente', 'nombre', 'apellido', 'idcongreso')

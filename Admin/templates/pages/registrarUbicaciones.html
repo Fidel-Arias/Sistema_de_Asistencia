@@ -74,6 +74,7 @@
         </main>
     </div>
 </body>
+
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const buttons = document.querySelectorAll('.fill-btn');
@@ -85,6 +86,13 @@
 
         buttonActualizar.style.display = 'none';
         buttonDesactivado.style.display='none';
+
+        buttonRegister.addEventListener('click', () => {
+            enlaceUbicacion.style.pointerEvents = 'none';
+            enlaceUbicacion.style.backgroundColor = '#4389D9';
+            enlaceUbicacion.style.cursor = 'not-allowed';
+            enlaceUbicacion.style.color = '#FFFFFF';
+        })
 
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
@@ -111,12 +119,6 @@
             });
         });
     });
-    // Ocultar el mensaje despues de 3 segundos
-    setTimeout(function() {
-        var message = document.getElementById('message');
-        if (message) {
-            message.style.display = 'none';
-        }
-    }, 3000); // 3000 milisegundos = 3 segundos
 </script>
+<script src="{% static 'js/messageTime.js' %}"></script>
 </html>
