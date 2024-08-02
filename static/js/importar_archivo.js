@@ -1,15 +1,9 @@
 const buttonSubir = document.getElementById("upload_files");
-const contenedor = document.getElementById("no-mostrar");
-
-contenedor.style.display = "none";
 
 buttonSubir.disabled = true;
-buttonSubir.style.backgroundColor = '#c8c8c8'
-buttonSubir.style.cursor = 'not-allowed'
+buttonSubir.style.backgroundColor = '#c8c8c8';
+buttonSubir.style.cursor = 'not-allowed';
 
-document.getElementById('congreso').addEventListener('change', () => {
-    contenedor.style.display = "block";
-});
 
 document.getElementById('uploadButton').addEventListener('click', function() {
     event.preventDefault();

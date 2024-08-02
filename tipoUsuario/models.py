@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class MaeTipoUsuario(models.Model):
     idtipo = models.AutoField(primary_key=True)
-    dstipo = models.CharField(max_length=20, blank=False, null=False)
+    dstipo = models.CharField(max_length=30, blank=False, null=False)
     estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
     class Meta:

@@ -1,17 +1,15 @@
 from django.db import models
 from Bloque.models import MaeBloque
-from CongresoJINIS.models import MaeCongresoJinis
 from tipoUsuario.models import MaeTipoUsuario
 
 # Create your models here.
 class MaeColaborador(models.Model):
     idcolaborador = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=10)
-    apellido = models.CharField(max_length=30)
-    correo = models.CharField(max_length=50)
-    contrasenia = models.CharField(max_length=20)
-    idtipo = models.ForeignKey(MaeTipoUsuario, db_column='idtipo', on_delete=models.CASCADE)
-    idcongreso = models.ForeignKey(MaeCongresoJinis, db_column='idcongreso', on_delete=models.CASCADE)
+    nombres = models.CharField(max_length=40, null=False)
+    apellidos = models.CharField(max_length=40, null=False)
+    correo = models.CharField(max_length=40, null=False)
+    contrasenia = models.CharField(null=False)
+    idtipo = models.ForeignKey(MaeTipoUsuario, db_column='idtipo', on_delete=models.CASCADE, null=False)
     estado = models.CharField(max_length=11, default='ACTIVO', null=False)
     
     class Meta:
@@ -19,4 +17,4 @@ class MaeColaborador(models.Model):
         db_table = 'mae_colaborador'
 
     def __str__(self) -> str:
-        return self.nombre + ' ' + self.apellido
+        return self.nombres + ' ' + self.apellidos

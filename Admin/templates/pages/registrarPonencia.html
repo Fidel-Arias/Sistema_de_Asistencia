@@ -78,7 +78,7 @@
                 <select id="ponente" name="ponente" required>
                     <option value="" disabled selected>Seleccionar un ponente</option>
                     {% for ponente in ponentes %}
-                        <option value="{{ponente.idponente}}">{{ponente.nombre}} {{ponente.apellido}}</option>
+                        <option value="{{ponente.idponente}}">{{ponente.nombres}} {{ponente.apellidos}}</option>
                     {% endfor %}
                     <!-- Más opciones según los ponentes registrados -->
                 </select>

@@ -6,10 +6,8 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import MaeColaborador
 from Bloque.models import MaeBloque
-from CongresoJINIS.models import MaeCongresoJinis
 from Asistencia.models import TrsAsistencia
 from Bloque.models import MaeBloque
-from CongresoJINIS.models import MaeCongresoJinis
 from datetime import date
 
 class LoginColaborador(View):

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, response, status
+from rest_framework import viewsets
 from .models import MaePonencia
 from .serializers import PonenciasSerializer
 

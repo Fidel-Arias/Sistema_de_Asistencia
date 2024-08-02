@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class MaeTipodocumento(models.Model):
     idtipodoc = models.AutoField(primary_key=True)
-    dsdoc = models.CharField(max_length=30, blank=False, null=False)
+    dsdoc = models.CharField(max_length=50, blank=False, null=False)
 
     class Meta:
         managed = False

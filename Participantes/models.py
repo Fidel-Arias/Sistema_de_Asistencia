@@ -1,18 +1,17 @@
 from django.db import models
 from tipoDocumento.models import MaeTipodocumento
-from CongresoJINIS.models import MaeCongresoJinis
+from tipoParticipante.models import MaeTipoParticipante
 
 
 class MaeParticipantes(models.Model):
     codparticipante = models.CharField(primary_key=True, max_length=20)
-    nombre = models.CharField(max_length=40, null=False)
-    ap_paterno = models.CharField(max_length=40, null=False)
-    ap_materno = models.CharField(max_length=40, null=False)
+    nombre = models.CharField(max_length=30, null=False)
+    ap_paterno = models.CharField(max_length=30, null=False)
+    ap_materno = models.CharField(max_length=30, null=False)
     correo = models.CharField(max_length=40, null=False)
     idtipodoc = models.ForeignKey(MaeTipodocumento, db_column='idtipodoc', on_delete=models.CASCADE, null=False)
-    estado = models.CharField(max_length=11, default='ACTIVO', null=False)
-    idcongreso = models.ForeignKey(MaeCongresoJinis, null=False, db_column='idcongreso', on_delete=models.CASCADE)
-    qr_code = models.CharField(max_length=255, null=True)
+    idtipo = models.ForeignKey(MaeTipoParticipante, db_column='idtipo', on_delete=models.CASCADE, null=False)
+    qr_code = models.CharField(max_length=40, null=True)
 
     class Meta:
         managed = False
