@@ -17,7 +17,7 @@
         <img class="img-epis-blanco" src="{% static 'images/epis_logo_blanco.webp' %}" alt="Epis" />
     </header>
 
-    <div class='img-login-bloque'>
+    <div class='img-login-bloque login-bloque-colaborador'>
         <div class="image-jinis-universidad">
             <img class="jinis" src="{% static 'images/logo_jinis2024.webp' %}" alt="logo jinis"/>
             <p>XXXI Jornada Internacional de Ingeniería de Sistemas</p>
@@ -28,7 +28,7 @@
             <form action="{% url 'LoginColaborador' %}" method="POST" class="form_login">
                 {% csrf_token %}
                 <div class="bloque-icon-input">
-                    <img src="{% static 'images/icon-email.png' %}" alt="key">
+                    <img src="{% static 'images/icon-email-blanco.png' %}" alt="key">
                     <div class="input-box">
                         <label for="correo">Correo</label>
                         <input type="email" name="correo" required />
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="bloque-icon-input">
-                    <img src="{% static 'images/icon-key.png' %}" alt="key">
+                    <img src="{% static 'images/icon-key-blanco.png' %}" alt="key">
                     <div class="input-box">
                         <label for="contrasenia">Contraseña</label>
                         <input type="password" name="contrasenia" required />
@@ -50,8 +50,7 @@
                 {% endif %}
     
                 <div class="enlaces-login">
-                    <a href="{% url 'Login' %}" class="participante-enlace">Participante</a>
-                    <a href="{% url 'LoginAdmin' %}" class="administrador-enlace">Administrador</a>
+                    <a href="{% url 'Login' %}" class="participante-enlace">Ingresa aqui si eres Participante</a>
                 </div>
             </form>
         </div>

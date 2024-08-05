@@ -66,15 +66,6 @@
                     </tbody>
                 </table>
             </div>
-
-            {% if not congresos or congresos.estado == 'NO ACTIVO' %}
-                <script>
-                    var enlaces = document.querySelector('.sidebar').querySelectorAll('.nav');
-                    enlaces.forEach(enlace => {
-                        enlace.classList.add('action');
-                    })
-                </script>
-            {% endif %}
     
             <h2>Registrar Congreso</h2>
             <form class="register-form" method="POST" action="{% url 'RegistrarCongreso' %}">
@@ -99,8 +90,7 @@
                 <input type="number" name="totalAsistencia" id="totalAsistencia" required>
     
                 <div class="button-container">
-                    <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
-                    <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
+                    <button type="submit" id="desactivate-button" class="delete-button" name="action" value="desactivate">Desactivar</button>
                     <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
                 </div>
             </form>
@@ -116,19 +106,30 @@
         const buttons = document.querySelectorAll('.fill-btn');
         var estado;
         //Botones desactivados Desactivar y Eliminar 
-        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonDesactivado = document.getElementById('desactivate-button');
         const buttonActualizar = document.getElementById('edit-button');
-        const buttonRegister = document.getElementById('register-button');
 
-        buttonActualizar.style.display = 'none';
-        buttonDesactivado.style.display='none';
+        //Deshabilitando ambos botones
+        buttonActualizar.disabled = true;
+        buttonDesactivado.disabled = true;
+        buttonDesactivado.style.cursor = 'not-allowed';
+        buttonActualizar.style.cursor = 'not-allowed';
+
+        //cambiando los colores
+        buttonActualizar.style.backgroundColor = '#F0F0F0';
+        buttonDesactivado.style.backgroundColor = '#F0F0F0';
 
         buttons.forEach(button => {
             button.addEventListener('click', (event) => {
-                //Agregando los botones
-                buttonActualizar.style.display='block';
-                buttonDesactivado.style.display='block';
-                buttonRegister.style.display = 'none';
+                //Habilitando los botones
+                buttonActualizar.disabled = false;
+                buttonDesactivado.disabled = false;
+                buttonDesactivado.style.cursor = 'pointer';
+                buttonActualizar.style.cursor = 'pointer';
+                
+                //colores
+                buttonActualizar.style.backgroundColor = '#28a745';
+                buttonDesactivado.style.backgroundColor = '#dc3545';
 
                 //Datos
                 const idcongreso = event.currentTarget.getAttribute('data-id');
@@ -139,11 +140,11 @@
                 const asistenciatotal = event.currentTarget.getAttribute('data-asistenciatotal');
 
                 if (estado === "NO ACTIVO") {
-                    document.getElementById('delete-button').innerText = "Activar";
-                    document.getElementById('delete-button').value = "activate";
+                    document.getElementById('desactivate-button').innerText = "Activar";
+                    document.getElementById('desactivate-button').value = "activate";
                 } else {
-                    document.getElementById('delete-button').innerText = "Desactivar";
-                    document.getElementById('delete-button').value = "delete";
+                    document.getElementById('desactivate-button').innerText = "Desactivar";
+                    document.getElementById('desactivate-button').value = "desactivate";
                 }
 
                 document.getElementById('congresoid').value = idcongreso;

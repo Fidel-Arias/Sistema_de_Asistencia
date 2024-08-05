@@ -17,8 +17,6 @@
         <img class="img-epis-blanco" src="{% static 'images/epis_logo_blanco.webp' %}" alt="Epis" />
     </header>
 
-    <div id="particles-js"></div>
-
     <div class='img-login-bloque'>
         <div class="image-jinis-universidad">
             <img class="jinis" src="{% static 'images/logo_jinis2024.webp' %}" alt="logo jinis"/>
@@ -30,7 +28,6 @@
             <form action="{% url 'Login' %}" method="POST" class="form_login">
                 {% csrf_token %}
                 <div class="bloque-icon-input">
-                    <img src="{% static 'images/icon-key.png' %}" alt="key" class="key-disabled">
                     <img src="{% static 'images/icon-key-blanco.png' %}" alt="key" class="key-active">
                     <div class="input-box">
                         <label for="codigo">Código</label>
@@ -45,8 +42,7 @@
                 {% endif %}
     
                 <div class="enlaces-login">
-                    <a href="{% url 'LoginColaborador' %}" class="colaboradorEnlace">Colaborador</a>
-                    <a href="{% url 'LoginAdmin' %}" class="administradorEnlace">Administrador</a>
+                    <a href="{% url 'LoginColaborador' %}" class="colaboradorEnlace">Ingresa aqui si eres Colaborador</a>
                 </div>
             </form>
         </div>

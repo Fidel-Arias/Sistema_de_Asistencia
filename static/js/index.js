@@ -5,8 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnStart = document.getElementById('btn-cam');
     const btnStop = document.getElementById('btn-stop-cam');
     const audio = document.getElementById('audioScaner');
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const bloqueSelect = document.querySelector('[name=bloque]');
     
     let stream;
+    let animationFrameId;
 
     btnStart.addEventListener('click', async () => {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -27,6 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
             video.classList.add('hidden');  // Ocultar el video
             canvas.classList.add('hidden');  // Ocultar el canvas
         }
+
+        // Cancelar la animación
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
     });
 
     function scanQRCode() {
@@ -43,11 +52,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (code) {
                 audio.play();
-                alert(`QR Code detected: ${code.data}`);
+                //Envio al metodo
+                if (bloqueSelect.value) {
+                    fetch('/colaborador/interfaz_colaborador/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            qr_code: code.data,
+                            bloque: bloqueSelect.value
+                        })
+                    })
+                    .then(response => response.json());
+                } else {
+                    alert('Debe seleccionar un bloque');
+                }
+                
                 btnStop.click(); // Stop the camera after detecting a QR code
             }
         }
 
-        requestAnimationFrame(scanQRCode);
+        animationFrameId = requestAnimationFrame(scanQRCode);
     }
+
+
 });

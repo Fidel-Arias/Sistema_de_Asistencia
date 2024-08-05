@@ -2,12 +2,16 @@ from django.contrib.auth import authenticate, login
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from rest_framework.decorators import action
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import MaeColaborador
-from Bloque.models import MaeBloque
+from BloqueColaborador.models import BloqueColaborador
 from Asistencia.models import TrsAsistencia
-from Bloque.models import MaeBloque
+from ParticipanteCongreso.models import ParticipanteCongreso
 from datetime import date
 
 class LoginColaborador(View):
@@ -29,39 +33,45 @@ class LoginColaborador(View):
             return redirect('LoginColaborador')
 
 class Colaborador(viewsets.ViewSet):
+    @method_decorator(csrf_exempt)
     @method_decorator(login_required)
+    @action(detail=False, methods=['post', 'get'])
     def interfaz_colaborador(self, request):
         if request.method == 'POST':
-            codigo = request.POST.get('codigo')
-            id_bloque = request.POST.get('id_bloque')
-            id_congreso = request.POST.get('id_congreso')
-            correoColaborador = request.session.get('correoColaborador')
-            contraseniaColaborador = request.session.get('contraseniaColaborador')
             try:
-                colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
-                if not TrsAsistencia.objects.filter(codparticipante=codigo, idbloque=id_bloque).exists():
-                    nueva_asistencia = TrsAsistencia(
-                        idcongreso_id=id_congreso,
-                        codparticipante_id=codigo,
-                        idbloque_id=id_bloque,
+                data = request.data  # Usar request.data para obtener los datos JSON
+                qr_data = json.loads(data.get('qr_code'))
+                bloque_actual = json.loads(data.get('bloque'))
+                
+                participante = ParticipanteCongreso.objects.get(codparticipante=qr_data['DNI'], idcongreso=qr_data['CONGRESO'])
+                bloque = BloqueColaborador.objects.get(idcongreso=qr_data['CONGRESO'], idbloque=bloque_actual)
+                if not TrsAsistencia.objects.filter(idpc = participante, idbc = bloque).exists():
+                    #Registro de asistencia
+                    asistencia = TrsAsistencia(
+                        idpc = participante,
+                        idbc = bloque
                     )
-                    nueva_asistencia.save()    
-                    mensaje = "Registro exitoso"
+                    asistencia.save()
                 else:
-                    mensaje = "El código de participante ya se encuentra registrado en este bloque"
-            except Exception:
-                mensaje = 'Error al guardar la asistencia'
-            return redirect('InterfazColaborador')
+                    print("El participante ya ha sido")
+
+                # Simulación de procesamiento
+                response_data = {
+                    'status': 'success',
+                    'message': f'Data recibida: {qr_data}'
+                }
+                return JsonResponse(response_data)
+            except json.JSONDecodeError:
+                return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
         else:
             correoColaborador = request.session.get('correoColaborador')
             contraseniaColaborador = request.session.get('contraseniaColaborador')
             colaborador = MaeColaborador.objects.get(correo=correoColaborador, contrasenia=contraseniaColaborador)
-            dia_actual = date.today()
-            dia_actual = dia_actual.strftime('%d/%m/%Y')
-            bloques = MaeBloque.objects.filter(idcongreso=colaborador.idcongreso)
+            colaborador_bloque = BloqueColaborador.objects.filter(idcolaborador=colaborador.idcolaborador)
+            dia_actual = date.today().strftime('%d/%m/%Y')
             return render(request, 'asistencia_colaborador.html', {
                 'colaborador': colaborador, 
-                'bloques': bloques, 
-                'congreso': colaborador.idcongreso,
+                'bloques': colaborador_bloque, 
+                'congreso': colaborador_bloque,
                 'dia_actual': dia_actual
             })

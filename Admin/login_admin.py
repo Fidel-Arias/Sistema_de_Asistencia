@@ -25,7 +25,7 @@ class Cerrar_Sesion(viewsets.ViewSet):
     def cerrar_sesion(self, request):
         del request.session['correo_admin']
         del request.session['contrasenia_admin']
-        return redirect('Login')
+        return redirect('LoginAdmin')
 
     
     

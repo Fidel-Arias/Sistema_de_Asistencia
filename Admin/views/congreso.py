@@ -19,33 +19,9 @@ class Registrar_Congreso(viewsets.ViewSet):
             fechaInicio = request.POST.get('fechaInicio')
             fechaFin = request.POST.get('fechaFin')
             asistenciaTotal = request.POST.get('totalAsistencia')
-            if action == 'register':
-                if fechaInicio == fechaFin:
-                    messages.error(request, 'Las fechas de inicio y fin deben ser distintas')
-                elif fechaFin < fechaInicio:
-                    messages.error(request, 'Ingrese correctamente las fechas')
-                elif fechaInicio < fechaHoy.__str__() or fechaFin < fechaHoy.__str__():
-                    messages.error(request, 'La fecha de inicio y fin no puede ser anterior a la fecha de hoy')
-                else:
-                    try:
-                        if (not(MaeCongreso.objects.filter(nombre=nombreCongreso).exists()) and not(MaeCongreso.objects.filter(fechainicio=fechaInicio, fechafin=fechaFin).exists())):
-                            nueva_congreso = MaeCongreso(
-                                nombre=nombreCongreso,
-                                fechainicio=fechaInicio,
-                                fechafin=fechaFin,
-                                asistenciatotal=asistenciaTotal
-                            )
-                            nueva_congreso.save()
-                            congreso = MaeCongreso.objects.get(nombre=nombreCongreso)
-                            generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin, congreso.idcongreso)
-                            messages.success(request, 'Congreso registrado con éxito')
-                        else:
-                            messages.error(request, 'Ya existe el congreso')
-                            print('bien el mensaje')
-                    except Exception:
-                        messages.error(request, 'Error al registrar el congreso')
-                return redirect('RegistrarCongreso')
-            elif action == 'delete':
+
+            print(action)
+            if action == 'desactivate':
                 try:
                     congreso = MaeCongreso.objects.get(nombre=nombreCongreso)
                     #ELIMINACION TOTAL
@@ -59,7 +35,6 @@ class Registrar_Congreso(viewsets.ViewSet):
                     messages.error(request, 'No se encontró el congreso')
                 except Exception as e:
                     messages.error(request, e)
-                return redirect('RegistrarCongreso')
             elif action == 'activate':
                 try:
                     congreso = MaeCongreso.objects.get(nombre=nombreCongreso)
@@ -71,10 +46,8 @@ class Registrar_Congreso(viewsets.ViewSet):
                     messages.error(request, 'No se encontró el congreso')
                 except Exception:
                     messages.error(request, 'Error al activar el congreso')
-                return redirect('RegistrarCongreso')
             elif action == 'edit':
                 idcongreso = request.POST.get('id')
-                print('id congreso: ', idcongreso)
                 if fechaInicio == fechaFin:
                     messages.error(request, 'Las fechas de inicio y fin deben ser distintas')
                 elif fechaFin < fechaInicio:
@@ -98,10 +71,10 @@ class Registrar_Congreso(viewsets.ViewSet):
                         messages.error(request, congreso_actualizado.errors)
                 except MaeCongreso.DoesNotExist:
                     messages.error(request, 'El congreso ya no existe')
-                return redirect('RegistrarCongreso')
+            return redirect('RegistrarCongreso')
         else:
             congresos = MaeCongreso.objects.all().order_by('pk')
-            return render(request, 'pages/registrarCongreso.html', {'current_page': 'registrar_congreso', 'congresos':congresos})
+            return render(request, 'pages/mostrarCongreso.html', {'current_page': 'registrar_congreso', 'congresos':congresos})
     
 
 def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin, idcongreso):

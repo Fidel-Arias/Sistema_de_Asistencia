@@ -26,7 +26,7 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('', RedirectView.as_view(url='/accounts/login/', permanent=True)),
     path('accounts/login/', LoginView.as_view(), name='Login'),  # URL para la vista de inicio de sesión personalizada
-    path('accounts/login-admin/', LoginAdmin.as_view(), name='LoginAdmin'),  # URL para la vista de inicio de sesión personalizada
+    path('accounts/Administrador/login-admin/', LoginAdmin.as_view(), name='LoginAdmin'),  # URL para la vista de inicio de sesión personalizada
     path('accounts/login-colaborador/', LoginColaborador.as_view(), name='LoginColaborador'),  # URL para la vista de inicio de sesión personalizada
     path('participante/', include('Participantes.urls')),  # Incluye las URLs de la aplicación Participantes    
     path('administrador/', include('Admin.urls')),
