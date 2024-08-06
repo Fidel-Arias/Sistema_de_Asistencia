@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-11y)b^s2&ct^yvr99tykp%6ig%v*o_q8xfyigk_u#7)5h8f+v2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1', 
+    'localhost',
+    'd8ff-2800-200-f430-30e-1dc0-f056-244e-4059.ngrok-free.app',
+]
 
 
 # Application definition
@@ -160,3 +164,7 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_URL = '/accounts/login/'  # Ruta de inicio de sesión personalizada
 LOGIN_REDIRECT_URL = '/participante/'  # Redirige aquí después de iniciar sesión
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://d8ff-2800-200-f430-30e-1dc0-f056-244e-4059.ngrok-free.app'
+]

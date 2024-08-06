@@ -65,7 +65,7 @@ body{
 }
 
 .greeting {
-    margin-top: 10px;
+    margin-top: 4px;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -77,7 +77,7 @@ body{
 }
 
 .middle-section {
-    padding: 20px;
+    padding: 13px;
     text-align: center;
 }
 
@@ -145,8 +145,6 @@ body{
     flex-direction: column;
     align-items: center;
 }
-
-/* Media Queries para diseño responsive */
 
 /* Para pantallas más pequeñas, como tabletas */
 @media (max-width: 768px) {
@@ -233,7 +231,7 @@ body{
 
     .top-section{
         width: 95.5%;
-        height: 330px;
+        height: 41%;
     }
 
     .top-section img.top-image-right{
@@ -249,8 +247,8 @@ body{
     }
 
     .top-section img.top-image {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
         margin-top: 165px;
     }
 
@@ -264,13 +262,13 @@ body{
     }
 
     .middle-section-scroll{
-        margin-top: 350px;
+        margin-top: 100%;
         overflow-y: auto;
     }
 
     .QR-code img {
-        width: 300px;
-        height: 300px;
+        width: 280px;
+        height: 280px;
     }
 
     .bottom-section {
@@ -293,5 +291,12 @@ body{
         width: 35px;
         height: 45px;
         margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 800px) {
+    .middle-section-scroll{
+        margin-top: 92%;
+        overflow-y: auto;
     }
 }

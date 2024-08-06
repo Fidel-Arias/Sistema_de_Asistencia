@@ -16,6 +16,9 @@
         <img src="{% static 'images/ucsm_logo_blanco.webp' %}" alt="UCSM" class="ucsm_logo">
         <img src="{% static 'images/epis_logo_blanco.webp' %}" alt="JINIS" class="epis_logo">
     </header>
+
+    <div class="fondo-borroso mostrar" hidden></div>
+
     <div class="d-flex flex-column container h-75">
         <h1 class="text-white text-center my-2">Escanear QR Code</h1>
 
@@ -46,6 +49,18 @@
         </div>
     </div>
     <audio id="audioScaner" src="{% static 'sound/sonido.mp3' %}"></audio>
-    <script src="{% static 'js/index.js' %}"></script>
+
+    <div class="success-message mostrar" hidden data-warning-img-url="{% static 'images/close.png' %}" data-success-img-url="{% static 'images/checked.png' %}">
+        <img src="{% static 'images/checked.png' %}" alt="check" class="success-message__icon icon-checkmark" id="logo_message">
+         <h1 class="success-message__title">Asistencia marcada</h1>
+         <div class="success-message__content">
+           <h4><b>Registro exitoso</b></h4>
+         </div>
+     </div>
+
+    <div class="cerrar-sesion text-center align-content-center">
+        <a href="{% url 'LoginColaborador' %}" class="text-white nav-link h2 ">Cerrar Sesión</a>
+    </div>
 </body>
+<script src="{% static 'js/scanQR.js' %}"></script>
 </html>

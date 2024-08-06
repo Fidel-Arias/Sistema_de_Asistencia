@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const audio = document.getElementById('audioScaner');
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const bloqueSelect = document.querySelector('[name=bloque]');
+    const warningImgUrl = document.querySelector('.success-message').dataset.warningImgUrl;
+    const successImgUrl = document.querySelector('.success-message').dataset.successImgUrl;
+    const mensajeFondo = document.querySelectorAll(".mostrar");
     
     let stream;
     let animationFrameId;
@@ -65,9 +68,47 @@ document.addEventListener('DOMContentLoaded', () => {
                             bloque: bloqueSelect.value
                         })
                     })
-                    .then(response => response.json());
+                    .then(response => response.json())
+                    .then(data => {
+                        mensajeFondo.forEach((elemento) => {
+                            elemento.hidden = false;
+                        });
+
+                        if (data['status'] === 'warning'){
+                            document.getElementById('logo_message').setAttribute('src', warningImgUrl);
+                            document.querySelector('.success-message__title').innerHTML = 'Asistencia no marcada';
+                            document.querySelector('.success-message__title').style.color = 'red';
+                            document.querySelector('.success-message__content').style.fontWeight = 'bold';
+                            document.querySelector('.success-message__content').innerHTML = 'El Registro ya existe';
+                        } else {
+                            document.getElementById('logo_message').setAttribute('src', successImgUrl);
+                            document.querySelector('.success-message__title').innerHTML = 'Asistencia marcada';
+                            document.querySelector('.success-message__title').style.color = 'green';
+                            document.querySelector('.success-message__content').style.fontWeight = 'bold';
+                            document.querySelector('.success-message__content').innerHTML = 'Registro exitoso';
+                        }
+
+                        setTimeout(() => {
+                            mensajeFondo.forEach((elemento) => {
+                                elemento.hidden = true;
+                            });
+                        }, 3000);
+                    });
                 } else {
-                    alert('Debe seleccionar un bloque');
+                    mensajeFondo.forEach((elemento) => {
+                        elemento.hidden = false;
+                    });
+                    document.getElementById('logo_message').setAttribute('src', warningImgUrl);
+                    document.querySelector('.success-message__title').innerHTML = 'Error';
+                    document.querySelector('.success-message__title').style.color = 'red';
+                    document.querySelector('.success-message__content').style.fontWeight = 'bold';
+                    document.querySelector('.success-message__content').innerHTML = 'Primero selecciona un bloque';
+
+                    setTimeout(() => {
+                        mensajeFondo.forEach((elemento) => {
+                            elemento.hidden = true;
+                        });
+                    }, 3000);
                 }
                 
                 btnStop.click(); // Stop the camera after detecting a QR code
