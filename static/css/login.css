@@ -161,6 +161,13 @@ body {
     color: rgb(67, 67, 117);;
 }
 
+.input-box label::after {
+    content: '*';
+    margin-left: 3px;
+    color: white;
+    font-weight: bold;
+}
+
 .input-box input {
     height: 20px;
     border: none;

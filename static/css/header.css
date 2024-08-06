@@ -37,7 +37,7 @@
 
 @media(max-width: 1500px){
     .header {
-        width: 95.6%;
+        width: auto;
     }
     .logo_jinis{
         margin-right: 0;

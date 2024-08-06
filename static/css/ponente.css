@@ -53,6 +53,13 @@ h2 {
     max-width: 60%; /* Maximo ancho disponible */
 }
 
+.register-form label::after {
+    content: '*';
+    margin-left: 3px;
+    color: red;
+    font-weight: bold;
+}
+
 /* Estilo de los campos de entrada del formulario */
 .register-form input,
 .register-form select {

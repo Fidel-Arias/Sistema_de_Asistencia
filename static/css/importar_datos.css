@@ -85,6 +85,13 @@ h2 {
     font-weight: bold;
 }
 
+.flex-select label::after {
+    content: '*';
+    margin-left: 3px;
+    color: red;
+    font-weight: bold;
+}
+
 /* Estilo de los mensajes */
 .message {
     margin: 0 auto;

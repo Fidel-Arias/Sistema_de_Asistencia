@@ -37,8 +37,8 @@
             {% endfor %}
             <form class="d-flex" style="gap: 0.5em;" method="POST" id="form-json" action="{% url 'InterfazColaborador' %}">
                 {% csrf_token %}
-                <label class="mr-sm-2 sr-only text-white h5 mr" for="inlineFormCustomSelect">Bloque:</label>
-                <select required name="bloque" class="custom-select mr-sm-2 w-75 mb-3 rounded select-small" id="inlineFormCustomSelect">
+                <label class="mr-sm-2 sr-only text-white h5 mr" for="inlineFormCustomSelect">Bloque</label>
+                <select required name="bloque" class="custom-select mr-sm-2 w-auto mb-3 rounded select-small" id="inlineFormCustomSelect">
                     <option selected disabled value="">Seleccione el bloque actual</option>
                     {% for bloque in bloques %}
                         <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option>

@@ -20,70 +20,22 @@
     {% include 'partials/sidebar.html' %}
 
     <!-- Contenido principal -->
-    <main class="main-content-reporte main">
-        <h2>Generar Reporte</h2>
-        <div class="table-container">
-            <table class="report-table">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
-                        <th>Congreso</th>
-                        <th class="th_asistencia">Hora de Asistencia</th>
-                        <th>Inicia</th>
-                        <th>Finaliza</th>
-                        <th>Día</th>
-                        <th class="th_ubicacion">Ubicación</th>
-                        <th class="th_ponencia">Ponencia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Ejemplo de fila de datos -->
-                    {% for participante in listaAsistencia %}
-                    <tr>
-                        <td>{{participante.codparticipante.codparticipante}}</td>
-                        <td>{{participante.codparticipante.nombre}}</td>
-                        <td>{{participante.codparticipante.apellido}}</td>
-                        <td>{{participante.idcongreso.nombre}}</td>
-                        <td>{{participante.hora}}</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>{{participante.fecha|format_fecha}}</td>
-                        <td>--</td>
-                        <td>{{participante.idponencia.nombre}}</td>
-                    </tr>
-                    {% endfor %}
-                    <!-- Agregar más filas según sea necesario -->
-                </tbody>
-            </table>
-        </div>
-        <form class="filter-button-container" method="get">
-            <div class="content-text-filter">
-                <label>FILTRAR POR APELLIDO:</label>
-                <input type="text" class="text_filter" id="text_filter" name="text_filter" onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
-            </div>
-            <button type="submit" class="filter-button">Filtrar</button>
-        </form>
-        <h2>Datos del participante</h2>
-        <div class="data-container">
-            <label for="name">Nombre del participante</label>
-            <span id="name">[Nombre]</span>
-            <label for="codigo">Código del participante</label>
-            <span id="codigo">[Codigo]</span>
-            <label for="numero-asistencias">Número de asistencias</label>
-            <span id="numero-asistencias">[---]</span>
-            <label for="congreso">Congreso</label>
-            <span id="congreso">[congreso]</span>
-        </div>
-    </main>
+        <!-- Contenido principal -->
+        <main class="main-content-reporte main">
+            <h2>Generar Reporte</h2>
+    
+            <form action="" class="formulario">
+                <div class="input-name">
+                    <label for="input-name">Nombre del archivo</label>
+                    <input type="text" name="input-name" id="name" required placeholder="Ingrese un nombre para el archivo">
+                </div>
+    
+                <div class="button-descarga">
+                    <button type="button" class="button button-1">Ver Reporte</button>
+                    <button type="submit" class="button button-2">Descargar</button>
+                </div>
+            </form>
+            
+        </main>
 </body>
-{% if not congresos %}
-    <script>
-        var enlaces = document.querySelector('.sidebar').querySelectorAll('.nav');
-        enlaces.forEach(enlace => {
-            enlace.classList.add('action');
-        })
-    </script>
-{% endif %}
 </html>
