@@ -32,20 +32,23 @@
         
         <div class="data">
             <p class="text-white mb-3 h5">Día: <span>{{dia_actual}}</span></p>
-            {% for congreso in congresos %}
+
             <p class="text-white mb-3 h5">Congreso: <span>{{congreso.idcongreso}}</span></p>
-            {% endfor %}
+
+            <p class="text-white mb-3 h5">Colaborador: <span>{{colaborador}}</span></p>
+
             <form class="d-flex" style="gap: 0.5em;" method="POST" id="form-json" action="{% url 'InterfazColaborador' %}">
                 {% csrf_token %}
-                <label class="mr-sm-2 sr-only text-white h5 mr" for="inlineFormCustomSelect">Bloque</label>
-                <select required name="bloque" class="custom-select mr-sm-2 w-auto mb-3 rounded select-small" id="inlineFormCustomSelect">
+                <label class="mr-sm-2 sr-only text-white h5 mr label" for="inlineFormCustomSelect">Bloque</label>
+                <select required name="bloque" class="custom-select mr-sm-2 mb-3 rounded select" id="inlineFormCustomSelect">
                     <option selected disabled value="">Seleccione el bloque actual</option>
                     {% for bloque in bloques %}
+                        {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}
                         <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </form>
-            <p class="text-white mb-3 h5">Colaborador: <span>{{colaborador}}</span></p>
         </div>
     </div>
     <audio id="audioScaner" src="{% static 'sound/sonido.mp3' %}"></audio>

@@ -3,13 +3,11 @@ import qrcode
 import json
 # Create your views here.
 
-data={
-    'name':'Fidel',
-    'apellido':'Arias',
-    'cedula':'123456789',
-    'telefono':'3123456789',
-    'email':'fidel@gmail.com',
-    'direccion':'Carrera 123 # 456, Barrio San Francisco'
+data = {
+    'AP_PATERNO': 'HERRERA',
+    'AP_MATERNO': 'HERRERA',
+    'CORREO': 'piero.herrera@ucsm.edu.pe',
+    'CONGRESO': 5
 }
 
 json_data = json.dumps(data)

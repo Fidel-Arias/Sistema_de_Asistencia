@@ -78,14 +78,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('logo_message').setAttribute('src', warningImgUrl);
                             document.querySelector('.success-message__title').innerHTML = 'Asistencia no marcada';
                             document.querySelector('.success-message__title').style.color = 'red';
-                            document.querySelector('.success-message__content').style.fontWeight = 'bold';
-                            document.querySelector('.success-message__content').innerHTML = 'El Registro ya existe';
+                            // document.querySelector('.success-message__content').style.fontWeight = 'bold';
+                            document.querySelector('.success-message__content').innerHTML = '<b>'+data['message']+'</b>';
+                        } else if (data['status'] === 'error'){ 
+                            document.getElementById('logo_message').setAttribute('src', warningImgUrl);
+                            document.querySelector('.success-message__title').innerHTML = 'Error';
+                            document.querySelector('.success-message__title').style.color ='red';
+                            // document.querySelector('.success-message__content').style.fontWeight = 'bold';
+                            document.querySelector('.success-message__content').innerHTML = '<b>'+data['message']+'</b>';
                         } else {
                             document.getElementById('logo_message').setAttribute('src', successImgUrl);
                             document.querySelector('.success-message__title').innerHTML = 'Asistencia marcada';
                             document.querySelector('.success-message__title').style.color = 'green';
-                            document.querySelector('.success-message__content').style.fontWeight = 'bold';
-                            document.querySelector('.success-message__content').innerHTML = 'Registro exitoso';
+                            // document.querySelector('.success-message__content').style.fontWeight = 'bold';
+                            document.querySelector('.success-message__content').innerHTML = '<b>'+data['message']+'</b>';
                         }
 
                         setTimeout(() => {

@@ -16,12 +16,12 @@
             <img src="{% static 'images/logoUCSM.png' %}" class="top-image-left"></img>
             <img src="{% static 'images/logo_jinis2024.webp' %}" alt="imagen" class="top-image2"></img>
             <img src="{% static 'images/usuario.png' %}" alt="Imagen" class="top-image">
-            <div class="greeting">Good morning, {{participante_data.nombre}}</div>
+            <div class="greeting">Bienvenido, {{nombre}}</div>
         </div>
         <div class="middle-section-scroll">
             <div class="middle-section">
                 <div class="attendance-text">CANTIDAD DE ASISTENCIAS</div>
-                <div class="attendance-count">0</div>
+                <div class="attendance-count">{{cantidad_asistencia}}</div>
                 <div class="attendance-text">CODIGO</div>
                 <div class="student-code">{{participante_data.codparticipante}}</div>            
             </div>

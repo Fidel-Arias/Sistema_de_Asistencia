@@ -15,17 +15,17 @@
         {% for ponencia in ponencias %}
         <div class="card">
             <div class="card-header">
-                <span class="day">DIA 1 - 03/10</span>
-                <span class="time">09:30 - 10:30</span>
+                <span class="day">DIA {{ponencia.iddia.fecha|date:"d/m/Y"}}</span>
+                <span class="time">{{ponencia.horainicio}} - {{ponencia.horafin}}</span>
             </div>
             <div class="card-content">
                 <img src="{% static 'images/perfilponente.png' %}" alt="Speaker Image" class="speaker-image">
                 <div class="speaker-info">
-                    <h3>{{ponencia.idponente}}</h3>
-                    <p>{{ponencia.nombre}}</p>
+                    <h3>{{ponencia.idponencia.idponente}}</h3>
+                    <p>{{ponencia.idponencia}}</p>
                     <div class="location">
-                        <span class="location-icon">📍</span>
-                        <span>Auditorio William Morris</span>
+                        <span class="location-icon">🚩</span>
+                        <span style="margin-top: 4px;">{{ponencia.idubicacion}}</span>
                     </div>
                 </div>
             </div>

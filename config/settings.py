@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
-    'd8ff-2800-200-f430-30e-1dc0-f056-244e-4059.ngrok-free.app',
+    '7b92-2800-200-f430-30e-3536-de5b-2090-ab7e.ngrok-free.app',
 ]
 
 
@@ -166,5 +166,5 @@ LOGIN_URL = '/accounts/login/'  # Ruta de inicio de sesión personalizada
 LOGIN_REDIRECT_URL = '/participante/'  # Redirige aquí después de iniciar sesión
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://d8ff-2800-200-f430-30e-1dc0-f056-244e-4059.ngrok-free.app'
+    'https://7b92-2800-200-f430-30e-3536-de5b-2090-ab7e.ngrok-free.app'
 ]

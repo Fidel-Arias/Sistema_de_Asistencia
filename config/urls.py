@@ -18,15 +18,15 @@ from django.contrib import admin
 from django.urls import path, include
 from Participantes.views import LoginView
 from Colaborador.views import LoginColaborador
-from Admin.login_admin import LoginAdmin
-
+from Admin.admin import LoginAdmin, RegisterAdmin
 from django.views.generic import RedirectView
 
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/accounts/login/', permanent=True)),
     path('accounts/login/', LoginView.as_view(), name='Login'),  # URL para la vista de inicio de sesión personalizada
-    path('accounts/Administrador/login-admin/', LoginAdmin.as_view(), name='LoginAdmin'),  # URL para la vista de inicio de sesión personalizada
+    path('accounts/administrador/login-admin/', LoginAdmin.as_view(), name='LoginAdmin'),  # URL para la vista de inicio de sesión personalizada
+    path('accounts/administrador/register-admin/', RegisterAdmin.as_view(), name='RegisterAdmin'),
     path('accounts/login-colaborador/', LoginColaborador.as_view(), name='LoginColaborador'),  # URL para la vista de inicio de sesión personalizada
     path('participante/', include('Participantes.urls')),  # Incluye las URLs de la aplicación Participantes    
     path('administrador/', include('Admin.urls')),

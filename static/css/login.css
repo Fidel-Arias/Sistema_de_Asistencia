@@ -239,7 +239,7 @@ input:-webkit-autofill {
     }
     .form-login-bloque{
         height: 53.2%;
-        gap: 2em;
+        gap: 1em;
     }
     .form-login-bloque h1 {
         font-size: 30px;
@@ -333,7 +333,7 @@ input:-webkit-autofill {
         margin-bottom: 0;
     }
     .form-login-bloque, .colaborador-form {
-        height: 58.2%;
+        height: 60%;
         background-color: rgba(0, 0, 0, 0.644);
         max-height: 240px;
         margin: 0 auto;
@@ -372,8 +372,13 @@ input:-webkit-autofill {
         color: white;
     }
 
+    .enlaces-login {
+        align-self: center;
+    }
+
     .enlaces-login a {
         color: white;
+        text-align: center;
     }
     .enlaces-login a:hover {
         color: rgb(255, 200, 80);

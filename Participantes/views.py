@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.views import View
 from .models import MaeParticipantes
+from Asistencia.models import TrsAsistencia
+from ParticipanteCongreso.models import ParticipanteCongreso
 from rest_framework import viewsets
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -9,7 +11,7 @@ from django.utils.decorators import method_decorator
 class LoginView(View):
     def get(self, request):
         error = request.session.pop('error', None)  # Obtiene y elimina el mensaje de error de la sesión
-        return render(request, 'registration/login.html', {'error': error})  # Renderiza el formulario de login
+        return render(request, 'login/login.html', {'error': error})  # Renderiza el formulario de login
 
     def post(self, request):
         codparticipante = request.POST.get('codigo')
@@ -28,10 +30,16 @@ class viewParticipantes(viewsets.ViewSet):
     def interfaz_user(self, request):
         codigo = request.session.get('codigo')
         participante = MaeParticipantes.objects.get(pk=codigo)
+        participante_congreso = ParticipanteCongreso.objects.get(codparticipante=participante.codparticipante)
         participante_qrcode_path = participante.qr_code.replace('static/', '')
+        cantidad_asistencia = TrsAsistencia.objects.filter(idpc=participante_congreso).count()
+        nombreParticipante = participante.nombre.split(' ')
+
         return render(request, 'participante.html', {
+            'nombre': nombreParticipante[0].capitalize() + ' ' + participante.ap_paterno.capitalize() + ' ' + participante.ap_materno.capitalize(),
             'participante_data': participante,
-            'participante_qrcode_path':participante_qrcode_path
+            'participante_qrcode_path':participante_qrcode_path,
+            'cantidad_asistencia':cantidad_asistencia
         })
     
     @method_decorator(login_required)

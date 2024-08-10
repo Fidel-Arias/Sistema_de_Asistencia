@@ -1,10 +1,10 @@
 from django.urls import path
-from .login_admin import Cerrar_Sesion
+from .admin import Cerrar_Sesion
 from .views import colaboradores, congreso, ponentes, bloques, ponencias, ubicacion, bloquesColaborador, reporte, importar, interfaz
 
 urlpatterns = [
     path('bienvenido/', interfaz.Interfaz_Administrador.as_view({'get':'interfaz_administrador'}), name='InterfazAdministrador'),
-    path('generar_reporte/', reporte.generar_reporte, name='GenerarReporte'),
+    path('generar_reporte/', reporte.ReporteAsistencia.as_view({'get':'generar_reporte', 'post':'generar_reporte'}), name='GenerarReporte'),
     path('registrar_colaboradores/', colaboradores.Registrar_Colaboradores.as_view({'get':'registrar_colaboradores', 'post':'registrar_colaboradores'}), name='RegistrarColaboradores'),
     path('registrar_ponencias/', ponencias.Registrar_Ponencias.as_view({'get':'registrar_ponencias', 'post':'registrar_ponencias'}), name='RegistrarPonencia'),
     path('registrar_ponentes/', ponentes.Registrar_Ponentes.as_view({'get':'registrar_ponentes', 'post':'registrar_ponentes'}), name='RegistrarPonentes'),
