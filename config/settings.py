@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
-    '7b92-2800-200-f430-30e-3536-de5b-2090-ab7e.ngrok-free.app',
+    'ed98-2800-200-f430-30e-e006-b363-6d5c-ed9d.ngrok-free.app',
 ]
 
 
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'tipoDocumento',
     'tipoParticipante',
     'tipoUsuario',
+    'email_service',
     'rest_framework',
 ]
 
@@ -165,6 +166,20 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = '/accounts/login/'  # Ruta de inicio de sesión personalizada
 LOGIN_REDIRECT_URL = '/participante/'  # Redirige aquí después de iniciar sesión
 
+#Sessions Django
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Elimina la sesión al cerrar el navegador
+# Duración de la sesión en segundos
+SESSION_COOKIE_AGE = 604800  # 2 semanas por defecto
+
+
 CSRF_TRUSTED_ORIGINS = [
-    'https://7b92-2800-200-f430-30e-3536-de5b-2090-ab7e.ngrok-free.app'
+    'https://ed98-2800-200-f430-30e-e006-b363-6d5c-ed9d.ngrok-free.app'
 ]
+
+#SERVIDOR DE CORREO
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.office365.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''

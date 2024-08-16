@@ -1,9 +1,27 @@
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+:root {
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 body {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(43, 43, 43);
+    justify-content: space-between;
     height: 100vh;
+    margin: 0;
+    font-family: var(--bs-font-sans-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
 }
 
 /*Flex al header*/
 .flex-header {
+    display: flex;
     max-width: 100%;
     max-height: 30%;
     padding: 0.5em;
@@ -22,6 +40,55 @@ body {
     height: 65%;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-right: var(--bs-gutter-x, .75rem);
+    padding-left: var(--bs-gutter-x, .75rem);
+    margin-right: auto;
+    margin-left: auto;
+    height: 75% !important;
+    overflow-y: auto;
+}
+
+.text-center {
+    text-align: center !important;
+    color: #fff !important;
+    margin-top: .5rem !important;
+    margin-bottom: .5rem !important;
+}
+
+.connect-network, .disconnect-network{
+    height: 40px;
+    padding: 0.5em;
+    margin: 0 auto;
+    border-radius: 1em;
+}
+
+.connect-network {
+    background-color: #3dc480;
+}
+
+.disconnect-network {
+    background-color: #c43d3d;
+}
+
+.connect-network p, .disconnect-network p {
+    margin: 0 1em 0 1em;
+    font-weight: bold;  
+    color: white; 
+}
+
+.video, .canvas {
+    width: auto;
+    height: 50% !important;
+    margin-top: .5rem !important;
+    margin-bottom: .5rem !important;
+    margin-right: 1rem !important;
+    margin-left: 1rem !important;
+}
+
 .canvas {
     width: 40%;
     align-self: center;
@@ -31,9 +98,51 @@ body {
     display: none;
 }
 
-.cerrar-sesion {
-    height: 10%;
-    background-color: rgb(255, 84, 84);
+.buttons-camera {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.info, .label {
+    color: #fff !important;
+    margin-bottom: 1rem !important;
+    font-size: 1.25rem;
+    margin-top: 0;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.form {
+    display: flex;
 }
 
 .label::after {
@@ -43,8 +152,10 @@ body {
     font-weight: bold;
 }
 
-.select {
-    width: 100%;
+.custom-select{
+    border-radius: .25rem !important;
+    margin-bottom: 1rem !important;
+    width: 90% !important;
 }
 
 .fondo-borroso {
@@ -55,7 +166,27 @@ body {
     position: absolute;
 }
 
+.cerrar-sesion {
+    text-align: center !important;
+    align-content: center !important;
+    height: 10%;
+    background-color: rgb(255, 84, 84);
+}
+
+.nav-link {
+    display: block;
+    color: #fff !important;
+    padding: .5rem 1rem;
+    text-decoration: none;
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.2;
+    font-size: calc(1.325rem + .9vw);
+}
+
 .success-message {
+    display: flex;
+    flex-direction: column;
     background-color: white;
     text-align: center;
     max-width: 325px;
@@ -66,7 +197,9 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 2em;
-    height: auto;
+    height: auto !important;
+    align-items: center;
+    justify-content: center;
 }
   
 .success-message__icon {
@@ -77,6 +210,7 @@ body {
     color: #3DC480;
     transform: translateY(25px);
     opacity: 0;
+    margin: 0;
     transition: all 200ms ease;
 }
 .success-message__title {
@@ -88,11 +222,13 @@ body {
     color: black;
     transform: translateY(25px);
     opacity: 0;
+    font-size: 20px;
     transition: all 200ms ease;
     transition-delay: 50ms;
+    height: 40px;
 }
 .success-message__content {
-    transform: translateY(0);
+    transform: translateY(-16px);
     opacity: 1;
 }
 
@@ -110,6 +246,10 @@ body {
     transform: scale(1);
 }
 
+.mostrar {
+    display: none;
+}
+
 .success-button__content {
     transform: translateY(25px);
     opacity: 0;
@@ -122,11 +262,7 @@ body {
     opacity: 1;
 }
 
-@media(max-width:789px) {
-    body {
-        gap: 2em;
-    }
-
+@media (max-width: 360px) and (max-width:800px) {
     /*Flex al header*/
     .flex-header {
         max-width: 100%;
@@ -134,17 +270,30 @@ body {
         padding: 0.5em;
         justify-content: space-between;
         align-items: center;
-        margin: 0 30px 0 30px;
+        margin: 0 15px 0 15px;
+    }
+}
+
+
+@media(max-width:789px) {
+    /*Flex al header*/
+    .flex-header {
+        max-width: 100%;
+        max-height: 40%;
+        padding: 0.5em;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 15px 0 15px;
     }
 
     .ucsm_logo {
-        width: auto;
+        width: 59%;
         height: 100%;
     }
 
     .epis_logo {
-        width: auto;
-        height: 80%;
+        width: 25%;
+        height: 57%;
     }
 
     .canvas {
@@ -152,15 +301,13 @@ body {
         align-self: center;
     }
 
-    .data p{
+    .data p, .label{
         font-size: 25px;
     }
+
 }
 
 @media(max-width:418px){
-    body {
-        gap: 2em;
-    }
 
     .canvas {
         width: 100%;
@@ -169,7 +316,7 @@ body {
 
     .flex-header {
         max-width: 100%;
-        max-height: 10%;
+        max-height: 12%;
         padding: 0.5em;
         justify-content: space-between;
         align-items: center;
@@ -177,16 +324,17 @@ body {
     }
     
     .ucsm_logo {
-        width: auto;
-        height: 100%;
+        width: 215px;
+        height: auto;
     }
     
     .epis_logo {
         width: auto;
-        height: 80%;
+        height: 75%;
     }
 
-    .data p{
+    .data p, .label{
         font-size: 20px;
     }
+    
 }

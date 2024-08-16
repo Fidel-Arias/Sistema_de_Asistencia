@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from .decorators import participante_login_required
+from django.urls import reverse
 from django.views import View
 from .models import MaeParticipantes
 from Asistencia.models import TrsAsistencia
 from ParticipanteCongreso.models import ParticipanteCongreso
 from rest_framework import viewsets
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 class LoginView(View):
@@ -15,21 +15,32 @@ class LoginView(View):
 
     def post(self, request):
         codparticipante = request.POST.get('codigo')
-        user = authenticate(request, username=codparticipante)
-        if user is not None:
-            login(request, user)
-            request.session['codigo'] = codparticipante
-            return redirect('Participante')  # Redirige a la página de Participante después del inicio de sesión exitoso
-        else:
-            # Guarda el mensaje de error en la sesión
+        print(codparticipante)
+
+        if not codparticipante:
+            request.session['error'] = 'Debes ingresar un código'
+            return redirect('Login')
+
+        try:
+            participante = MaeParticipantes.objects.get(pk=codparticipante)
+            print('si ingrese')
+            request.session['codparticipante'] = participante.pk  # Se guarda el código de participante en la sesión
+            print('redirige')
+            return redirect(reverse('Participante', kwargs={'pk':participante.pk}))  # Redirige a la página de Participante después del inicio de sesión exitoso
+        except MaeParticipantes.DoesNotExist:
             request.session['error'] = 'Credenciales incorrectas'
             return redirect('Login')  # Redirige al formulario de login
 
+
 class viewParticipantes(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def interfaz_user(self, request):
-        codigo = request.session.get('codigo')
-        participante = MaeParticipantes.objects.get(pk=codigo)
+    @method_decorator(participante_login_required)
+    def interfaz_user(self, request, pk):
+        codparticipante = request.session.get('codparticipante')
+        if codparticipante != str(pk):
+            request.session['error'] = 'Acceso inválido'
+            return redirect('Login')  # Redirigir si no está autenticado o si intenta acceder a otro usuario
+
+        participante = MaeParticipantes.objects.get(pk=pk)
         participante_congreso = ParticipanteCongreso.objects.get(codparticipante=participante.codparticipante)
         participante_qrcode_path = participante.qr_code.replace('static/', '')
         cantidad_asistencia = TrsAsistencia.objects.filter(idpc=participante_congreso).count()
@@ -42,9 +53,9 @@ class viewParticipantes(viewsets.ViewSet):
             'cantidad_asistencia':cantidad_asistencia
         })
     
-    @method_decorator(login_required)
+    @method_decorator(participante_login_required)
     def cerrar_sesion(self, request):
-        request.session.clear()
+        request.session.flush()
         return redirect('Login')  # Redirige al formulario de login
 
 

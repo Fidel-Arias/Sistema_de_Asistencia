@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Encode+Sans:wght@100..900&family=Lilita+One&display=swap');
 
+:root {
+    --letra-Encode-Sans: "Encode Sans", 'Arial', 'Helvetica', sans-serif;
+    --letra-Lilita-One: "Lilita One",'Verdana', 'Geneva', sans-serif;
+}
+
 html {
     box-sizing: border-box;
   }
@@ -7,11 +12,17 @@ html {
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.8em !important;
     overflow: hidden;
+    overflow-y: auto;
+    --opacidad-negro: 0.2;
+    background-image: linear-gradient(rgba(0, 0, 0, var(--opacidad-negro)), rgba(0, 0, 0, var(--opacidad-negro))), url('../images/universidad_ucsm.jpg');
+    background-size: 190% 120%;
+    background-repeat: no-repeat;
+    background-position-x: 29%;
 }
 
 /*Estilos al Header*/
@@ -22,108 +33,113 @@ body {
     padding-top: 1em;
     padding-bottom: 1em;
     width: 100%;
+    background-color: rgba(0, 0, 0, 0.877);
+    gap: 1em;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
 }
 
 /*Estilos a las imagenes deñ header*/
 .header .img-ucsm {
-    width: 20%;
-    min-width: 300px;
-    padding-left: 30px;
-}
-
-.header .img-epis {
-    width: 10%;
-    min-width: 170px;
-    padding-right: 30px;
-}
-
-.header .img-ucsm-blanco {
     display: none;
+}
+.header .img-epis {
+    display: none;
+}
+.header .img-ucsm-blanco {
+    display: block;
+    width: 100%;
+    min-width: 150px;
+    padding-left: 8px;
 }
 
 .header .img-epis-blanco {
-    display: none;
+    display: block;
+    width: 40%;
+    min-width: 90px;
+    padding-right: 15px;
 }
-
 
 /*Estilos al login Participante*/
 .img-login-bloque {
     display: flex;
-    width: 100%;
+    flex-direction: column;
+    width: 85%;
     max-width: 800px;
-    height: 63.5%;
-    max-height: 500px;
+    height: auto;
+    max-height: 100%;
     align-items: center;
-    justify-content: space-between;
     border: none;
     border-radius: 2em;
-    box-shadow: 0px 0px 23px 7px rgba(115,115,115,1);
-    background-color: white;
+    background-color: transparent;
+    justify-content: space-around;
 }
 
 /*Estilos al fondo de la imagen*/
 .image-jinis-universidad {
-    width: 50%;
-    height: 100%;
-    --opacidad-negro: 0.2;
-    border-top-left-radius: 2em;
-    border-bottom-left-radius: 2em;
-    background-image: linear-gradient(rgba(0, 0, 0, var(--opacidad-negro)), rgba(0, 0, 0, var(--opacidad-negro))), url('../images/universidad_ucsm.jpg');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+    width: 100%;
     text-align: center;
+    height: auto;
 }
 
 .image-jinis-universidad p {
     color: white;
-    padding-left: 1em;
-    padding-right: 1em;
-    font-size: 30px;
     font-weight: bold;
     margin-top: 0;
     text-shadow: 0 0 5px white, -20px 0 20px black, 20px 0 20px black;
+    font-size: 25px;
+    width: auto;
+    margin-bottom: 1em;
 }
 
 .image-jinis-universidad .jinis {
-    width: 80%;
-    padding-top: 65px;
-    padding-bottom: 25px;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
 }
 
 /*Estilos a la sección del formulario*/
-.form-login-bloque {
-    padding-left: 2em;
-    padding-right: 2em;
-    width: 40%;
-    height: 60%;
+.form-login-bloque, .colaborador-form{
+    height: auto;
     display: flex;
     flex-direction: column;
     gap: 1em;
+    background-color: rgba(0, 0, 0, 0.644);
+    max-height: 100%;
+    margin: 0 auto;
+    border-radius: 1em;
+    width: 60%;
+    min-width: 280px;
+    padding: 1.2em 0.8em 1.4em 0.8em;
+    margin-bottom: 1em;
 }
 
 .form-login-bloque h1 {
-    color: rgb(67, 67, 117);
-    font-size: 38px;
-    font-family: "Lilita One", sans-serif;
+    font-family: var(--letra-Lilita-One);
     font-weight: 400;
     font-style: normal;
     padding-right: 0.2em;
     margin-bottom: 0.3em;
+    font-size: 28px;
+    width: 100%;
+    min-width: 210px;
+    text-align: center;
+    color: white;
 }
 
 /*Editando el h1 y tamaño para el form del colaborador*/
-.colaborador-form {
-    height: 68%;
-}
 
 .colaborador-form h1{
     margin-top: 0;
 }
 
-/*------------------------*/
+.etiqueta {
+    margin-top: 15px;
+}
 
 .form_login {
     display: flex;
+    align-items: center;
     flex-direction: column;
     gap: 1em;
 }
@@ -133,13 +149,14 @@ body {
     display: flex;
     padding-top: 0.6em;
     padding-bottom: 0.6em;
-    padding-left: 1em;
-    padding-right: 1em;
     border-radius: 0.5em;
-    background-color: rgb(241, 241, 241);
     gap: 0.5em;
     justify-content: center;
     align-items: center;
+    width: 85%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    background-color: rgba(102, 102, 102, 0.589);
 }
 
 .bloque-icon-input img {
@@ -154,11 +171,12 @@ body {
 }
 
 .input-box label {
-    font-family: "Encode Sans", sans-serif;
+    font-family: var(--letra-Encode-Sans);
     font-weight: 600;
     font-style: normal;
     font-size: 13px;
-    color: rgb(67, 67, 117);;
+    color: white;
+    margin-bottom: 0.5em;
 }
 
 .input-box label::after {
@@ -171,13 +189,15 @@ body {
 .input-box input {
     height: 20px;
     border: none;
-    background-color: rgb(241, 241, 241);
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid white;
     outline: none;
+    background-color: rgba(102, 102, 102, 0);
+    color: white;
 }
 
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px rgb(241, 241, 241) inset !important;
+    background: none !important;
 }
 
 /*Estilos al boton del form*/
@@ -195,284 +215,16 @@ input:-webkit-autofill {
 .enlaces-login {
     display: flex;
     gap: 1em;
+    align-self: center;
 }
 .enlaces-login a {
-    color: rgb(67, 67, 117);
+    color: white;
+    text-align: center;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: bold;
 }
 
 .enlaces-login a:hover {
-    color: rgb(255, 86, 80);
-}
-
-/*Aplicando media queries para pantallas tablet mas pequeñas*/
-@media(max-width:768px){
-    body {
-        gap: 12em;
-    }
-    .img-login-bloque {
-        height: 55%;
-        width: 90%;
-    }
-    .image-jinis-universidad {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .image-jinis-universidad .jinis {
-        width: 80%;
-        padding-top: 50px;
-        padding-bottom: 15px;
-    }
-    .image-jinis-universidad p {
-        font-size: 25px;
-    }
-
-    /*Estilos al bloque codigo*/
-    .bloque-icon-input{
-        padding-top: 0.4em;
-        padding-bottom: 0.4em;
-    }
-    .form-login-bloque{
-        height: 53.2%;
-        gap: 1em;
-    }
-    .form-login-bloque h1 {
-        font-size: 30px;
-        margin-bottom: 0;
-    }
-    .input-box label {
-        font-size: 11px;
-    }
-    .form-login-bloque button {
-        font-size: 14px;
-    }
-}
-
-/*Aplicando media queries para tabletas*/
-@media(max-width:1024) {
-    .header { 
-        padding-top: 2em;
-    }
-    .header .img-ucsm {
-        width: 40%;
-        min-width: 350px;
-        padding-left: 30px;
-    }
-    
-    .header .img-epis {
-        width: 10%;
-        min-width: 95px;
-        padding-right: 30px;
-    }
-}
-
-@media(max-width:412px) {
-    body {
-        gap: 7em;
-        --opacidad-negro: 0.2;
-        background-image: linear-gradient(rgba(0, 0, 0, var(--opacidad-negro)), rgba(0, 0, 0, var(--opacidad-negro))), url('../images/universidad_ucsm.jpg');
-        background-size: 850px 100%;
-        background-repeat: no-repeat;
-        background-position-y: 99px;
-        background-position-x: -130px;
-    }
-    .header {
-        background-color: rgba(0, 0, 0, 0.877);
-        gap: 1em;
-        padding-bottom: 0.5em;
-        padding-top: 0.5em;
-    }
-    .header .img-ucsm {
-        display: none;
-    }
-    .header .img-epis {
-        display: none;
-    }
-    .header .img-ucsm-blanco {
-        display: block;
-        width: 100%;
-        min-width: 150px;
-        padding-left: 8px;
-    }
-    
-    .header .img-epis-blanco {
-        display: block;
-        width: 40%;
-        min-width: 90px;
-        padding-right: 15px;
-    }
-
-    .img-login-bloque {
-        display: flex;
-        flex-direction: column;
-        width: 85%;
-        height: 55%;
-        max-height: 550px;
-        background-color: transparent;
-        box-shadow: 0 0 0;
-        justify-content: space-around;
-    }
-    .image-jinis-universidad {
-        width: 100%;
-        border-radius: 2em;
-        background-image: none;
-        height: auto;
-    }
-    .image-jinis-universidad .jinis {
-        padding-top: 1em;
-        width: 100%;
-    }
-    .image-jinis-universidad p {
-        font-size: 23px;
-        width: auto;
-        margin-bottom: 0;
-    }
-    .form-login-bloque, .colaborador-form {
-        height: 60%;
-        background-color: rgba(0, 0, 0, 0.644);
-        max-height: 240px;
-        margin: 0 auto;
-        border-radius: 1em;
-        width: 60%;
-        min-width: 280px;
-        padding-left: 0.5em;
-        padding-right: 0.5em;
-        padding-top: 1.3em;
-    }
-    .form-login-bloque h1 {
-        font-size: 28px;
-        width: 100%;
-        min-width: 210px;
-        text-align: center;
-        color: white;
-    }
-    .etiqueta {
-        margin-top: 15px;
-    }
-    .form_login {
-        align-items: center;
-    }
-    .bloque-icon-input {
-        width: 80%;
-        padding-left: 0.5em;
-        padding-right: 0.5em;
-        background-color: rgba(102, 102, 102, 0.589);
-    }
-    .input-box label {
-        color: white;
-        margin-bottom: 0.5em;
-    }
-    .input-box input {
-        background-color: rgba(102, 102, 102, 0);
-        color: white;
-    }
-
-    .enlaces-login {
-        align-self: center;
-    }
-
-    .enlaces-login a {
-        color: white;
-        text-align: center;
-    }
-    .enlaces-login a:hover {
-        color: rgb(255, 200, 80);
-    }
-}
-
-@media(max-height:950px) {
-    body {
-        gap: 3em;
-        background-size: 720px 100%;
-        background-repeat: no-repeat;
-        background-position-y: 88px;
-        background-position-x: -100px;
-    }
-    
-    .colaborador-form h1{
-        padding-top: 0.5em;
-    }
-
-    .img-login-bloque {
-        justify-content: center;
-        gap: 1em;
-        width: 85%;
-        height: 65%;
-        max-height: 700px;
-        background-color: transparent;
-        box-shadow: 0px 0px 23px 7px rgba(115,115,115,1);
-        box-shadow: 0 0 0;
-    }
-    .form-login-bloque {
-        max-height: 240px;
-        padding-top: 0.5em;
-    }
-
-    .login-bloque-colaborador {
-        height: 90%;
-    }
-
-    .colaborador-form {
-        max-height: 300px;
-        padding-bottom: 1em;
-    }
-}
-
-@media(max-height:740px) {
-    body {
-        gap: 3em;
-        background-size: 720px 100%;
-        background-repeat: no-repeat;
-        background-position-y: 88px;
-        background-position-x: -100px;
-    }
-    .img-login-bloque {
-        gap: 1em;
-        width: 85%;
-        height: 68%;
-        max-height: 550px;
-        background-color: transparent;
-        box-shadow: 0px 0px 23px 7px rgba(115,115,115,1);
-        box-shadow: 0 0 0;
-    }
-    .form-login-bloque {
-        max-height: 240px;
-        padding-top: 0.5em;
-    }
-
-    .login-bloque-colaborador {
-        height: 70%;
-    }
-
-    .colaborador-form {
-        max-height: 300px;
-        padding-bottom: 0.5em;
-    }
-}
-
-@media(max-height:708px) {
-    body {
-        gap: 1.5em;
-    }
-
-    .login-bloque-colaborador {
-        height: 100%;
-    }
-
-    .image-jinis-universidad .jinis {
-        padding-top: 0;
-    }
-    
-    .form-login-bloque {
-        max-height: 53%; /*50*/
-    }
-
-    .colaborador-form h1{
-        padding-top: 0.2em;
-    }
+    color: rgb(255, 200, 80);
 }

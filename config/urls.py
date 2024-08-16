@@ -28,9 +28,8 @@ urlpatterns = [
     path('accounts/administrador/login-admin/', LoginAdmin.as_view(), name='LoginAdmin'),  # URL para la vista de inicio de sesión personalizada
     path('accounts/administrador/register-admin/', RegisterAdmin.as_view(), name='RegisterAdmin'),
     path('accounts/login-colaborador/', LoginColaborador.as_view(), name='LoginColaborador'),  # URL para la vista de inicio de sesión personalizada
-    path('participante/', include('Participantes.urls')),  # Incluye las URLs de la aplicación Participantes    
+    path('dashboard/', include('Participantes.urls')),  # Incluye las URLs de la aplicación Participantes    
     path('administrador/', include('Admin.urls')),
     path('colaborador/', include('Colaborador.urls')),
-    path('', include('Ponencia.urls')),
 ]
  #    path('api/ponentes/<int:pk>', viewPonentes.as_view({'get': 'ponente'})), --------ejemplo --- no se modifica

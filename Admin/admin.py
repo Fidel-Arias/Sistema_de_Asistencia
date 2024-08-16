@@ -1,5 +1,6 @@
 from django.views import View
 from django.http import JsonResponse
+from email_service.views import email_service
 from rest_framework import viewsets
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -35,11 +36,15 @@ class RegisterAdmin(View):
             data = json.loads(request.body)
             formulario_data = data.get('formulario')
             print(formulario_data)
+            status_email = email_service(formulario_data)
+
             # Aquí puedes realizar cualquier operación con `formulario_data`
-            return JsonResponse({
-                'status': 'success',
-            })
+            if status_email == 'success':
+                return JsonResponse({'status': 'success'})
         except json.JSONDecodeError:
+            return redirect('RegisterAdmin')
+        except Exception as e:
+            print("Error encontrado: ", e)
             return redirect('RegisterAdmin')
 
 
@@ -48,3 +53,4 @@ class Cerrar_Sesion(viewsets.ViewSet):
         del request.session['correo_admin']
         del request.session['contrasenia_admin']
         return redirect('LoginAdmin')
+        

@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
             video.srcObject = stream;
             video.play();
-            video.classList.add('hidden');  // Mostrar el video
-            canvas.classList.remove('hidden');  // Ocultar el canvas
+            canvas.classList.remove('hidden');  // Mostrar el video
+            video.classList.add('hidden');  // Ocultar el canvas
             scanQRCode();
         }
     });
@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
             canvas.hidden = false;
             canvas.height = video.videoHeight;
             canvas.width = video.videoWidth;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height); //canvas.height, canvas.width
             const code = jsQR(imageData.data, imageData.width, imageData.height, {
                 inversionAttempts: "dontInvert",
             });
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(response => response.json())
                     .then(data => {
                         mensajeFondo.forEach((elemento) => {
-                            elemento.hidden = false;
+                            elemento.style.display = 'block';
                         });
 
                         if (data['status'] === 'warning'){
@@ -79,40 +79,39 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.querySelector('.success-message__title').innerHTML = 'Asistencia no marcada';
                             document.querySelector('.success-message__title').style.color = 'red';
                             // document.querySelector('.success-message__content').style.fontWeight = 'bold';
-                            document.querySelector('.success-message__content').innerHTML = '<b>'+data['message']+'</b>';
+                            document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
                         } else if (data['status'] === 'error'){ 
                             document.getElementById('logo_message').setAttribute('src', warningImgUrl);
                             document.querySelector('.success-message__title').innerHTML = 'Error';
                             document.querySelector('.success-message__title').style.color ='red';
                             // document.querySelector('.success-message__content').style.fontWeight = 'bold';
-                            document.querySelector('.success-message__content').innerHTML = '<b>'+data['message']+'</b>';
+                            document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
                         } else {
                             document.getElementById('logo_message').setAttribute('src', successImgUrl);
                             document.querySelector('.success-message__title').innerHTML = 'Asistencia marcada';
                             document.querySelector('.success-message__title').style.color = 'green';
                             // document.querySelector('.success-message__content').style.fontWeight = 'bold';
-                            document.querySelector('.success-message__content').innerHTML = '<b>'+data['message']+'</b>';
+                            document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
                         }
 
                         setTimeout(() => {
                             mensajeFondo.forEach((elemento) => {
-                                elemento.hidden = true;
+                                elemento.style.display = 'none';
                             });
                         }, 3000);
                     });
                 } else {
                     mensajeFondo.forEach((elemento) => {
-                        elemento.hidden = false;
+                        elemento.style.display = 'block';
                     });
                     document.getElementById('logo_message').setAttribute('src', warningImgUrl);
                     document.querySelector('.success-message__title').innerHTML = 'Error';
                     document.querySelector('.success-message__title').style.color = 'red';
-                    document.querySelector('.success-message__content').style.fontWeight = 'bold';
-                    document.querySelector('.success-message__content').innerHTML = 'Primero selecciona un bloque';
+                    document.querySelector('.success-message__content h4').innerHTML = '<b>'+'Primero selecciona un bloque'+'<b>';
 
                     setTimeout(() => {
                         mensajeFondo.forEach((elemento) => {
-                            elemento.hidden = true;
+                            elemento.style.display = 'none';
                         });
                     }, 3000);
                 }

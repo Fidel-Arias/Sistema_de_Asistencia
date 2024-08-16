@@ -6,41 +6,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Registrar Asistencia</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/asistencia_colaborador.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
     <script src="{% static 'plugins/jsQR.js' %}"></script>
 </head>
-<body class="d-flex flex-column bg-dark justify-content-start">
-    <header class="d-flex flex-header">
+<body>
+    <header class="flex-header">
         <img src="{% static 'images/ucsm_logo_blanco.webp' %}" alt="UCSM" class="ucsm_logo">
         <img src="{% static 'images/epis_logo_blanco.webp' %}" alt="JINIS" class="epis_logo">
     </header>
 
     <div class="fondo-borroso mostrar" hidden></div>
 
-    <div class="d-flex flex-column container h-75">
-        <h1 class="text-white text-center my-2">Escanear QR Code</h1>
+    <div class="container">
 
-        <video id="cam-video" class="img-fluid h-50 my-2 mx-4 hidden" autoplay></video>
-        <canvas id="cam-canvas" class="img-fluid h-50 my-2 mx-4 canvas hidden"></canvas>
+        <div id="status-network">
+            <p id="status"></p>
+        </div>
 
-        <div class="d-flex justify-content-around my-3">
+        <h1 class="text-center">Escanear QR Code</h1>
+
+        <video id="cam-video" class="video hidden" autoplay></video>
+        <canvas id="cam-canvas" class="canvas hidden"></canvas>
+
+        <div class="buttons-camera">
             <button class="btn btn-success" id="btn-cam">Encender Cámara</button>
             <button class="btn btn-danger" id="btn-stop-cam">Detener Cámara</button>
         </div>
         
         <div class="data">
-            <p class="text-white mb-3 h5">Día: <span>{{dia_actual}}</span></p>
+            <p class="info">Día: <span>{{dia_actual}}</span></p>
 
-            <p class="text-white mb-3 h5">Congreso: <span>{{congreso.idcongreso}}</span></p>
+            <p class="info">Congreso: <span>{{congreso.idcongreso}}</span></p>
 
-            <p class="text-white mb-3 h5">Colaborador: <span>{{colaborador}}</span></p>
+            <p class="info">Hora: <span id="reloj">00:00</span></p>
 
-            <form class="d-flex" style="gap: 0.5em;" method="POST" id="form-json" action="{% url 'InterfazColaborador' %}">
+            <p class="info">Colaborador: <span>{{colaborador}}</span></p>
+
+            <form class="form" style="gap: 0.5em;" method="POST" id="form-json" action="{% url 'InterfazColaborador' %}">
                 {% csrf_token %}
-                <label class="mr-sm-2 sr-only text-white h5 mr label" for="inlineFormCustomSelect">Bloque</label>
-                <select required name="bloque" class="custom-select mr-sm-2 mb-3 rounded select" id="inlineFormCustomSelect">
+                <label class="label info" for="inlineFormCustomSelect">Bloque</label>
+                <select required name="bloque" class="custom-select" id="inlineFormCustomSelect">
                     <option selected disabled value="">Seleccione el bloque actual</option>
                     {% for bloque in bloques %}
                         {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}
@@ -54,16 +60,17 @@
     <audio id="audioScaner" src="{% static 'sound/sonido.mp3' %}"></audio>
 
     <div class="success-message mostrar" hidden data-warning-img-url="{% static 'images/close.png' %}" data-success-img-url="{% static 'images/checked.png' %}">
-        <img src="{% static 'images/checked.png' %}" alt="check" class="success-message__icon icon-checkmark" id="logo_message">
-         <h1 class="success-message__title">Asistencia marcada</h1>
+        <img src="" alt="check" class="success-message__icon icon-checkmark" id="logo_message">
+         <h1 class="success-message__title"></h1>
          <div class="success-message__content">
-           <h4><b>Registro exitoso</b></h4>
+           <h4><b></b></h4>
          </div>
      </div>
 
-    <div class="cerrar-sesion text-center align-content-center">
-        <a href="{% url 'LoginColaborador' %}" class="text-white nav-link h2 ">Cerrar Sesión</a>
+    <div class="cerrar-sesion">
+        <a href="{% url 'LoginColaborador' %}" class="nav-link">Cerrar Sesión</a>
     </div>
 </body>
+<script src="{% static 'js/reloj_internet.js' %}"></script>
 <script src="{% static 'js/scanQR.js' %}"></script>
 </html>
