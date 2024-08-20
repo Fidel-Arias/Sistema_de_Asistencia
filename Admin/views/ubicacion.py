@@ -6,6 +6,7 @@ from rest_framework import viewsets
 from Ubicacion.models import MaeUbicacion
 from Ubicacion.forms import UbicacionForm
 from django.contrib import messages
+from django.db import transaction
 
 class Registrar_Ubicacion(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
@@ -17,10 +18,11 @@ class Registrar_Ubicacion(viewsets.ViewSet):
             if action == 'register':
                 try:
                     if (not(MaeUbicacion.objects.filter(ubicacion=nombreUbicacion).exists())):
-                        nueva_ubicacion = MaeUbicacion(
-                            ubicacion=nombreUbicacion,
-                        )
-                        nueva_ubicacion.save()
+                        with transaction.atomic():
+                            nueva_ubicacion = MaeUbicacion(
+                                ubicacion=nombreUbicacion,
+                            )
+                            nueva_ubicacion.save()
                         messages.success(request, 'Ubicación registrada con éxito')
                     else:
                         messages.error(request, 'Ya existe la ubicación')

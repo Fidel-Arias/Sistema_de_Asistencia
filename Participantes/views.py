@@ -30,7 +30,7 @@ class LoginView(View):
 
 
 class viewParticipantes(viewsets.ViewSet):
-    @method_decorator(participante_login_required)
+    @method_decorator(participante_login_required) #Manejar errores y aviso de mensajes
     def interfaz_user(self, request, pk):
         codparticipante = request.session.get('codparticipante')
         if codparticipante != str(pk):
