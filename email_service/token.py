@@ -23,6 +23,8 @@ def activar_admin(request): #Encriptar las contraseñas
 
     if is_valid == 'failed':
         return HttpResponse("Error al crear el congreso", status=status.HTTP_400_BAD_REQUEST)
+    elif is_valid == 'exists':
+        return HttpResponse("El congreso ya existe", status=status.HTTP_400_BAD_REQUEST)
     
     data['idtipo'] = MaeTipoUsuario.objects.get(dstipo="ADMINISTRADOR").pk
     data['idcongreso'] = MaeCongreso.objects.get(nombre=data['nombreCongreso']).pk

@@ -79,23 +79,6 @@ class Registrar_Congreso(viewsets.ViewSet):
                 'congresos':congresos,
                 'pk':pk
             })
-    
-
-def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin, idcongreso, pk):
-    try:
-        date_range = pd.date_range(start=fechaInicio, end=fechaFin) #Generación de rangos desde la fecha de inicio hasta la fecha fin
-        date_list = date_range.strftime('%Y-%m-%d').tolist()
-        lista_dias = None
-        for i in range(0, len(date_list)):
-            lista_dias = MaeDia(
-                fecha = date_list[i],
-                idcongreso = MaeCongreso.objects.get(pk=idcongreso)
-            )
-            lista_dias.save()
-        messages.success(request, 'Se generaron los dias del congreso con éxito')
-    except Exception:
-        messages.error(request, 'Error al generar los dias del congreso')
-        return redirect(reverse('RegistrarCongreso', kwargs={'pk':pk}))
 
 def desactivarDias(request, idcongreso, pk):
     try:
