@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from ..decorators import administrador_login_required
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from Ponencia.models import MaePonencia
@@ -9,8 +10,8 @@ from Congreso.models import MaeCongreso
 from django.contrib import messages
 
 class Registrar_Ponencias(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def registrar_ponencias(self, request):
+    @method_decorator(administrador_login_required)
+    def registrar_ponencias(self, request, pk):
         if request.method == 'POST':
             action = request.POST.get('action')
             ponente = request.POST.get('ponente')
@@ -36,7 +37,7 @@ class Registrar_Ponencias(viewsets.ViewSet):
                         messages.error(request, 'Ya existe la ponencia')
                 except Exception:
                     messages.error(request, 'Error al registrar la ponencia')
-                return redirect('RegistrarPonencia')
+                return redirect(reverse('RegistrarPonencia', kwargs={'pk':pk}))
             elif action == 'delete':
                 try:
                     ponencia = MaePonencia.objects.get(nombre=nombrePonencia)
@@ -50,7 +51,7 @@ class Registrar_Ponencias(viewsets.ViewSet):
                     messages.error(request, 'No se encontró la ponencia')
                 except Exception:
                     messages.error(request, 'Error al desactivar la ponencia')
-                return redirect('RegistrarPonencia')
+                return redirect(reverse('RegistrarPonencia', kwargs={'pk':pk}))
             elif action == 'activate':
                 idponencia = request.POST.get('id')
                 try:
@@ -65,7 +66,7 @@ class Registrar_Ponencias(viewsets.ViewSet):
                     messages.error(request, 'No se encontró la ponencia')
                 except Exception:
                     messages.error(request, 'Error al activar la ponencia')
-                return redirect('RegistrarPonencia')
+                return redirect(reverse('RegistrarPonencia', kwargs={'pk':pk}))
             elif action == 'edit':
                 idponencia = request.POST.get('id')
                 print('Ponente', ponente)
@@ -86,7 +87,7 @@ class Registrar_Ponencias(viewsets.ViewSet):
                     messages.error(request, 'No se encontró la ponencia')
                 except Exception:
                     messages.error(request, 'Error al actualizar la ponencia')
-                return redirect('RegistrarPonencia')
+                return redirect(reverse('RegistrarPonencia', kwargs={'pk':pk}))
             
             ponentes = MaePonente.objects.filter(estado='ACTIVO').order_by('pk')
             congresos = MaeCongreso.objects.filter(estado="ACTIVO")
@@ -96,7 +97,8 @@ class Registrar_Ponencias(viewsets.ViewSet):
                 'ponentes': ponentes, 
                 'congresos':congresos,
                 'ponencias': ponencias,
-                'selected_congreso': int(selected_congreso)
+                'selected_congreso': int(selected_congreso),
+                'pk': pk
             })
         else:
             if not MaePonente.objects.filter(estado="ACTIVO").exists() or not MaePonente.objects.filter().exists():
@@ -107,5 +109,6 @@ class Registrar_Ponencias(viewsets.ViewSet):
                 'current_page': 'registrar_ponencia', 
                 'ponencias': ponencias, 
                 'congresos':congresos, 
-                'selected_congreso': None
+                'selected_congreso': None,
+                'pk':pk
             })

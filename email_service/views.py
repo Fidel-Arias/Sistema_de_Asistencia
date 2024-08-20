@@ -1,30 +1,23 @@
 from config import settings
-from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
+from rest_framework.request import HttpRequest
+from django.core.signing import TimestampSigner
 from rest_framework import status
 from django.core.mail import send_mail, get_connection, BadHeaderError
 from django.template.loader import render_to_string
 from premailer import transform
-from Admin.models import MaeAdministrador
-from tipoUsuario.models import MaeTipoUsuario
-from Congreso.models import MaeCongreso
+import json
 
 
 # Create your views here.
 def email_service(request, formulario_data):
-    nombres = formulario_data['nombresAdmin']
-    apellidos = formulario_data['apellidosAdmin']
-    correo = formulario_data['correoAdmin']
-    contrasenia = formulario_data['contrasenaAdmin']
-    nombre_congreso= formulario_data['nombreCongreso']
-    tipo_usuario = MaeTipoUsuario.objects.get(dstipo='ADMINISTRADOR')
-    
+
+    # Generar token de validacion
+    token_generator = generar_token(formulario_data)
+    print('token: ', token_generator)
 
     # Configurando dinámicamente el email_host_user y el email_host_password
-    settings.EMAIL_HOST_USER = correo
-    settings.EMAIL_HOST_PASSWORD = contrasenia
+    settings.EMAIL_HOST_USER = formulario_data['correo']
+    settings.EMAIL_HOST_PASSWORD = formulario_data['contrasenia']
 
     # Crear una nueva conexión SMTP con las credenciales dinámicas
     connection = get_connection(
@@ -34,31 +27,18 @@ def email_service(request, formulario_data):
         password=settings.EMAIL_HOST_PASSWORD,
         use_tls=settings.EMAIL_USE_TLS,
     )
-
-    #Creando al administrador
-    administrador = MaeAdministrador(
-        nombres=nombres,
-        apellidos=apellidos,
-        correo=correo,
-        contrasenia=contrasenia,
-        idtipo=tipo_usuario.idtipo,
-    )
-
-    #Generar token de validacion
-    token = default_token_generator.make_token(administrador)
-    uid = urlsafe_base64_encode(force_bytes(administrador.pk))
-    enlace_verificacion = reverse('activar_admin', kwargs={'uidb64': uid, 'token': token, 'formulario': formulario_data})
-    url_completa = f'{request.scheme}://{request.get_host()}{enlace_verificacion}'
-
+    
     template = render_to_string('mail_context.html', {
-        'nombre_admin': nombres + ' ' + apellidos,
-        'nombre_congreso': nombre_congreso,
-        'correo': correo,
-        'validation_link': url_completa
+        'nombre_admin': f"{formulario_data['nombres']} {formulario_data['apellidos']}",
+        'nombre_congreso': formulario_data['nombreCongreso'],
+        'correo': formulario_data['correo'],
+        'protocolo': request.scheme,
+        'dominio': request.get_host(),
+        'token': token_generator
     })
 
     template = transform(template)
-    plain_message = f'Nuevo administrador: {nombres} {apellidos}\nCongreso: {nombre_congreso}\nCorreo: {correo}\nValida el registro aquí: https://www.google.com/'
+    plain_message = f'Nuevo administrador: {formulario_data['nombres']} {formulario_data['apellidos']}\nCongreso: {formulario_data['nombreCongreso']}\nCorreo: {formulario_data['correo']}\nValida el registro aquí: {token_generator}'
 
     try:
         send_mail(
@@ -69,8 +49,10 @@ def email_service(request, formulario_data):
             recipient_list=['fidel.arias@ucsm.edu.pe'],
             fail_silently=False,
             connection=connection,  # Utilizar la conexión con las nuevas credenciales
-            
         )
+
+        # Cerrar la conexión SMTP
+        connection.close()
         
         return 'success'
     except BadHeaderError:
@@ -79,3 +61,9 @@ def email_service(request, formulario_data):
     except Exception as e:
         print("Error SMTP: ", e)
         return 'failed'
+    
+def generar_token(data):
+    signer = TimestampSigner()
+    data_serializado = json.dumps(data)
+    token = signer.sign(data_serializado)
+    return token

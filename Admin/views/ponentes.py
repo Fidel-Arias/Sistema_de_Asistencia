@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from ..decorators import administrador_login_required
 from rest_framework import viewsets
 from django.utils.decorators import method_decorator
 from Ponente.models import MaePonente
@@ -7,8 +8,8 @@ from Ponente.forms import PonenteForm
 from django.contrib import messages
 
 class Registrar_Ponentes(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def registrar_ponentes(self, request):
+    @method_decorator(administrador_login_required)
+    def registrar_ponentes(self, request, pk):
         if request.method == 'POST':
             action = request.POST.get('action')
             nombrePonente = request.POST.get('nombres')
@@ -27,7 +28,7 @@ class Registrar_Ponentes(viewsets.ViewSet):
                         messages.error(request, 'El ponente ya existe')
                 except Exception:
                     messages.error(request, 'Error al registrar al ponente')
-                return redirect('RegistrarPonentes')
+                return redirect(reverse('RegistrarPonentes', kwargs={'pk':pk}))
             elif action == "delete":
                 try:
                     ponente = MaePonente.objects.get(nombres=nombrePonente, apellidos=apellidoPonente)
@@ -41,7 +42,7 @@ class Registrar_Ponentes(viewsets.ViewSet):
                     messages.error(request, 'El ponente no existe')
                 except Exception:
                     messages.error(request, 'Error al desactivar al ponente')
-                return redirect('RegistrarPonentes')
+                return redirect(reverse('RegistrarPonentes', kwargs={'pk':pk}))
             elif action == "activate":
                 try:
                     ponente = MaePonente.objects.get(nombres=nombrePonente, apellidos=apellidoPonente)
@@ -52,7 +53,7 @@ class Registrar_Ponentes(viewsets.ViewSet):
                     messages.error(request, 'El ponente no existe')
                 except Exception:
                     messages.error(request, 'Error al activar al ponente')
-                return redirect('RegistrarPonentes')
+                return redirect(reverse('RegistrarPonentes', kwargs={'pk':pk}))
             elif action == 'edit':
                 id_ponente = request.POST.get('id')
                 try:
@@ -71,16 +72,18 @@ class Registrar_Ponentes(viewsets.ViewSet):
                     messages.error(request, 'El ponente no existe')
                 except Exception:
                     messages.error(request, 'Error al actualizar al ponente')
-                return redirect('RegistrarPonentes')
+                return redirect(reverse('RegistrarPonentes', kwargs={'pk':pk}))
 
             ponentes = MaePonente.objects.filter().order_by('pk')
             return render(request, 'pages/registrarPonente.html', {
                 'current_page': 'registrar_ponentes', 
-                'ponentes': ponentes
+                'ponentes': ponentes,
+                'pk':pk
             })
         else:
             ponentes = MaePonente.objects.all().order_by('pk')
             return render(request, 'pages/registrarPonente.html', {
                 'current_page': 'registrar_ponentes', 
-                'ponentes': ponentes
+                'ponentes': ponentes,
+                'pk': pk
             })

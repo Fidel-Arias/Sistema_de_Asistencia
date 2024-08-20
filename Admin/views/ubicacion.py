@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from ..decorators import administrador_login_required
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from Ubicacion.models import MaeUbicacion
@@ -7,8 +8,9 @@ from Ubicacion.forms import UbicacionForm
 from django.contrib import messages
 
 class Registrar_Ubicacion(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def registrar_ubicacion(self, request):
+    @method_decorator(administrador_login_required)
+    def registrar_ubicacion(self, request, pk):
+        print('clave: ', pk)
         if request.method == 'POST':
             nombreUbicacion = request.POST.get('nombre_ubicacion')
             action = request.POST.get('action')
@@ -24,7 +26,6 @@ class Registrar_Ubicacion(viewsets.ViewSet):
                         messages.error(request, 'Ya existe la ubicación')
                 except Exception as e: #Cannot resolve keyword 'nombre' into field. Choices are: estado, idubicacion, maebloque, ubicacion
                     messages.error(request, e)
-                return redirect('RegistrarUbicaciones')
             elif action == 'delete':
                 try:
                     ubicacion = MaeUbicacion.objects.get(ubicacion=nombreUbicacion)
@@ -38,7 +39,6 @@ class Registrar_Ubicacion(viewsets.ViewSet):
                     messages.error(request, 'No se encontró la ubicación')
                 except Exception:
                     messages.error(request, 'Error al desactivar la ubicación')
-                return redirect('RegistrarUbicaciones')
             elif action == 'activate':
                 try:
                     ubicacion = MaeUbicacion.objects.get(ubicacion=nombreUbicacion)
@@ -49,7 +49,6 @@ class Registrar_Ubicacion(viewsets.ViewSet):
                     messages.error(request, 'No se encontró la ubicación')
                 except Exception:
                     messages.error(request, 'Error al activar la ubicación')
-                return redirect('RegistrarUbicaciones')
             elif action == 'edit':
                 idubicacion = request.POST.get('id')
                 try:
@@ -67,10 +66,11 @@ class Registrar_Ubicacion(viewsets.ViewSet):
                     messages.error(request, 'La ubicación ya no existe')
                 except Exception:
                     messages.error(request, 'Error al actualizar la ubicación')
-                return redirect('RegistrarUbicaciones')
+            return redirect(reverse('RegistrarUbicaciones', kwargs={'pk':pk}))
         else:
             ubicaciones = MaeUbicacion.objects.all().order_by('pk')
             return render(request, 'pages/registrarUbicaciones.html', {
                 'current_page': 'registrar_ubicaciones', 
-                'ubicaciones':ubicaciones
+                'ubicaciones':ubicaciones,
+                'pk': pk
             })

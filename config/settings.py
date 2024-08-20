@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
-    'ed98-2800-200-f430-30e-e006-b363-6d5c-ed9d.ngrok-free.app',
+    'e006-2800-200-f430-30e-e4e1-d3dd-fba0-e36f.ngrok-free.app',
 ]
 
 
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'tipoUsuario',
     'email_service',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -173,7 +174,7 @@ SESSION_COOKIE_AGE = 604800  # 2 semanas por defecto
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://ed98-2800-200-f430-30e-e006-b363-6d5c-ed9d.ngrok-free.app'
+    'https://e006-2800-200-f430-30e-e4e1-d3dd-fba0-e36f.ngrok-free.app'
 ]
 
 #SERVIDOR DE CORREO

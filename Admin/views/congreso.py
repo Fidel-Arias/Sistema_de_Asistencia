@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from rest_framework import viewsets
-from django.contrib.auth.decorators import login_required
+from ..decorators import administrador_login_required
 from django.utils.decorators import method_decorator
 from Congreso.models import MaeCongreso
 from Congreso.forms import CongresoJinisForm
@@ -10,8 +11,8 @@ from datetime import date
 import pandas as pd
 
 class Registrar_Congreso(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def registrar_congreso(self, request):
+    @method_decorator(administrador_login_required)
+    def registrar_congreso(self, request, pk):
         if request.method == 'POST':
             action = request.POST.get('action')
             nombreCongreso = request.POST.get('nombreCongreso')
@@ -20,7 +21,6 @@ class Registrar_Congreso(viewsets.ViewSet):
             fechaFin = request.POST.get('fechaFin')
             asistenciaTotal = request.POST.get('totalAsistencia')
 
-            print(action)
             if action == 'desactivate':
                 try:
                     congreso = MaeCongreso.objects.get(nombre=nombreCongreso)
@@ -29,7 +29,7 @@ class Registrar_Congreso(viewsets.ViewSet):
                     #ELIMINACION LOGICA
                     congreso.estado = 'NO ACTIVO'
                     congreso.save()
-                    desactivarDias(request, congreso.idcongreso)
+                    desactivarDias(request, congreso.idcongreso, pk)
                     messages.success(request, 'Congreso desactivado con éxito')
                 except MaeCongreso.DoesNotExist:
                     messages.error(request, 'No se encontró el congreso')
@@ -40,7 +40,7 @@ class Registrar_Congreso(viewsets.ViewSet):
                     congreso = MaeCongreso.objects.get(nombre=nombreCongreso)
                     congreso.estado = 'ACTIVO'
                     congreso.save()
-                    activarDias(request, congreso.idcongreso)
+                    activarDias(request, congreso.idcongreso, pk)
                     messages.success(request, 'Congreso activado con éxito')
                 except MaeCongreso.DoesNotExist:
                     messages.error(request, 'No se encontró el congreso')
@@ -65,19 +65,23 @@ class Registrar_Congreso(viewsets.ViewSet):
                     congreso_actualizado = CongresoJinisForm(contexto, instance=congreso)
                     if congreso_actualizado.is_valid():
                         congreso_actualizado.save()
-                        editarDias(request, idcongreso, fechaInicio, fechaFin)
+                        editarDias(request, idcongreso, fechaInicio, fechaFin, pk)
                         messages.success(request, 'Congreso actualizado con éxito')
                     else:
                         messages.error(request, congreso_actualizado.errors)
                 except MaeCongreso.DoesNotExist:
                     messages.error(request, 'El congreso ya no existe')
-            return redirect('RegistrarCongreso')
+            return redirect(reverse('RegistrarCongreso', kwargs={'pk':pk}))
         else:
             congresos = MaeCongreso.objects.all().order_by('pk')
-            return render(request, 'pages/mostrarCongreso.html', {'current_page': 'registrar_congreso', 'congresos':congresos})
+            return render(request, 'pages/mostrarCongreso.html', {
+                'current_page': 'registrar_congreso', 
+                'congresos':congresos,
+                'pk':pk
+            })
     
 
-def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin, idcongreso):
+def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin, idcongreso, pk):
     try:
         date_range = pd.date_range(start=fechaInicio, end=fechaFin) #Generación de rangos desde la fecha de inicio hasta la fecha fin
         date_list = date_range.strftime('%Y-%m-%d').tolist()
@@ -91,9 +95,9 @@ def generacion_ingreso_tabla_dias(request, fechaInicio, fechaFin, idcongreso):
         messages.success(request, 'Se generaron los dias del congreso con éxito')
     except Exception:
         messages.error(request, 'Error al generar los dias del congreso')
-        return redirect('RegistrarCongreso')
+        return redirect(reverse('RegistrarCongreso', kwargs={'pk':pk}))
 
-def desactivarDias(request, idcongreso):
+def desactivarDias(request, idcongreso, pk):
     try:
         dias = MaeDia.objects.filter(idcongreso=idcongreso)
         for i in range(0, len(dias)):
@@ -104,9 +108,9 @@ def desactivarDias(request, idcongreso):
         messages.error(request, 'No se encontró el día del congreso')
     except Exception:
         messages.error(request, 'Error al desactivar los dias del congreso')
-    return redirect('RegistrarCongreso')
+    return redirect(reverse('RegistrarCongreso', kwargs={'pk':pk}))
 
-def activarDias(request, idcongreso):
+def activarDias(request, idcongreso, pk):
     try:
         dias = MaeDia.objects.filter(idcongreso=idcongreso)
         for i in range(0, len(dias)):
@@ -117,9 +121,9 @@ def activarDias(request, idcongreso):
         messages.error(request, 'No se encontró el día del congreso')
     except Exception:
         messages.error(request, 'Error al activar los dias del congreso')
-    return redirect('RegistrarCongreso')
+    return redirect(reverse('RegistrarCongreso', kwargs={'pk':pk}))
 
-def editarDias(request, idcongreso, fechaInicio, fechaFin):
+def editarDias(request, idcongreso, fechaInicio, fechaFin, pk):
     try:
         date_range = pd.date_range(start=fechaInicio, end=fechaFin) #Generación de rangos desde la fecha de inicio hasta la fecha fin
         date_list = date_range.strftime('%Y-%m-%d').tolist()
@@ -136,4 +140,4 @@ def editarDias(request, idcongreso, fechaInicio, fechaFin):
         messages.error(request, 'No se encontró el día del congreso')
     except Exception as e:
         messages.error(request, e)
-    return redirect('RegistrarCongreso')
+    return redirect(reverse('RegistrarCongreso', kwargs={'pk':pk}))

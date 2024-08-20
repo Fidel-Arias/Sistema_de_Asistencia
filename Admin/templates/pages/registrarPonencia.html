@@ -62,7 +62,7 @@
             </div>
 
             <h2>Registrar Ponencia</h2>
-            <form class="register-form" method="POST" action="{% url 'RegistrarPonencia' %}">
+            <form class="register-form" method="POST" action="{% url 'RegistrarPonencia' pk %}">
                 {% csrf_token %}
                 <label for="congreso">Congreso</label>
                 <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">

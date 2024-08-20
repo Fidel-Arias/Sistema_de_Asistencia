@@ -24,17 +24,19 @@
         <main class="main-content-reporte main">
             <h2>Generar Reporte</h2>
     
-            <form action="{% url 'GenerarReporte' %}" method="POST" class="formulario">
+            <form action="{% url 'GenerarReporte' pk %}" method="POST" class="formulario">
                 {% csrf_token %}
                 <div class="input-name">
                     <label for="input-name">Nombre del archivo</label>
                     <input type="text" name="input-name" id="name" required placeholder="Ingrese un nombre para el archivo">
                 </div>
-    
+                
+                {% if is_there_Data %}
                 <div class="button-descarga">
                     <!-- <button type="button" class="button button-1">Ver Reporte</button> -->
                     <button type="submit" class="button button-2">Descargar</button>
                 </div>
+                {% endif %}
             </form>
             
         </main>

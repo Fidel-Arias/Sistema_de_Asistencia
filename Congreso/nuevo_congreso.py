@@ -1,6 +1,7 @@
 from .models import MaeCongreso
 
 def creando_nuevo_congreso(formulario):
+    #Validar q no se repia congreso y agregar la tabla admin congreso y quitar las opcones select
     try:
         nombre = formulario['nombreCongreso']
         asistencias = formulario['asistencia']
@@ -16,7 +17,7 @@ def creando_nuevo_congreso(formulario):
 
         nuevo_congreso.save()
         return 'success'
-    except MaeCongreso.DoesNotExist:
+    except Exception:
         return 'failed'
 
     

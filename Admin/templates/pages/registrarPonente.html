@@ -48,8 +48,8 @@
                             <td class="check-td">
                                 <button type="button" class="fill-btn"
                                     data-id="{{ponente.idponente}}"
-                                    data-nombre="{{ponente.nombre}}"
-                                    data-apellido="{{ponente.apellido}}"
+                                    data-nombre="{{ponente.nombres}}"
+                                    data-apellido="{{ponente.apellidos}}"
                                     data-estado="{{ponente.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
@@ -62,7 +62,7 @@
             </div>
 
             <h2>Registrar Ponente</h2>
-            <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' %}">
+            <form class="register-form" method="POST" action="{% url 'RegistrarPonentes' pk %}">
                 {% csrf_token %}
 
                 <input type="hidden" name="id" id="ponenteid" class="function">

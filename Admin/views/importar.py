@@ -1,4 +1,5 @@
-from django.contrib.auth.decorators import login_required
+from ..decorators import administrador_login_required
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from Congreso.models import MaeCongreso
@@ -18,8 +19,8 @@ import pandas as pd
 archivo_subido = False
 
 class Importar_Datos(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def importar_datos(self, request):
+    @method_decorator(administrador_login_required)
+    def importar_datos(self, request, pk):
         #Quitar el idcongreso de participantes es redundadnte y con la trs_ASistencia se puede verificar asi mismo quitar el diseño del html implementado
         global archivo_subido
         if request.method == 'POST' and request.FILES['file']:
@@ -75,18 +76,19 @@ class Importar_Datos(viewsets.ViewSet):
                     )
 
             messages.success(request, 'Archivo importado y procesado con éxito')
-            return redirect('ImportarDatos')
+            return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
         else:
             congresos = MaeCongreso.objects.all().order_by('pk')
             return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
                 'congresos':congresos,
-                'archivo_subido': archivo_subido
+                'archivo_subido': archivo_subido,
+                'pk': pk
             })
         
 class Generar_QRCode(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def generar_codigo_qrcode(self, request):
+    @method_decorator(administrador_login_required)
+    def generar_codigo_qrcode(self, request, pk):
         global archivo_subido
         if request.method == 'POST':
             participantes_congreso = ParticipanteCongreso.objects.all()
@@ -127,7 +129,8 @@ class Generar_QRCode(viewsets.ViewSet):
             return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
                 'congresos':congresos,
-                'archivo_subido': archivo_subido
+                'archivo_subido': archivo_subido,
+                'pk': pk
             })
         else:
             return redirect('ImportarDatos')

@@ -1,6 +1,7 @@
 from collections import defaultdict
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from ..decorators import administrador_login_required
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from django.db import transaction
@@ -11,8 +12,8 @@ from Congreso.models import MaeCongreso
 from django.contrib import messages
 
 class Registrar_Bloques_Colaborador(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def registrar_bloques_colaboradores(self, request):
+    @method_decorator(administrador_login_required)
+    def registrar_bloques_colaboradores(self, request, pk):
         if request.method == 'POST':
             colaborador = request.POST.get('colaborador')
             bloques = request.POST.getlist('bloques')
@@ -42,7 +43,7 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                     messages.error(request, 'No se encontró al colaborador o a los bloques')
                 except Exception as e:    
                     messages.error(request, e) #unsupported operand type(s) for +: 'int' and 'str'
-                return redirect('RegistrarBloqueColaborador')
+                return redirect(reverse('RegistrarBloqueColaborador', kwargs={'pk':pk}))
             elif action == 'delete':
                 try:
                     bloques_colaborador = BloqueColaborador.objects.filter(idcolaborador=colaborador)
@@ -55,7 +56,7 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                     messages.error(request, 'No se encontró al colaborador o al bloque')
                 except Exception as e:    
                     messages.error(request, e)
-                return redirect('RegistrarBloqueColaborador')
+                return redirect(reverse('RegistrarBloqueColaborador', kwargs={'pk':pk}))
             elif action == 'activate':
                 try:
                     bloques_colaborador = BloqueColaborador.objects.filter(idcolaborador=colaborador)
@@ -68,7 +69,7 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                     messages.error(request, 'No se encontró al colaborador o al bloque')
                 except Exception:    
                     messages.error(request, 'Error al activar el bloque del colaborador') #unsupported operand type(s) for +: 'int' and 'str'
-                return redirect('RegistrarBloqueColaborador')
+                return redirect(reverse('RegistrarBloqueColaborador', kwargs={'pk':pk}))
             elif action == 'edit':
                 idblcl = request.POST.get('id')
                 try:
@@ -90,7 +91,7 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                         messages.success(request, 'Bloques del colaborador actualizado con éxito')
                 except BloqueColaborador.DoesNotExist:
                     messages.error(request, 'No se encontró al colaborador o al bloque')
-                return redirect('RegistrarBloqueColaborador')
+                return redirect(reverse('RegistrarBloqueColaborador', kwargs={'pk':pk}))
             
             colaboradores = MaeColaborador.objects.filter(estado='ACTIVO').order_by('pk')
             bloques = MaeBloque.objects.filter(estado='ACTIVO').order_by('pk')
@@ -109,7 +110,8 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                 'colaboradores': colaboradores, 
                 'bloques': bloques,
                 'selected_congreso': int(selected_congreso),
-                'congresos': congresos
+                'congresos': congresos,
+                'pk': pk
             })
         else:
             if not MaeColaborador.objects.filter(estado='ACTIVO').exists() or not MaeColaborador.objects.filter().exists():
@@ -128,5 +130,6 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                 'current_page': 'registrar_bloques_colaboradores', 
                 'bloques_por_colaborador':dict(bloques_por_colaborador), 
                 'selected_congreso': None,
-                'congresos':congresos
+                'congresos':congresos,
+                'pk': pk
             })

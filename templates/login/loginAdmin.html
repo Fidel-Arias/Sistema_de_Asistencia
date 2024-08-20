@@ -42,6 +42,10 @@
                         <input type="password" name="contrasenia" required />
                     </div>
                 </div>
+
+                {% if error %}
+                    <p style="color: red; margin: 0;" id="error">{{ error }}</p>
+                {% endif %}
                 
                 <button type="submit" class="buttonEntrar">Ingresar</button>
     
@@ -52,4 +56,13 @@
         </div>
     </div>
 </body>
+<script>
+    // Ocultar el mensaje después de 3 segundos
+    setTimeout(function() {
+            var message = document.getElementById('error');
+            if (message) {
+                message.style.display = 'none';
+            }
+        }, 3000);
+</script>
 </html>

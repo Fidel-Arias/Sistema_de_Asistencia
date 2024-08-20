@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
             video.srcObject = stream;
             video.play();
-            canvas.classList.remove('hidden');  // Mostrar el video
-            video.classList.add('hidden');  // Ocultar el canvas
+            canvas.classList.add('hidden');  // Mostrar el video
+            video.classList.remove('hidden');  // Ocultar el canvas
             scanQRCode();
         }
     });
@@ -57,7 +57,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 audio.play();
                 //Envio al metodo
                 if (bloqueSelect.value) {
-                    fetch('/colaborador/interfaz_colaborador/', {
+                    if (!navigator.onLine) {
+                        mensajeFondo.forEach((elemento) => {
+                            elemento.style.display = 'block';
+                        });
+
+                        document.getElementById('logo_message').classList.add('hidden');
+                        document.querySelector('.success-message__title').innerHTML = 'Sin conexión';
+                        document.querySelector('.success-message__title').style.color = 'red';
+                        document.querySelector('.success-message__content h4').innerHTML = '<b>Conéctate a una red</b>';
+
+                        setTimeout(() => {
+                            mensajeFondo.forEach((elemento) => {
+                                elemento.style.display = 'none';
+                            });
+                        }, 3000);
+                        
+                    }
+                    document.getElementById('logo_message').classList.remove('hidden');
+                    fetch('', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -78,19 +96,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('logo_message').setAttribute('src', warningImgUrl);
                             document.querySelector('.success-message__title').innerHTML = 'Asistencia no marcada';
                             document.querySelector('.success-message__title').style.color = 'red';
-                            // document.querySelector('.success-message__content').style.fontWeight = 'bold';
                             document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
                         } else if (data['status'] === 'error'){ 
                             document.getElementById('logo_message').setAttribute('src', warningImgUrl);
                             document.querySelector('.success-message__title').innerHTML = 'Error';
                             document.querySelector('.success-message__title').style.color ='red';
-                            // document.querySelector('.success-message__content').style.fontWeight = 'bold';
                             document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
                         } else {
                             document.getElementById('logo_message').setAttribute('src', successImgUrl);
                             document.querySelector('.success-message__title').innerHTML = 'Asistencia marcada';
                             document.querySelector('.success-message__title').style.color = 'green';
-                            // document.querySelector('.success-message__content').style.fontWeight = 'bold';
                             document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
                         }
 

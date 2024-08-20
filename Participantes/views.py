@@ -15,17 +15,14 @@ class LoginView(View):
 
     def post(self, request):
         codparticipante = request.POST.get('codigo')
-        print(codparticipante)
 
         if not codparticipante:
-            request.session['error'] = 'Debes ingresar un código'
+            request.session['error'] = 'Debes ingresar tu código'
             return redirect('Login')
 
         try:
             participante = MaeParticipantes.objects.get(pk=codparticipante)
-            print('si ingrese')
             request.session['codparticipante'] = participante.pk  # Se guarda el código de participante en la sesión
-            print('redirige')
             return redirect(reverse('Participante', kwargs={'pk':participante.pk}))  # Redirige a la página de Participante después del inicio de sesión exitoso
         except MaeParticipantes.DoesNotExist:
             request.session['error'] = 'Credenciales incorrectas'

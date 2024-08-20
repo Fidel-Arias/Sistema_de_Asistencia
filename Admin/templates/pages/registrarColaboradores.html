@@ -49,8 +49,8 @@
                             <td class="check-td" style="width: 190px;">
                                 <button type="button" class="fill-btn"
                                     data-id="{{colaborador.idcolaborador}}"
-                                    data-nombre="{{colaborador.nombre}}"
-                                    data-apellido="{{colaborador.apellido}}"
+                                    data-nombre="{{colaborador.nombres}}"
+                                    data-apellido="{{colaborador.apellidos}}"
                                     data-correo="{{colaborador.correo}}"
                                     data-password="{{colaborador.contrasenia}}"
                                     data-usuario="{{colaborador.idtipo.idtipo}}"
@@ -77,7 +77,7 @@
         <div class="content-fondo">
             <h2>Registrar Colaborador</h2>
             <main class="main-content">
-                <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' %}">
+                <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' pk %}">
                     {% csrf_token %}
 
                     <input type="hidden" name="id" id="usuarioid">

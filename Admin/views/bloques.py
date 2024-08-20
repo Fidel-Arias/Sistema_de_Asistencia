@@ -1,6 +1,7 @@
 from django.db import connection
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from ..decorators import administrador_login_required
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from Bloque.models import MaeBloque
@@ -12,8 +13,8 @@ from Ubicacion.models import MaeUbicacion
 from django.contrib import messages
 
 class Registrar_Bloques(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def registrar_bloques(self, request):
+    @method_decorator(administrador_login_required)
+    def registrar_bloques(self, request, pk):
         if request.method == 'POST':
             ponencia = request.POST.get('ponencia')
             dia = request.POST.get('dia')
@@ -53,7 +54,7 @@ class Registrar_Bloques(viewsets.ViewSet):
                         messages.error(request, 'Se produjo un error al crear el bloque')
                 else:
                     messages.error(request, "Ya existe una ponencia en los bloques")
-                return redirect('RegistrarBloques')
+                return redirect(reverse('RegistrarBloques', kwargs={'pk':pk}))
             elif action == 'delete':
                 try:
                     bloque = MaeBloque.objects.get(idponencia=ponencia, iddia=dia, horainicio=horaInicio, horafin=horaFin, idubicacion=ubicacion)
@@ -67,7 +68,7 @@ class Registrar_Bloques(viewsets.ViewSet):
                     messages.error(request, 'El bloque no existe')
                 except Exception:
                     messages.error(request, 'Se produjo un error al desactivar el bloque')
-                return redirect('RegistrarBloques')
+                return redirect(reverse('RegistrarBloques', kwargs={'pk':pk}))
             elif action == 'activate':
                 try:
                     bloque = MaeBloque.objects.get(idponencia=ponencia, iddia=dia, horainicio=horaInicio, horafin=horaFin, idubicacion=ubicacion)
@@ -78,7 +79,7 @@ class Registrar_Bloques(viewsets.ViewSet):
                     messages.error(request, 'El bloque no existe')
                 except Exception:
                     messages.error(request, 'Se produjo un error al activar el bloque')
-                return redirect('RegistrarBloques')
+                return redirect(reverse('RegistrarBloques', kwargs={'pk':pk}))
             elif action == 'edit':
                 idbloque = request.POST.get('id');
                 try:
@@ -100,7 +101,7 @@ class Registrar_Bloques(viewsets.ViewSet):
                     messages.error(request, 'El bloque no existe')
                 except Exception:
                     messages.error(request, 'Se produjo un error al actualizar el bloque')
-                return redirect('RegistrarBloques')
+                return redirect(reverse('RegistrarBloques', kwargs={'pk':pk}))
             
             if not MaePonencia.objects.filter(idcongreso=idcongreso).exists() or not MaePonencia.objects.filter(estado='ACTIVO').exists():
                 messages.warning(request,'No hay ponencias registradas o activas, por favor registre al menos una')
@@ -120,7 +121,8 @@ class Registrar_Bloques(viewsets.ViewSet):
                 'ubicaciones':ubicaciones, 
                 'bloques':bloques, 
                 'selected_congreso':int(selected_congreso), 
-                'congresos':congresos
+                'congresos':congresos,
+                'pk': pk
             })
         else:
             bloques = MaeBloque.objects.filter().order_by('pk')
@@ -131,7 +133,9 @@ class Registrar_Bloques(viewsets.ViewSet):
                 'current_page': 'registrar_bloques', 
                 'bloques':bloques, 
                 'selected_congreso':None, 
-                'congresos':congresos})
+                'congresos':congresos,
+                'pk': pk
+            })
     
 
 def verificar_ubicacion(id, fecha, hora_inicio, hora_fin, ubicacion):

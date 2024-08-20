@@ -59,7 +59,7 @@
             </div>
 
             <h2>Registrar Ubicaciones</h2>
-            <form class="register-form" method="POST" action="{% url 'RegistrarUbicaciones' %}">
+            <form class="register-form" method="POST" action="{% url 'RegistrarUbicaciones' pk %}">
                 {% csrf_token %}
                 <input type="hidden" name="id" id="ubicacionid">
                 <label for="nombre">Nombre</label>

@@ -71,7 +71,7 @@
         <div class="content-fondo">
             <h2>Seleecionar Bloques para el Colaborador</h2>
             <main class="main-content">
-                <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' %}">
+                <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' pk %}">
                     {% csrf_token %}
 
                     <label for="congreso">Congreso</label>

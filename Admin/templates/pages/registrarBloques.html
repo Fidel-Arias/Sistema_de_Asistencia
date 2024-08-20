@@ -76,7 +76,7 @@
         <div class="content-fondo">
             <h2>Registrar Bloques</h2>
             <main class="main-content">
-                <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarBloques' %}">
+                <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarBloques' pk %}">
                     {% csrf_token %}
                     
                     <label for="congreso">Congreso</label>

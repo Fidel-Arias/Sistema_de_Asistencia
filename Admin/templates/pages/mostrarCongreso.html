@@ -68,7 +68,7 @@
             </div>
     
             <h2>Registrar Congreso</h2>
-            <form class="register-form" method="POST" action="{% url 'RegistrarCongreso' %}">
+            <form class="register-form" method="POST" action="{% url 'RegistrarCongreso' pk %}">
                 {% csrf_token %}
                 <input type="hidden" name="id" id="congresoid">
                 <label for="nombre">Nombre del Congreso</label>

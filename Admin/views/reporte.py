@@ -1,23 +1,18 @@
 from django.http import HttpResponse
-from io import BytesIO
 from django.shortcuts import render
 from rest_framework import viewsets
-from django.contrib.auth.decorators import login_required
+from ..decorators import administrador_login_required
 from django.utils.decorators import method_decorator
 from Asistencia.models import TrsAsistencia
 from Admin.models import MaeAdministrador
 import pandas as pd
 
 class ReporteAsistencia(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def generar_reporte(self, request):
+    @method_decorator(administrador_login_required)
+    def generar_reporte(self, request, pk):
         if request.method == 'POST':
             nombre_archivo = request.POST.get('input-name')
-            correo = request.session.get('correo_admin')
-            contrasenia = request.session.get('contrasenia_admin')
-            print('correo:', correo + ' contrasenia:', contrasenia)
-            print('archivo: ' + nombre_archivo)
-            administrador = MaeAdministrador.objects.get(correo=correo, contrasenia=contrasenia)
+            administrador = MaeAdministrador.objects.get(pk=pk)
             listaAsistencia = TrsAsistencia.objects.filter(idcongreso=administrador.idcongreso).order_by('pk')
             data = []
             for asistencia in listaAsistencia:
@@ -45,10 +40,11 @@ class ReporteAsistencia(viewsets.ViewSet):
 
             return response
         else:
-            correo = request.session.get('correo_admin')
-            contrasenia = request.session.get('contrasenia_admin')
-            print('correo:', correo, ' contrasenia:', contrasenia)
+            admin = MaeAdministrador.objects.get(pk=pk)
+            is_there_Data = True if TrsAsistencia.objects.filter().exists() else False
             return render(request, 'pages/generarReporte.html', {
-            'current_page':'generar_reportes'
+                'current_page':'generar_reportes',
+                'pk':admin.pk,
+                'is_there_Data': is_there_Data
             })
     

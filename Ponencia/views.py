@@ -6,7 +6,7 @@ from Bloque.models import MaeBloque
 from Participantes.models import MaeParticipantes
 
 # Create your views here.
-class viewPonencias(viewsets.ModelViewSet):
+class viewPonencias(viewsets.ViewSet):
     @method_decorator(participante_login_required)
     def verPonencias(self, request, pk):
         codparticipante = request.session.get('codparticipante')

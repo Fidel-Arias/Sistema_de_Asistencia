@@ -1,6 +1,7 @@
 from django.db import models
 from tipoUsuario.models import MaeTipoUsuario
 from Congreso.models import MaeCongreso
+import uuid
 
 
 class MaeAdministrador(models.Model):
@@ -19,3 +20,15 @@ class MaeAdministrador(models.Model):
 
     def __str__(self):
         return f'{self.nombres} {self.apellidos}'
+    
+
+class AdminToken(models.Model):
+    key = models.CharField(max_length=40, primary_key=True, null=False, default=uuid.uuid4)
+    admin = models.ForeignKey(MaeAdministrador, null=False, on_delete=models.CASCADE, related_name='auth_token')
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('admin','key')
+
+    def __str__(self):
+        return self.key

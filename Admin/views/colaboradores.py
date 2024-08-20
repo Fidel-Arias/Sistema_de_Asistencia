@@ -1,18 +1,17 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from Congreso.models import MaeCongreso
 from Colaborador.models import MaeColaborador
 from Colaborador.forms import ColaboradorForm
 from tipoUsuario.models import MaeTipoUsuario
-from Admin.models import MaeAdministrador
-from Admin.forms import AdministradorForm
+from ..decorators import administrador_login_required
 from django.contrib import messages
 
 class Registrar_Colaboradores(viewsets.ViewSet):
-    @method_decorator(login_required)
-    def registrar_colaboradores(self, request):
+    @method_decorator(administrador_login_required)
+    def registrar_colaboradores(self, request, pk):
         if request.method == 'POST':
             idTipoUsuario = request.POST.get('tipoUsuario')
             nombres = request.POST.get('nombre')
@@ -82,7 +81,7 @@ class Registrar_Colaboradores(viewsets.ViewSet):
                 except Exception as e:
                     messages.error(request, e)
 
-            return redirect('RegistrarColaboradores')
+            return redirect(reverse('RegistrarColaboradores', kwargs={'pk':pk}))
         else:
             colaboradores = MaeColaborador.objects.all().order_by('pk')
             if not MaeCongreso.objects.filter(estado='ACTIVO').exists() or not MaeCongreso.objects.filter().exists():
@@ -92,4 +91,5 @@ class Registrar_Colaboradores(viewsets.ViewSet):
                 'current_page':'registrar_colaboradores', 
                 'colaboradores':colaboradores, 
                 'tiposUsuario':tiposUsuario, 
+                'pk': pk
             })
