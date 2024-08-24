@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
-    'e006-2800-200-f430-30e-e4e1-d3dd-fba0-e36f.ngrok-free.app',
+    'bc8a-181-177-241-28.ngrok-free.app',
 ]
 
 
@@ -131,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 
@@ -157,13 +157,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTHENTICATION_BACKENDS = [
-    'Participantes.backends.CodParticipanteAuthBackend',
-    'Colaborador.backends.ColaboradorAuthBackend',
-    'Admin.backends.AdminAuthBackend',
-    'django.contrib.auth.backends.ModelBackend',  # Opcional: Mantener el backend predeterminado
-]
-
 LOGIN_URL = '/accounts/login/'  # Ruta de inicio de sesión personalizada
 LOGIN_REDIRECT_URL = '/participante/'  # Redirige aquí después de iniciar sesión
 
@@ -174,7 +167,7 @@ SESSION_COOKIE_AGE = 604800  # 2 semanas por defecto
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://e006-2800-200-f430-30e-e4e1-d3dd-fba0-e36f.ngrok-free.app'
+    'https://bc8a-181-177-241-28.ngrok-free.app'
 ]
 
 #SERVIDOR DE CORREO
