@@ -42,15 +42,15 @@
                     <tbody>
                         {% for ponencia in ponencias %}
                         <tr>
-                            <td>{{ponencia.nombre}}</td>
-                            <td>{{ponencia.idponente}}</td>
-                            <td>{{ponencia.estado}}</td>
+                            <td>{{ponencia.idponencia.nombre}}</td>
+                            <td>{{ponencia.idponencia.idponente}}</td>
+                            <td>{{ponencia.idponencia.estado}}</td>
                             <td class="check-td">
                                 <button type="button" class="fill-btn"
-                                    data-id="{{ponencia.idponencia}}"
-                                    data-nombre="{{ponencia.nombre}}"
-                                    data-ponente="{{ponencia.idponente.idponente}}"
-                                    data-estado="{{ponencia.estado}}">
+                                    data-id="{{ponencia.idponencia.idponencia}}"
+                                    data-nombre="{{ponencia.idponencia.nombre}}"
+                                    data-ponente="{{ponencia.idponencia.idponente.idponente}}"
+                                    data-estado="{{ponencia.idponencia.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
                             </td>
@@ -64,21 +64,17 @@
             <h2>Registrar Ponencia</h2>
             <form class="register-form" method="POST" action="{% url 'RegistrarPonencia' pk %}">
                 {% csrf_token %}
-                <label for="congreso">Congreso</label>
-                <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">
-                    <option value="" {% if not selected_congreso %}selected{% endif %} disabled>Seleccione el congreso</option>
-                    {% for congreso in congresos %}
-                        <option value="{{congreso.idcongreso}}" {% if selected_congreso == congreso.idcongreso %}selected{% endif %}>{{congreso.nombre}}</option>
-                    {% endfor %}
-                </select>
 
-                {% if selected_congreso %}
                 <input type="hidden" name="id" id="ponenciaid">
                 <label for="ponente">Ponente</label>
                 <select id="ponente" name="ponente" required>
                     <option value="" disabled selected>Seleccionar un ponente</option>
-                    {% for ponente in ponentes %}
-                        <option value="{{ponente.idponente}}">{{ponente.nombres}} {{ponente.apellidos}}</option>
+                    {% for admin in admin_ponentes %}
+                        {% for ponente in admin.administradorponentes_set.all %}
+                            {% if ponente.idponente in ponentes_activos %}
+                            <option value="{{ponente.idponente.idponente}}">{{ponente.idponente.nombres}} {{ponente.idponente.apellidos}}</option>
+                            {% endif %}
+                        {% endfor %}
                     {% endfor %}
                     <!-- Más opciones según los ponentes registrados -->
                 </select>
@@ -90,7 +86,6 @@
                     <button type="submit" class="delete-button" id="delete-button" name="action" value="delete">Desactivar</button>
                     <button type="submit" class="edit-button" id="edit-button" name="action" value="edit">Actualizar</button>
                 </div>
-                {% endif %}
             </form>
 
         </main>

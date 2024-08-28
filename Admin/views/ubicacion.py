@@ -11,7 +11,6 @@ from django.db import transaction
 class Registrar_Ubicacion(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def registrar_ubicacion(self, request, pk):
-        print('clave: ', pk)
         if request.method == 'POST':
             nombreUbicacion = request.POST.get('nombre_ubicacion')
             action = request.POST.get('action')

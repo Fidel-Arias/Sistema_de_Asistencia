@@ -1,17 +1,29 @@
 from django.shortcuts import render, redirect
+from django.db import transaction
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
+from django.template.loader import render_to_string
+from adminMaestros.models import AdministradorCongreso
+from adminMaestros.models import AdministradorColaborador
+from Admin.models import MaeAdministrador
 from Congreso.models import MaeCongreso
 from Colaborador.models import MaeColaborador
 from Colaborador.forms import ColaboradorForm
 from tipoUsuario.models import MaeTipoUsuario
 from ..decorators import administrador_login_required
+from email_service.views import email_service
 from django.contrib import messages
 
 class Registrar_Colaboradores(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def registrar_colaboradores(self, request, pk):
+        admin = MaeAdministrador.objects.get(pk=pk)
+        admin_data = {
+                'correo': admin.correo,
+                'contrasenia': admin.contrasenia
+        }
+        
         if request.method == 'POST':
             idTipoUsuario = request.POST.get('tipoUsuario')
             nombres = request.POST.get('nombre')
@@ -19,18 +31,52 @@ class Registrar_Colaboradores(viewsets.ViewSet):
             correo = request.POST.get('correo')
             contrasenia = request.POST.get('contrasenia')
             action = request.POST.get('action')
+            congreso = AdministradorCongreso.objects.get(idadministrador=pk)
+
+            colaborador_data = {
+                    'nombres_admin': admin.nombres,
+                    'nombres': nombres,
+                    'apellidos': apellidos,
+                    'correo': correo,
+                    'contrasenia': contrasenia,
+                    'idTipoUsuario': idTipoUsuario,
+                    'nombreCongreso': congreso.idcongreso.nombre
+                }
+            
 
             if action == 'register':
                 try:
                     if (not(MaeColaborador.objects.filter(nombres=nombres, apellidos=apellidos).exists())):
-                        nuevo_colaborador = MaeColaborador(
-                            nombres=nombres,
-                            apellidos=apellidos,
-                            correo=correo,
-                            contrasenia=contrasenia,
-                            idtipo=MaeTipoUsuario.objects.get(pk=idTipoUsuario),
-                        )
-                        nuevo_colaborador.save()
+                        with transaction.atomic():
+                            nuevo_colaborador = MaeColaborador(
+                                nombres=nombres,
+                                apellidos=apellidos,
+                                correo=correo,
+                                contrasenia=contrasenia,
+                                idtipo=MaeTipoUsuario.objects.get(pk=idTipoUsuario),
+                            )
+                            nuevo_colaborador.save()
+
+                            #Asociando el colaborador a la tabla administrador
+                            admin_colaborador = AdministradorColaborador(
+                                idadministrador=admin,
+                                idcolaborador=nuevo_colaborador,
+                            )
+                            admin_colaborador.save()
+
+                        #ENVIAR DATOS AL SERVICIO EMAIL
+                        template_or_message = crear_template_or_message(request, colaborador_data)
+                        subject = f'Selección para colaborador en el congreso {colaborador_data['nombreCongreso']}'
+                        
+                        if template_or_message:
+                            status_email = email_service(request, admin_data, template_or_message[0], template_or_message[1], subject, colaborador_data['correo'])
+
+                            if status_email == 'failed':
+                                messages.error(request, 'No se pudo enviar el correo al destino')
+                                return redirect(reverse('RegistrarColaboradores', kwargs={'pk':pk}))
+                        else:
+                            messages.error(request, 'No se pudo construir el template')
+
                         messages.success(request, 'Colaborador registrado con éxito')
                     else:
                         messages.error(request, 'El colaborador registrado ya existe')
@@ -83,9 +129,7 @@ class Registrar_Colaboradores(viewsets.ViewSet):
 
             return redirect(reverse('RegistrarColaboradores', kwargs={'pk':pk}))
         else:
-            colaboradores = MaeColaborador.objects.all().order_by('pk')
-            if not MaeCongreso.objects.filter(estado='ACTIVO').exists() or not MaeCongreso.objects.filter().exists():
-                messages.warning(request, 'No hay congresos registrados o activos, registre al menos uno')
+            colaboradores = AdministradorColaborador.objects.filter(idadministrador=pk)
             tiposUsuario = MaeTipoUsuario.objects.filter(dstipo='COLABORADOR')
             return render(request, 'pages/registrarColaboradores.html', {
                 'current_page':'registrar_colaboradores', 
@@ -93,3 +137,20 @@ class Registrar_Colaboradores(viewsets.ViewSet):
                 'tiposUsuario':tiposUsuario, 
                 'pk': pk
             })
+        
+def crear_template_or_message(request, data_user):
+    try:
+        template = render_to_string('messages/mail_colaborador.html', {
+            'nombres_admin': data_user['nombres_admin'],
+            'nombre': f"{data_user['nombres']} {data_user['apellidos']}",
+            'nombre_congreso': data_user['nombreCongreso'],
+            'correo': data_user['correo'],
+            'contrasenia': data_user['contrasenia'],
+        })
+
+        plain_message = f'Nuevo Colaborador: {data_user['nombres']} {data_user['apellidos']}\nCongreso: {data_user['nombreCongreso']}\nTu Correo: {data_user['correo']}\nTu contraseña: {data_user['contrasenia']}\n'
+
+        return template, plain_message
+    except Exception as e:
+        print('Error creando template: ', e)
+        return None

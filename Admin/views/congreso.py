@@ -5,6 +5,7 @@ from ..decorators import administrador_login_required
 from django.utils.decorators import method_decorator
 from Congreso.models import MaeCongreso
 from Congreso.forms import CongresoJinisForm
+from adminMaestros.models import AdministradorCongreso
 from Dia.models import MaeDia
 from django.contrib import messages
 from datetime import date
@@ -73,10 +74,11 @@ class Registrar_Congreso(viewsets.ViewSet):
                     messages.error(request, 'El congreso ya no existe')
             return redirect(reverse('RegistrarCongreso', kwargs={'pk':pk}))
         else:
-            congresos = MaeCongreso.objects.all().order_by('pk')
+            administrador_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
+            congreso = MaeCongreso.objects.filter(pk=administrador_congreso.idcongreso.pk) 
             return render(request, 'pages/mostrarCongreso.html', {
-                'current_page': 'registrar_congreso', 
-                'congresos':congresos,
+                'current_page': 'registrar_congreso',
+                'congresos':congreso,
                 'pk':pk
             })
 

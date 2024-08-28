@@ -41,20 +41,20 @@
                         <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
                         {% for colaborador in colaboradores %}
                         <tr>
-                            <td style="width: 180px;">{{colaborador.nombres}}</td>
-                            <td style="width: 180px;">{{colaborador.apellidos}}</td>
-                            <td style="width: 195px;">{{colaborador.correo}}</td>
-                            <td style="width: 90px;">{{colaborador.idtipo}}</td>
-                            <td style="width: 100px;">{{colaborador.estado}}</td>
+                            <td style="width: 180px;">{{colaborador.idcolaborador.nombres}}</td>
+                            <td style="width: 180px;">{{colaborador.idcolaborador.apellidos}}</td>
+                            <td style="width: 195px;">{{colaborador.idcolaborador.correo}}</td>
+                            <td style="width: 90px;">{{colaborador.idcolaborador.idtipo}}</td>
+                            <td style="width: 100px;">{{colaborador.idcolaborador.estado}}</td>
                             <td class="check-td" style="width: 190px;">
                                 <button type="button" class="fill-btn"
-                                    data-id="{{colaborador.idcolaborador}}"
-                                    data-nombre="{{colaborador.nombres}}"
-                                    data-apellido="{{colaborador.apellidos}}"
-                                    data-correo="{{colaborador.correo}}"
-                                    data-password="{{colaborador.contrasenia}}"
-                                    data-usuario="{{colaborador.idtipo.idtipo}}"
-                                    data-estado="{{colaborador.estado}}">
+                                    data-id="{{colaborador.idcolaborador.idcolaborador}}"
+                                    data-nombre="{{colaborador.idcolaborador.nombres}}"
+                                    data-apellido="{{colaborador.idcolaborador.apellidos}}"
+                                    data-correo="{{colaborador.idcolaborador.correo}}"
+                                    data-password="{{colaborador.idcolaborador.contrasenia}}"
+                                    data-usuario="{{colaborador.idcolaborador.idtipo.idtipo}}"
+                                    data-estado="{{colaborador.idcolaborador.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
                             </td>
@@ -83,7 +83,7 @@
                     <input type="hidden" name="id" id="usuarioid">
                     <div class="flex-nombre-apellido">
                         <div class="form-group form-nombres">
-                            <label for="nombre" class="label__nombre">Nombre</label>
+                            <label for="nombre" class="label__nombre">Nombres</label>
                             <input type="text" class="input__nombre" name="nombre" id="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
                         </div>
 

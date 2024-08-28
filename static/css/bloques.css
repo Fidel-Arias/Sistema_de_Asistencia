@@ -131,8 +131,7 @@ h2{
 }
 
 /* Estilo de los campos de entrada del formulario */
-.register-form input,
-.register-form select {
+.register-form input {
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ddd;

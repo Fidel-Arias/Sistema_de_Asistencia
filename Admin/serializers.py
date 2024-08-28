@@ -4,7 +4,7 @@ from .models import MaeAdministrador, AdminToken
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = MaeAdministrador
-        fields = ('nombres', 'apellidos', 'correo', 'contrasenia', 'idtipo', 'idcongreso')
+        fields = ('nombres', 'apellidos', 'correo', 'contrasenia', 'idtipo')
 
     def create(self, validated_data):
         return MaeAdministrador.objects.create(**validated_data)

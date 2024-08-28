@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
-    'bc8a-181-177-241-28.ngrok-free.app',
+    '2ed6-2800-200-f430-30e-e173-db67-ebca-21a6.ngrok-free.app',
 ]
 
 
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'static',
     'Admin',
+    'adminMaestros',
     'Colaborador',
     'Asistencia',
     'Bloque',
@@ -167,7 +168,7 @@ SESSION_COOKIE_AGE = 604800  # 2 semanas por defecto
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://bc8a-181-177-241-28.ngrok-free.app'
+    'https://2ed6-2800-200-f430-30e-e173-db67-ebca-21a6.ngrok-free.app'
 ]
 
 #SERVIDOR DE CORREO

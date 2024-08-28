@@ -40,21 +40,21 @@
                         <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
                         {% for bloque in bloques %}
                         <tr>
-                            <td>{{bloque.idponencia}}</td>
-                            <td>{{bloque.iddia.fecha|date:"d/m/Y"}}</td>
-                            <td>{{bloque.horainicio|time:"H:i A"}}</td>
-                            <td>{{bloque.horafin|time:"H:i A"}}</td>
-                            <td>{{bloque.idubicacion}}</td>
-                            <td>{{bloque.estado}}</td>
+                            <td>{{bloque.idbloque.idponencia}}</td>
+                            <td>{{bloque.idbloque.iddia.fecha|date:"d/m/Y"}}</td>
+                            <td>{{bloque.idbloque.horainicio|time:"H:i A"}}</td>
+                            <td>{{bloque.idbloque.horafin|time:"H:i A"}}</td>
+                            <td>{{bloque.idbloque.idubicacion}}</td>
+                            <td>{{bloque.idbloque.estado}}</td>
                             <td class="check-td">
                                 <button type="button" class="fill-btn"
-                                    data-id="{{bloque.idbloque}}"
-                                    data-ponencia="{{bloque.idponencia.idponencia}}"
-                                    data-dia="{{bloque.iddia.iddia}}"
-                                    data-horainicio="{{bloque.horainicio|time:'H:i'}}"
-                                    data-horafin="{{bloque.horafin|time:'H:i'}}"
-                                    data-ubicacion="{{bloque.idubicacion.idubicacion}}"
-                                    data-estado="{{bloque.estado}}">
+                                    data-id="{{bloque.idbloque.idbloque}}"
+                                    data-ponencia="{{bloque.idbloque.idponencia.idponencia}}"
+                                    data-dia="{{bloque.idbloque.iddia.iddia}}"
+                                    data-horainicio="{{bloque.idbloque.horainicio|time:'H:i'}}"
+                                    data-horafin="{{bloque.idbloque.horafin|time:'H:i'}}"
+                                    data-ubicacion="{{bloque.idbloque.idubicacion.idubicacion}}"
+                                    data-estado="{{bloque.idbloque.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
                             </td>
@@ -78,22 +78,17 @@
             <main class="main-content">
                 <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarBloques' pk %}">
                     {% csrf_token %}
-                    
-                    <label for="congreso">Congreso</label>
-                    <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">
-                        <option value="" {% if not selected_congreso %}selected{% endif %} disabled>Seleccione el congreso</option>
-                        {% for congreso in congresos %}
-                            <option value="{{congreso.idcongreso}}" {% if selected_congreso == congreso.idcongreso %}selected{% endif %}>{{congreso.nombre}}</option>
-                        {% endfor %}
-                    </select>
 
-                    {% if selected_congreso %}
                     <input type="hidden" name="id" id="bloqueid">
                     <label for="ponencia">Ponencia</label>
                     <select id="ponencia" name="ponencia" required style="margin-bottom: 0.2em;">
                         <option value="" selected disabled>Seleccionar una ponencia</option>
-                        {% for ponencia in ponencias %}
-                            <option value="{{ponencia.idponencia}}">{{ponencia.nombre}}</option>
+                        {% for admin in admin_ponencias %}
+                            {% for ponencia in admin.administradorponencias_set.all %}
+                                {% if ponencia.idponencia in ponencias_activas %}
+                                <option value="{{ponencia.idponencia.idponencia}}">{{ponencia.idponencia.nombre}}</option>
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
                     </select>
     
@@ -130,7 +125,6 @@
                         <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
                         <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
                     </div>
-                    {% endif %}
                 </form>
             </main>
         </div>

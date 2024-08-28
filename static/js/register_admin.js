@@ -43,27 +43,33 @@ document.addEventListener('DOMContentLoaded', () => {
     formularioCongreso.addEventListener('submit', function (event) {
         event.preventDefault();
         if (nombreCongreso.value && asistencia.value && fechaInicioCongreso.value && fechaFinCongreso.value) {
-            // Crear el objeto datosFormulario con los datos del formulario
-            const datosFormulario = {
-                nombres: nombresAdmin.value,
-                apellidos: apellidosAdmin.value,
-                correo: correoAdmin.value,
-                contrasenia: contrasenaAdmin.value,
-                nombreCongreso: nombreCongreso.value,
-                asistencia: asistencia.value,
-                fechaInicioCongreso: fechaInicioCongreso.value,
-                fechaFinCongreso: fechaFinCongreso.value
-            };
+            if (fechaFinCongreso.value < fechaInicioCongreso.value){
+                mostrarAlerta(messageAlertCongreso, 'Ingrese las fechas correctamente');
+                return;
+            } else {
+                // Crear el objeto datosFormulario con los datos del formulario
+                const datosFormulario = {
+                    nombres: nombresAdmin.value,
+                    apellidos: apellidosAdmin.value,
+                    correo: correoAdmin.value,
+                    contrasenia: contrasenaAdmin.value,
+                    nombreCongreso: nombreCongreso.value,
+                    asistencia: asistencia.value,
+                    fechaInicioCongreso: fechaInicioCongreso.value,
+                    fechaFinCongreso: fechaFinCongreso.value
+                };
 
-            containerRegisterCongreso.classList.remove('hide-derecha');
-            containerRegister.classList.add('hide-izquierda');
+                containerRegisterCongreso.classList.remove('hide-derecha');
+                containerRegister.classList.add('hide-izquierda');
 
-            // Deshabilitar el botón de registro para evitar múltiples envíos
-            event.target.querySelector('button[type="submit"]').disabled = true;
-            event.target.querySelector('button[type="submit"]').style.cursor = 'not-allowed';
+                // Deshabilitar el botón de registro para evitar múltiples envíos
+                event.target.querySelector('button[type="submit"]').disabled = true;
+                event.target.querySelector('button[type="submit"]').style.cursor = 'not-allowed';
 
-            // Enviar los datos del formulario
-            enviarDatosFormulario(messageSuccessOrFailed, csrftoken, datosFormulario, formularioAdmin, formularioCongreso);
+                // Enviar los datos del formulario
+                enviarDatosFormulario(messageSuccessOrFailed, csrftoken, datosFormulario, formularioAdmin, formularioCongreso);
+            }
+            
         } else {
             mostrarAlerta(messageAlertCongreso, 'Ingrese todos los campos');
         }

@@ -42,15 +42,15 @@
                     <tbody>
                         {% for ponente in ponentes %}
                         <tr>
-                            <td>{{ponente.nombres}}</td>
-                            <td>{{ponente.apellidos}}</td>
-                            <td>{{ponente.estado}}</td>
+                            <td>{{ponente.idponente.nombres}}</td>
+                            <td>{{ponente.idponente.apellidos}}</td>
+                            <td>{{ponente.idponente.estado}}</td>
                             <td class="check-td">
                                 <button type="button" class="fill-btn"
-                                    data-id="{{ponente.idponente}}"
-                                    data-nombre="{{ponente.nombres}}"
-                                    data-apellido="{{ponente.apellidos}}"
-                                    data-estado="{{ponente.estado}}">
+                                    data-id="{{ponente.idponente.idponente}}"
+                                    data-nombre="{{ponente.idponente.nombres}}"
+                                    data-apellido="{{ponente.idponente.apellidos}}"
+                                    data-estado="{{ponente.idponente.estado}}">
                                     <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
                                 </button>
                             </td>

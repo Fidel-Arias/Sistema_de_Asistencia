@@ -1,13 +1,18 @@
 from django.shortcuts import render, redirect
+from django.db.models import Prefetch
 from django.urls import reverse
 from ..decorators import administrador_login_required
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
+from adminMaestros.models import AdministradorCongreso, AdministradorPonencias, AdministradorPonentes
+from Admin.models import MaeAdministrador
+from Ponente.models import MaePonente
 from Ponencia.models import MaePonencia
 from Ponencia.forms import PonenciaForm
 from Ponente.models import MaePonente
 from Congreso.models import MaeCongreso
 from django.contrib import messages
+from django.db import transaction
 
 class Registrar_Ponencias(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
@@ -16,26 +21,28 @@ class Registrar_Ponencias(viewsets.ViewSet):
             action = request.POST.get('action')
             ponente = request.POST.get('ponente')
             nombrePonencia = request.POST.get('nombre_ponencia')
-            idcongreso = request.POST.get('congreso')
-
-            if idcongreso:
-                selected_congreso = idcongreso
-            else:
-                selected_congreso = None
+            admin = AdministradorCongreso.objects.get(idadministrador = pk)
 
             if action == 'register':
                 try:
                     if (not(MaePonencia.objects.filter(nombre=nombrePonencia).exists())):
-                        nueva_ponencia = MaePonencia(
-                            nombre=nombrePonencia,
-                            idponente=MaePonente.objects.get(pk=ponente),
-                            idcongreso=MaeCongreso.objects.get(pk=idcongreso)
-                        )
-                        nueva_ponencia.save()
+                        with transaction.atomic():
+                            nueva_ponencia = MaePonencia(
+                                nombre=nombrePonencia,
+                                idponente=MaePonente.objects.get(pk=ponente),
+                                idcongreso=MaeCongreso.objects.get(pk=admin.idcongreso.pk)
+                            )
+                            nueva_ponencia.save()
+                            admin_ponencia = AdministradorPonencias(
+                                idadministrador=admin.idadministrador,
+                                idponencia=nueva_ponencia
+                            )
+                            admin_ponencia.save()
                         messages.success(request, 'Ponencia registrada con éxito')
                     else:
                         messages.error(request, 'Ya existe la ponencia')
-                except Exception:
+                except Exception as e:
+                    print('Error: ', e)
                     messages.error(request, 'Error al registrar la ponencia')
                 return redirect(reverse('RegistrarPonencia', kwargs={'pk':pk}))
             elif action == 'delete':
@@ -75,7 +82,7 @@ class Registrar_Ponencias(viewsets.ViewSet):
                     contexto = {
                         'idponente': ponente,
                         'nombre': nombrePonencia,
-                        'idcongreso': MaeCongreso.objects.get(pk=idcongreso)
+                        'idcongreso': MaeCongreso.objects.get(pk=admin.idcongreso.pk)
                     }
                     ponencia_actualizada = PonenciaForm(contexto, instance=ponencia)
                     if ponencia_actualizada.is_valid():
@@ -87,28 +94,30 @@ class Registrar_Ponencias(viewsets.ViewSet):
                     messages.error(request, 'No se encontró la ponencia')
                 except Exception:
                     messages.error(request, 'Error al actualizar la ponencia')
-                return redirect(reverse('RegistrarPonencia', kwargs={'pk':pk}))
             
-            ponentes = MaePonente.objects.filter(estado='ACTIVO').order_by('pk')
-            congresos = MaeCongreso.objects.filter(estado="ACTIVO")
-            ponencias = MaePonencia.objects.filter(idcongreso=idcongreso).order_by('pk')
-            return render(request, 'pages/registrarPonencia.html', {
-                'current_page': 'registrar_ponencia', 
-                'ponentes': ponentes, 
-                'congresos':congresos,
-                'ponencias': ponencias,
-                'selected_congreso': int(selected_congreso),
-                'pk': pk
-            })
+            return redirect(reverse('RegistrarPonencia', kwargs={'pk':pk}))
         else:
-            if not MaePonente.objects.filter(estado="ACTIVO").exists() or not MaePonente.objects.filter().exists():
-                messages.warning(request, 'No hay ponentes registrados o activos, registre al menos uno')
-            ponencias = MaePonencia.objects.all().order_by('pk')
-            congresos = MaeCongreso.objects.filter(estado="ACTIVO")
-            return render(request, 'pages/registrarPonencia.html', {
-                'current_page': 'registrar_ponencia', 
-                'ponencias': ponencias, 
-                'congresos':congresos, 
-                'selected_congreso': None,
-                'pk':pk
-            })
+            try:
+                ponentes_activos = MaePonente.objects.filter(estado="ACTIVO")
+                admin_ponentes = MaeAdministrador.objects.prefetch_related(
+                    Prefetch('administradorponentes_set', queryset=AdministradorPonentes.objects.filter(
+                        idponente__in=ponentes_activos
+                    ))
+                ).filter(pk=pk)
+                ponencias = AdministradorPonencias.objects.filter(idadministrador = pk).order_by('pk')
+                return render(request, 'pages/registrarPonencia.html', {
+                    'current_page': 'registrar_ponencia', 
+                    'ponentes_activos': ponentes_activos,
+                    'ponencias': ponencias, 
+                    'admin_ponentes': admin_ponentes, 
+                    'pk':pk
+                })
+            except Exception as e:
+                print('Error: ', e)
+                ponencias = AdministradorPonencias.objects.filter(idadministrador = pk).order_by('pk')
+                messages.error(request, 'Error al cargar los ponentes')
+                return render(request, 'pages/registrarPonencia.html', {
+                    'current_page': 'registrar_ponencia', 
+                    'ponencias': ponencias, 
+                    'pk':pk
+                })

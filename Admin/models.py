@@ -11,7 +11,6 @@ class MaeAdministrador(models.Model):
     correo = models.CharField(max_length=50, null=False)
     contrasenia = models.CharField(null=False)
     idtipo = models.ForeignKey(MaeTipoUsuario, db_column='idtipo', on_delete=models.CASCADE, null=False)
-    idcongreso = models.ForeignKey(MaeCongreso, db_column='idcongreso', null=False, on_delete=models.CASCADE)
     estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
