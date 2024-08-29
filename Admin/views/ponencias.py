@@ -104,6 +104,7 @@ class Registrar_Ponencias(viewsets.ViewSet):
                         idponente__in=ponentes_activos
                     ))
                 ).filter(pk=pk)
+
                 ponencias = AdministradorPonencias.objects.filter(idadministrador = pk).order_by('pk')
                 return render(request, 'pages/registrarPonencia.html', {
                     'current_page': 'registrar_ponencia', 

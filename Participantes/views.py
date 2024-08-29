@@ -32,28 +32,33 @@ class LoginView(View):
 class viewParticipantes(viewsets.ViewSet):
     @method_decorator(participante_login_required) #Manejar errores y aviso de mensajes
     def interfaz_user(self, request, pk):
-        codparticipante = request.session.get('codparticipante')
-        if codparticipante != str(pk):
-            request.session['error'] = 'Acceso inválido'
-            return redirect('Login')  # Redirigir si no está autenticado o si intenta acceder a otro usuario
+        try:
+            codparticipante = request.session.get('codparticipante')
+            if codparticipante != str(pk):
+                request.session['error'] = 'Acceso inválido'
+                return redirect('Login')  # Redirigir si no está autenticado o si intenta acceder a otro usuario
 
-        participante = MaeParticipantes.objects.get(pk=pk)
-        participante_congreso = ParticipanteCongreso.objects.get(codparticipante=participante.codparticipante)
-        participante_qrcode_path = participante.qr_code.replace('static/', '')
-        cantidad_asistencia = TrsAsistencia.objects.filter(idpc=participante_congreso).count()
-        nombreParticipante = participante.nombre.split(' ')
+            participante = MaeParticipantes.objects.get(pk=pk)
+            participante_congreso = ParticipanteCongreso.objects.get(codparticipante=participante.codparticipante)
+            participante_qrcode_path = participante.qr_code.replace('static/', '')
+            cantidad_asistencia = TrsAsistencia.objects.filter(idpc=participante_congreso).count()
+            nombreParticipante = participante.nombre.split(' ')
 
-        return render(request, 'participante.html', {
-            'nombre': nombreParticipante[0].capitalize() + ' ' + participante.ap_paterno.capitalize() + ' ' + participante.ap_materno.capitalize(),
-            'participante_data': participante,
-            'participante_qrcode_path':participante_qrcode_path,
-            'cantidad_asistencia':cantidad_asistencia
-        })
-    
+            return render(request, 'participante.html', {
+                'nombre': nombreParticipante[0].capitalize() + ' ' + participante.ap_paterno.capitalize() + ' ' + participante.ap_materno.capitalize(),
+                'participante_data': participante,
+                'participante_qrcode_path':participante_qrcode_path,
+                'cantidad_asistencia':cantidad_asistencia
+            })
+        except Exception:
+            return redirect('Login')
     @method_decorator(participante_login_required)
     def cerrar_sesion(self, request):
-        request.session.flush()
-        return redirect('Login')  # Redirige al formulario de login
+        try:
+            request.session.flush()
+            return redirect('Login')  # Redirige al formulario de login
+        except Exception:
+            return redirect('Login')
 
 
 

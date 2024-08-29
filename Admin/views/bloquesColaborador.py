@@ -31,11 +31,13 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                                 nuevo_bloqueColaborador = BloqueColaborador(
                                     idcolaborador=MaeColaborador.objects.get(pk=colaborador),
                                     idbloque=MaeBloque.objects.get(pk=bloques[i]),
-                                    idcongreso=MaeCongreso.objects.get(pk=congreso.idcongreso)
+                                    idcongreso=MaeCongreso.objects.get(pk=congreso.idcongreso.idcongreso)
                                 )
                                 nuevo_bloqueColaborador.save()
+
+                                #Asociando al bloque colaborador con el administrador
                                 admin_bloqueColaborador = AdministradorBloquecolaborador(
-                                    idadministrador = AdministradorCongreso.objects.get(idadministrador = pk),
+                                    idadministrador = AdministradorCongreso.objects.get(idadministrador = pk).idadministrador,
                                     idbc = nuevo_bloqueColaborador
                                 )
                                 admin_bloqueColaborador.save()
@@ -45,7 +47,7 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                 except BloqueColaborador.DoesNotExist:
                     messages.error(request, 'No se encontró al colaborador o a los bloques')
                 except Exception as e:    
-                    messages.error(request, e) #unsupported operand type(s) for +: 'int' and 'str'
+                    messages.error(request, e)
                 return redirect(reverse('RegistrarBloqueColaborador', kwargs={'pk':pk}))
             elif action == 'delete':
                 try:
@@ -88,36 +90,63 @@ class Registrar_Bloques_Colaborador(viewsets.ViewSet):
                             nuevo_bloqueColaborador = BloqueColaborador(
                                 idcolaborador=colaborador_obj,
                                 idbloque=MaeBloque.objects.get(pk=bloques[i]),
-                                idcongreso=MaeCongreso.objects.get(pk=congreso.idcongreso)
+                                idcongreso=MaeCongreso.objects.get(pk=congreso.idcongreso.idcongreso)
                             )
                             nuevo_bloqueColaborador.save()
+
+                            #Asociando al bloque colaborador con el administrador
+                            admin_bloqueColaborador = AdministradorBloquecolaborador(
+                                    idadministrador = AdministradorCongreso.objects.get(idadministrador = pk).idadministrador,
+                                    idbc = nuevo_bloqueColaborador
+                            )
+                            admin_bloqueColaborador.save()
+
                         messages.success(request, 'Bloques del colaborador actualizado con éxito')
                 except BloqueColaborador.DoesNotExist:
                     messages.error(request, 'No se encontró al colaborador o al bloque')
+                except Exception as e:
+                    print('Error: %s' % e)
+                    messages.error(request, 'Error al actualizar los bloques del colaborador')
                 return redirect(reverse('RegistrarBloqueColaborador', kwargs={'pk':pk}))
             
         else:
-            if not AdministradorColaborador.objects.filter(idadministrador=pk).exists():
-                messages.warning(request, 'No hay colaboradores registrados o activos, registre al menos uno')
-            elif not AdministradorBloques.objects.filter(idadministrador=pk).exists():
-                messages.warning(request, 'No hay bloques registrados o activos, registre al menos uno')
-                
-            colaboradores_activos = MaeColaborador.objects.filter(estado='ACTIVO')
-            admin_colaboradores = MaeAdministrador.objects.prefetch_related(
-                Prefetch('administradorcolaborador_set', queryset=AdministradorColaborador.objects.filter(idcolaborador__in = colaboradores_activos))
-            ).filter(pk=pk)
-            bloquesToColaboradores = BloqueColaborador.objects.all()
-            bloques = MaeBloque.objects.filter(estado='ACTIVO').order_by('pk')
+            try:
+                if not AdministradorColaborador.objects.filter(idadministrador=pk).exists():
+                    messages.warning(request, 'No hay colaboradores registrados o activos, registre al menos uno')
+                elif not AdministradorBloques.objects.filter(idadministrador=pk).exists():
+                    messages.warning(request, 'No hay bloques registrados o activos, registre al menos uno')
+                    
+                #COLABORADORES ACTIVOS DEL ADMINISTRADOR
+                colaboradores_activos = MaeColaborador.objects.filter(estado='ACTIVO')
+                admin_colaboradores = MaeAdministrador.objects.prefetch_related(
+                    Prefetch('administradorcolaborador_set', queryset=AdministradorColaborador.objects.filter(idcolaborador__in = colaboradores_activos))
+                ).filter(pk=pk)
 
-            # Agrupar bloques por colaborador
-            bloques_por_colaborador = defaultdict(list)
-            for blcl in bloquesToColaboradores:
-                bloques_por_colaborador[blcl.idcolaborador].append(blcl)
-            return render(request, 'pages/bloqueColaborador.html', {
-                'current_page': 'registrar_bloques_colaboradores',
-                'colaboradores_activos': colaboradores_activos,
-                'admin_colaboradores': admin_colaboradores, 
-                'bloques_por_colaborador':dict(bloques_por_colaborador),
-                'bloques': bloques,
-                'pk': pk
-            })
+                #BLOQUES ACTIVOS DEL ADMINISTRADOR
+                bloques_activos = MaeBloque.objects.filter(estado='ACTIVO')
+                admin_bloques = MaeAdministrador.objects.prefetch_related(
+                    Prefetch('administradorbloques_set', queryset=AdministradorBloques.objects.filter(idbloque__in = bloques_activos))
+                ).filter(pk=pk)
+
+                # Agrupar bloques por colaborador
+                bloquesToColaboradores = AdministradorBloquecolaborador.objects.filter(idadministrador = pk)
+                bloques_por_colaborador = defaultdict(list)
+                for blcl in bloquesToColaboradores:
+                    bloques_por_colaborador[blcl.idbc.idcolaborador].append(blcl.idbc)
+
+                return render(request, 'pages/bloqueColaborador.html', {
+                    'current_page': 'registrar_bloques_colaboradores',
+                    'colaboradores_activos': colaboradores_activos,
+                    'admin_colaboradores': admin_colaboradores, 
+                    'bloques_por_colaborador':dict(bloques_por_colaborador),
+                    'bloques_activos': bloques_activos,
+                    'admin_bloques': admin_bloques,
+                    'pk': pk
+                })
+            except Exception as e:
+                print('error:', e)
+                messages.error(request, 'Error al cargar los datos')
+                return render(request, 'pages/bloqueColaborador.html', {
+                    'current_page': 'registrar_bloques_colaboradores',
+                    'pk': pk
+                })

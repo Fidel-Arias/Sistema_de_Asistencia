@@ -63,35 +63,6 @@ h2 {
     background-color: #218838;
 }
 
-/*Estilo al select*/
-.flex-select {
-    display: flex;
-    flex-direction: column;
-    width: 20%;
-    margin: 0 auto;
-}
-.flex-select select {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    max-width: 100%; /* Máximo ancho disponible */
-    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
-    font-size: 16px;
-}
-
-.flex-select label {
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
-
-.flex-select label::after {
-    content: '*';
-    margin-left: 3px;
-    color: red;
-    font-weight: bold;
-}
-
 /* Estilo de los mensajes */
 .message {
     margin: 0 auto;

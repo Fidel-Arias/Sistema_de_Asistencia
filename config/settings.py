@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
-    '2ed6-2800-200-f430-30e-e173-db67-ebca-21a6.ngrok-free.app',
+    'ee13-181-177-241-28.ngrok-free.app',
 ]
 
 
@@ -168,7 +168,7 @@ SESSION_COOKIE_AGE = 604800  # 2 semanas por defecto
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://2ed6-2800-200-f430-30e-e173-db67-ebca-21a6.ngrok-free.app'
+    'https://ee13-181-177-241-28.ngrok-free.app'
 ]
 
 #SERVIDOR DE CORREO

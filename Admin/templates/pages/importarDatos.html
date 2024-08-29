@@ -32,16 +32,6 @@
         <h2>Importar datos de Participantes</h2>
         <form action="{% url 'ImportarDatos' pk %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            <div class="flex-select">
-                <label for="congreso">Congreso</label>
-                <select name="congreso" class="congreso" id="congreso" required>
-                    <option value="" selected disabled>Seleccione el congreso</option>
-                    {% for congreso in congresos %}
-                        <option value="{{congreso.idcongreso}}">{{congreso.nombre}}</option>
-                    {% endfor %}
-                </select>
-            </div>
 
             <div id="no-mostrar">
                 <div class="button-container">

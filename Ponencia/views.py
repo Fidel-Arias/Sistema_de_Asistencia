@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from Participantes.decorators import participante_login_required
 from Bloque.models import MaeBloque
 from Participantes.models import MaeParticipantes
+from adminMaestros.models import AdministradorBloques
 
 # Create your views here.
 class viewPonencias(viewsets.ViewSet):
@@ -14,7 +15,7 @@ class viewPonencias(viewsets.ViewSet):
             request.session['error'] = 'Acceso inválido'
             return redirect('Login')  # Redirigir si no está autenticado o si intenta acceder a otro usuario
         
-        bloques = MaeBloque.objects.filter().order_by('iddia__fecha')
+        bloques = AdministradorBloques.objects.filter(idadministrador = 14)
         participante = MaeParticipantes.objects.get(pk=pk)
         return render(request, 'ponencias.html', {
             'ponencias': bloques,

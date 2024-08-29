@@ -74,22 +74,17 @@
                 <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' pk %}">
                     {% csrf_token %}
 
-                    <label for="congreso">Congreso</label>
-                    <select name="congreso" class="{% if selected_congreso %}selected{% endif %}" id="congreso" onchange="this.form.submit()">
-                        <option value="" {% if not selected_congreso %}selected{% endif %} disabled>Seleccione el congreso</option>
-                        {% for congreso in congresos %}
-                            <option value="{{congreso.idcongreso}}" {% if selected_congreso == congreso.idcongreso %}selected{% endif %}>{{congreso.nombre}}</option>
-                        {% endfor %}
-                    </select>
-                    
-                    {% if selected_congreso %}
                     <input type="hidden" name="id" id="blclid">
 
                     <label for="tipoUsuario">Colaborador</label>
                     <select class="combobox" name="colaborador" id="colaborador" required>
                         <option value="" disabled selected>Seleccionar el colaborador</option>
-                        {% for colaborador in colaboradores %}
-                            <option value="{{colaborador.idcolaborador}}">{{colaborador}}</option>
+                        {% for admin in admin_colaboradores %}
+                            {% for colaborador in admin.administradorcolaborador_set.all %}
+                                {% if colaborador.idcolaborador in colaboradores_activos %}
+                                <option value="{{colaborador.idcolaborador.idcolaborador}}">{{colaborador.idcolaborador}}</option>
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
                     </select>
 
@@ -97,11 +92,15 @@
                     <div class="flex-bloques-selected">
                         <div class="bloques-container">
                             <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
-                            {% for bloque in bloques %}
-                            <div class="form-bloque">
-                                <input type="checkbox" id="bloque_{{bloque.idbloque}}" name="bloques" value="{{bloque.idbloque}}" >
-                                <label for="bloque_{{bloque.idbloque}}">{{bloque}}</label>
-                            </div>
+                            {% for admin in admin_bloques %}
+                                {% for bloque in admin.administradorbloques_set.all %}
+                                    {% if bloque.idbloque in bloques_activos %}
+                                    <div class="form-bloque">
+                                        <input type="checkbox" id="bloque_{{bloque.idbloque.idbloque}}" name="bloques" value="{{bloque.idbloque.idbloque}}" >
+                                        <label for="bloque_{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</label>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
                         </div>
                     </div>
@@ -111,7 +110,6 @@
                         <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
                         <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
                     </div>
-                    {% endif %}
                 </form>
             </main>
         </div>

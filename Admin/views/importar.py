@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from Congreso.models import MaeCongreso
+from adminMaestros.models import AdministradorCongreso
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from Participantes.models import MaeParticipantes
@@ -21,14 +22,13 @@ archivo_subido = False
 class Importar_Datos(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def importar_datos(self, request, pk):
-        #Quitar el idcongreso de participantes es redundadnte y con la trs_ASistencia se puede verificar asi mismo quitar el diseño del html implementado
         global archivo_subido
         if request.method == 'POST' and request.FILES['file']:
             uploaded_file = request.FILES['file']
             fs = FileSystemStorage()
             filename = fs.save(uploaded_file.name, uploaded_file)
             file_path = fs.path(filename)
-            idcongreso = request.POST.get('congreso')
+            admin_congreso = AdministradorCongreso.objects.get(idadministrador = pk)
 
             #Procesando el archivo
             try:
@@ -72,16 +72,15 @@ class Importar_Datos(viewsets.ViewSet):
                 for participante in participantes:
                     ParticipanteCongreso.objects.create(
                         codparticipante=MaeParticipantes.objects.get(pk=participante.pk),
-                        idcongreso=MaeCongreso.objects.get(pk=idcongreso)
+                        idcongreso=admin_congreso.idcongreso
                     )
 
             messages.success(request, 'Archivo importado y procesado con éxito')
             return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
         else:
-            congresos = MaeCongreso.objects.all().order_by('pk')
+
             return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
-                'congresos':congresos,
                 'archivo_subido': archivo_subido,
                 'pk': pk
             })
@@ -124,11 +123,9 @@ class Generar_QRCode(viewsets.ViewSet):
                 file_path
             
             messages.success(request, 'Códigos QR generado con éxito')
-            congresos = MaeCongreso.objects.all().order_by('pk')
             archivo_subido = False
             return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
-                'congresos':congresos,
                 'archivo_subido': archivo_subido,
                 'pk': pk
             })

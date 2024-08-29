@@ -6,7 +6,7 @@ from Congreso.models import MaeCongreso
 class MaePonencia(models.Model):
     idponencia = models.AutoField(primary_key=True)
     idponente = models.ForeignKey(MaePonente, db_column='idponente', on_delete=models.CASCADE, null=False)
-    nombre = models.CharField(max_length=50, blank=False, null=False)
+    nombre = models.CharField(blank=False, null=False)
     idcongreso = models.ForeignKey(MaeCongreso, db_column='idcongreso', null=False, on_delete=models.CASCADE)
     estado = models.CharField(max_length=11, default='ACTIVO', null=False)
 
