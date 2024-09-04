@@ -62,9 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 containerRegisterCongreso.classList.remove('hide-derecha');
                 containerRegister.classList.add('hide-izquierda');
 
-                // Deshabilitar el botón de registro para evitar múltiples envíos
+                // Deshabilitar el botón de registro y anterior para evitar múltiples envíos
                 event.target.querySelector('button[type="submit"]').disabled = true;
+                event.target.querySelector('button[type="submit"]').style.backgroundColor = '#979797';
                 event.target.querySelector('button[type="submit"]').style.cursor = 'not-allowed';
+
+                document.querySelector('.back-btn').disabled = true;
+                document.querySelector('.back-btn').style.backgroundColor = '#979797';
+                document.querySelector('.back-btn').style.cursor = 'not-allowed';
 
                 // Enviar los datos del formulario
                 enviarDatosFormulario(messageSuccessOrFailed, csrftoken, datosFormulario, formularioAdmin, formularioCongreso);
@@ -172,9 +177,15 @@ function enviarDatosFormulario(messageSuccessOrFailed, csrftoken, datosFormulari
         formularioAdmin.reset();
     })
     .finally(() => {
-        // Habilitar el botón nuevamente
+        // Habilitar el botón nuevamente de Registrar
         document.querySelector('button[type="submit"]').disabled = false;
         document.querySelector('button[type="submit"]').style.cursor = 'pointer';
-
+        document.querySelector('button[type="submit"]').style.backgroundColor = '#1d99ff';
+        
+        // Habilitar el botón nuevamente de Anterior
+        document.querySelector('.buttons .back-btn').disabled = false;
+        document.querySelector('.buttons .back-btn').style.cursor = 'pointer';
+        document.querySelector('.buttons .back-btn').style.backgroundColor = '#2ed254';
+        
     });   
 }

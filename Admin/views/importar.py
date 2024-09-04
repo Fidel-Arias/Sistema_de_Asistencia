@@ -1,5 +1,6 @@
 from ..decorators import administrador_login_required
 from django.urls import reverse
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from Congreso.models import MaeCongreso
@@ -132,5 +133,12 @@ class Generar_QRCode(viewsets.ViewSet):
         else:
             return redirect('ImportarDatos')
     
+def enviar_email_participantes(datos_user, img_path):
+    try:
+        template = render_to_string('messages/mail_colaborador.html', {
+
+        })
+    except Exception:
+        return 'failed'
 
 #Posible url: https://sistemaasistenciajinis.com

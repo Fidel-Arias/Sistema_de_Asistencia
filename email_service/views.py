@@ -1,9 +1,9 @@
 from config import settings
-from django.core.mail import send_mail, get_connection, BadHeaderError
+from django.core.mail import EmailMultiAlternatives, get_connection, BadHeaderError
 from premailer import transform
 
 # Create your views here.
-def email_service(request, formulario_data, template, plain_message, subject, to_email):
+def email_service(request, formulario_data, template, plain_message, subject, to_email, image_path=None):
 
     # Configurando dinámicamente el email_host_user y el email_host_password
     settings.EMAIL_HOST_USER = formulario_data['correo']
@@ -21,15 +21,23 @@ def email_service(request, formulario_data, template, plain_message, subject, to
     template = transform(template)
 
     try:
-        send_mail(
+        email_message = EmailMultiAlternatives(
             subject=subject,
-            message=plain_message,
-            html_message=template,
+            body=plain_message,
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[to_email],
-            fail_silently=False,
+            to=[to_email],
             connection=connection,  # Utilizar la conexión con las nuevas credenciales
         )
+
+        if template:
+            email_message.attach_alternative(template, 'text/html')
+        
+        if image_path:
+            with open(image_path, 'rb') as img:
+                email_message.attach('Código QR', img.read(), 'image/png')
+
+        #Envio de correo
+        email_message.send()
 
         # Cerrar la conexión SMTP
         connection.close()
